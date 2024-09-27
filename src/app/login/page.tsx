@@ -6,8 +6,37 @@ const login: React.FC = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    throw new Error("Function not implemented.");
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    try {
+      const response = await fetch('https://our-backend-endpoint/api/login', { // TBD
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.message === "User not found") { // TBD
+          alert("This email address is not registered.");
+        } else if (errorData.message === "Invalid password") { // TBD
+          alert("Incorrect password.");
+        } else {
+          alert("Unexpected error occurred.");
+        }
+      } else {
+        const data = await response.json();
+        sessionStorage.setItem('authToken', data.token);
+        window.location.href = '/'; // TBD
+      }
+
+    } catch (error) {
+      console.error(error);
+      alert("Network error occurred.");
+    }
+    return;
   }
 
   return (
@@ -54,7 +83,7 @@ const login: React.FC = (): JSX.Element => {
           </div>
           <div className="flex items-center justify-between">
             <p>
-              don't have accout? 
+              don't have accout?
               <span className=" text-blue-800 font-semibold underline pl-1">
                 <Link href="/register"> Register</Link>
               </span>
