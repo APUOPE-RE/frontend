@@ -2,12 +2,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export type UserCredentials = {
 	email: string;
-	password: string;
+	passwordHash: string;
 };
 
 export const validateUser = async (userCredentials: UserCredentials) => {
 	try {
-		console.log(userCredentials)
 		const response = await fetch(`${API_BASE_URL}/api/Login`, {
 			method: "POST",
 			headers: {
@@ -15,7 +14,7 @@ export const validateUser = async (userCredentials: UserCredentials) => {
 			},
 			body: JSON.stringify({
 				email: userCredentials.email,
-				password: userCredentials.password,
+				passwordHash: userCredentials.passwordHash,
 			}),
 		})
 			.then((res) => {

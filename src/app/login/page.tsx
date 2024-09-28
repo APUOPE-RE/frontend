@@ -15,25 +15,25 @@ export default function Login() {
 		formState: { errors },
 	} = useForm<UserCredentials>();
 
-	const [watchEmail, watchPassword] = watch(["email", "password"]);
+	const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
 
 	useEffect(() => {
-		if (watchEmail || watchPassword) {
-			clearErrors("password");
+		if (watchEmail || watchPasswordHash) {
+			clearErrors("passwordHash");
 		}
-	}, [watchEmail, watchPassword, clearErrors]);
+	}, [watchEmail, watchPasswordHash, clearErrors]);
 
 	const handleLogin = async (data: UserCredentials): Promise<void> => {
 		const valid = await validateUser(data);
 
 		if (!valid) {
-			setError("password", {
+			setError("passwordHash", {
 				message: "Invalid credentials. Please try again.",
 			});
 			setValid(false);
 		} else {
 			setValid(true);
-			clearErrors("password");
+			clearErrors("passwordHash");
 		}
 	};
 
@@ -43,7 +43,7 @@ export default function Login() {
 				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
 
 				<div className="flex justify-center text-amber-500 h-5 mb-3">
-					<p>{errors.password && errors.password.message}</p>
+					<p>{errors.passwordHash && errors.passwordHash.message}</p>
 					{/*this is just for testing*/}
 					{valid && <p className="text-green-500">Credentials correct!</p>}
 				</div>
@@ -73,11 +73,11 @@ export default function Login() {
 							Password
 						</label>
 						<input
-							id="password"
+							id="passwordHash"
 							type="password"
 							placeholder="Enter your password"
 							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-							{...register("password")}
+							{...register("passwordHash")}
 							required
 						/>
 					</div>
