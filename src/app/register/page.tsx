@@ -1,13 +1,13 @@
 "use client"
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { useState } from "react";
 
 const Signup: React.FC = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>): void {
+  function handleSubmit(): void {
     throw new Error("Function not implemented.");
   }
 
@@ -84,9 +84,9 @@ const Signup: React.FC = (): JSX.Element => {
           </div>
           <div className="flex items-center justify-between">
             <p className="">
-              Already have accout
+              Already have an account?
               <span className="text-blue-800 font-semibold underline pl-1">
-                <Link href="/login"> login</Link>
+                <Link href="/login"> Login</Link>
               </span>
             </p>
             <button
