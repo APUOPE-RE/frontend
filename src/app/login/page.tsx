@@ -4,39 +4,35 @@ import { FormEvent, useState } from "react";
 
 const login: React.FC = (): JSX.Element => {
   const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [password, setPasswordHash] = useState<string>(""); // temporary use "setPasswordHash"
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
     try {
-      const response = await fetch('https://our-backend-endpoint/api/login', { // TBD
+      const response = await fetch('http://localhost:8080/api/Login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, passwordHash: password }), // temporary use "pssswordHash: "
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.message === "User not found") { // TBD
-          alert("This email address is not registered.");
-        } else if (errorData.message === "Invalid password") { // TBD
-          alert("Incorrect password.");
-        } else {
-          alert("Unexpected error occurred.");
-        }
+        alert("Unexpected error occurred.");
       } else {
-        const data = await response.json();
-        sessionStorage.setItem('authToken', data.token);
-        window.location.href = '/'; // TBD
+        const validUser = await response.json();
+        if (validUser) {
+          alert("Login successful!");
+          window.location.href = '/'; // TBD
+        } else {
+          alert("Invalid email or password.");
+        }
       }
 
     } catch (error) {
       console.error(error);
       alert("Network error occurred.");
     }
-    return;
   }
 
   return (
@@ -74,7 +70,7 @@ const login: React.FC = (): JSX.Element => {
               placeholder="Enter your password"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPasswordHash(e.target.value)} // temporary use "setPasswordHash"
               required
             />
           </div>
