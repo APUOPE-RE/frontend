@@ -1,8 +1,9 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { UserCredentials, validateUser } from "../actions/login";
+import { validateUser } from "../actions/login";
 import { useEffect, useState } from "react";
+import { UserCredentials } from "../types/types";
 
 export default function Login() {
 	const [valid, setValid] = useState(false);
@@ -19,21 +20,21 @@ export default function Login() {
 
 	useEffect(() => {
 		if (watchEmail || watchPasswordHash) {
-			clearErrors("passwordHash");
+			clearErrors("errors");
 		}
 	}, [watchEmail, watchPasswordHash, clearErrors]);
 
 	const handleLogin = async (data: UserCredentials): Promise<void> => {
-		const valid = await validateUser(data);
+		const response = await validateUser(data);
 
-		if (!valid) {
-			setError("passwordHash", {
-				message: "Invalid credentials. Please try again.",
+		if (!response.success) {
+			setError("errors", {
+				message: response.data,
 			});
 			setValid(false);
 		} else {
 			setValid(true);
-			clearErrors("passwordHash");
+			clearErrors("errors");
 		}
 	};
 
@@ -43,7 +44,7 @@ export default function Login() {
 				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
 
 				<div className="flex justify-center text-amber-500 h-5 mb-3">
-					<p>{errors.passwordHash && errors.passwordHash.message}</p>
+					<p>{errors.errors && errors.errors.message}</p>
 					{/*this is just for testing*/}
 					{valid && <p className="text-green-500">Credentials correct!</p>}
 				</div>

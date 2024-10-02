@@ -1,12 +1,10 @@
+import { UserCredentials, ResponseData } from "../types/types";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export type UserCredentials = {
-	email: string;
-	passwordHash: string;
-};
-
-export const validateUser = async (userCredentials: UserCredentials) => {
+export const validateUser = async (userCredentials: UserCredentials): Promise<ResponseData<string>> => {
 	try {
+		console.log(userCredentials)
 		const response = await fetch(`${API_BASE_URL}/api/Login`, {
 			method: "POST",
 			headers: {
@@ -20,13 +18,13 @@ export const validateUser = async (userCredentials: UserCredentials) => {
 			.then((res) => {
 				return res.json();
 			})
-			.then((data) => {
+			.then((data: ResponseData<string>) => {
 				return data;
 			});
 
 		return response;
 	} catch (error) {
 		console.error("Error during login request:", error);
-		return { success: false, message: "An error occurred" };
+		return { success: false, data: "An error occurred" };
 	}
 };
