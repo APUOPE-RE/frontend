@@ -118,9 +118,9 @@ const Signup: React.FC = (): JSX.Element => {
           </div>
           <div className="flex items-center justify-between">
             <p className="">
-              Already have accout
+              Already have an account?
               <span className="text-blue-800 font-semibold underline pl-1">
-                <Link href="/login"> login</Link>
+                <Link href="/login"> Login</Link>
               </span>
             </p>
             <button
