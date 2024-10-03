@@ -2,10 +2,11 @@ import { UserCredentials, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const validateUser = async (userCredentials: UserCredentials): Promise<ResponseData<string>> => {
+export const validateUser = async (
+	userCredentials: UserCredentials
+): Promise<ResponseData<string>> => {
 	try {
-		console.log(userCredentials)
-		const response = await fetch(`${API_BASE_URL}/api/Login`, {
+		const response = await fetch(`${API_BASE_URL}/api/login`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
