@@ -1,71 +1,82 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { UserCredentials, validateUser } from "../actions/login";
+import { validateUser } from "../actions/login";
 import { useEffect, useState } from "react";
+import { UserCredentials } from "../types/types";
+import { useSearchParams } from "next/navigation";
+import { verifyAccount } from "../actions/verification";
 
 export default function Login() {
-  const [valid, setValid] = useState(false);
-  const {
-    handleSubmit,
-    register,
-    watch,
-    setError,
-    clearErrors,
-    formState: { errors },
-  } = useForm<UserCredentials>();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
+
+	const [valid, setValid] = useState(false);
+	const [accountVerified, setAccountVerified] = useState(false);
+
+	const {
+		handleSubmit,
+		register,
+		watch,
+		setError,
+		clearErrors,
+		formState: { errors },
+	} = useForm<UserCredentials>();
 
   const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
 
-  useEffect(() => {
-    if (watchEmail || watchPasswordHash) {
-      clearErrors("passwordHash");
-    }
-  }, [watchEmail, watchPasswordHash, clearErrors]);
+	useEffect(() => {
+		const handleToken = async () => {
+			if (token !== null) {
+				const response = await verifyAccount(token);
+				if (response) {
+					setAccountVerified(true);
+				} else {
+					setAccountVerified(false);
+				}
+			}
+		};
 
-  async function handleLogin(data: UserCredentials): Promise<void> {
-    try {
-      const response = await fetch('http://localhost:8080/api/Login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
+		handleToken();
+	}, [token, setAccountVerified]);
 
-      if (!response.ok) {
-        alert("Unexpected error occurred.");
-        return;
-      }
+	useEffect(() => {
+		if (watchEmail || watchPasswordHash) {
+			clearErrors("errors");
+		}
+	}, [watchEmail, watchPasswordHash, clearErrors]);
 
-      const validUser = await response.json();
-      if (validUser) {
-        window.location.href = '/';
-        setValid(true);
-        clearErrors("passwordHash");
-      } else {
-        setError("passwordHash", {
-          message: "Invalid credentials. Please try again.",
-        });
-        setValid(false);
-      }
+	const handleLogin = async (data: UserCredentials): Promise<void> => {
+		const response = await validateUser(data);
 
-    } catch (error) {
-      console.error(error);
-      alert("Network error occurred.");
-    }
-  }
+		if (!response.success) {
+			setError("errors", {
+				message: response.data,
+			});
+			setValid(false);
+		} else {
+			setValid(true);
+			clearErrors("errors");
+		}
+	};
 
-  return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
+	return (
+		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+			{token !== null && accountVerified && (
+				<div className="flex text-m p-5 max-w-md w-full justify-center mb-8 rounded-lg bg-green-200">
+					Account verified!
+				</div>
+			)}
+			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
 
-        <div className="flex justify-center text-amber-500 h-5 mb-3">
-          <p>{errors.passwordHash && errors.passwordHash.message}</p>
-          {/*this is just for testing*/}
-          {valid && <p className="text-green-500">Credentials correct!</p>}
-        </div>
+				<div className="flex justify-center text-amber-500 h-5 mb-3">
+					<p>{errors.errors && errors.errors.message}</p>
+					{/*this is just for testing*/}
+					{valid && (
+						<p className="text-green-500">Credentials correct!</p>
+					)}
+				</div>
 
         <form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-4">

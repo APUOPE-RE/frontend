@@ -1,48 +1,54 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { registerUser } from "../actions/registration";
+import { RegistrationData } from "../types/types";
 
-const Signup: React.FC = (): JSX.Element => {
-  const [username, setUsername] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const router = useRouter();
+export default function Register() {
+	const {
+		handleSubmit,
+		register,
+		watch,
+		setError,
+		clearErrors,
+		formState: { errors },
+	} = useForm<RegistrationData>();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
-    event.preventDefault();
-    // Check if passwords match
-    if (password !== confirmPassword) {
-      setErrorMessage("passwords does not match");
-      return;
-    }
-    try {
-      const response = await fetch("http://localhost:8080/register", {  //endpoint need to be checked!
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({username, email, password}),
-      });
+	const [watchEmail, watchPasswordFirst, watchPasswordSecond, watchUsername] =
+		watch(["email", "passwordFirst", "passwordSecond", "username"]);
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Registration successful:", data);
-        setErrorMessage("");
-        // Redirect to login page after successful registration
-        router.push("/login"); // if needed
-      } else {
-        const errorData = await response.json();
-        setErrorMessage(errorData.message);
-      }
-      
-    } catch (error) {
-      console.error("Error during registration:", error);
-      setErrorMessage("Something went wrong. Please try again.");
-    }
-  }
+	useEffect(() => {
+		if (watchPasswordFirst || watchPasswordSecond) {
+			clearErrors("passwordFirst");
+		}
+	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
+
+	useEffect(() => {
+		if (watchEmail || watchUsername) {
+			clearErrors("errors");
+		}
+	}, [watchEmail, watchUsername, clearErrors]);
+
+	const handleRegistration = async (
+		data: RegistrationData
+	): Promise<void> => {
+		if (data.passwordFirst !== watchPasswordSecond) {
+			setError("passwordFirst", {
+				message: "Passwords don't match!",
+			});
+		} else {
+			const response = await registerUser(data);
+
+			if (!response.success) {
+				setError("errors", {
+					message: response.data,
+				});
+			} else {
+				clearErrors("errors");
+			}
+		}
+	};
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
@@ -136,5 +142,3 @@ const Signup: React.FC = (): JSX.Element => {
     </div>
   );
 };
-
-export default Signup;
