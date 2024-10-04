@@ -1,7 +1,7 @@
 export type RegistrationData = {
-	email: string;
+    email: string;
     username: string;
-	passwordFirst: string;
+    passwordFirst: string;
     passwordSecond: string;
     errors: string;
 };
@@ -12,7 +12,7 @@ export type ResponseData<T> = {
 }
 
 export type UserCredentials = {
-	email: string;
-	passwordHash: string;
+    email: string;
+    passwordHash: string;
     errors: string;
 };
