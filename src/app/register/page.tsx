@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { registerUser } from "../actions/registration";
 import { RegistrationData } from "../types/types";
 
@@ -38,6 +38,7 @@ export default function Register() {
 				message: "Passwords don't match!",
 			});
 		} else {
+			console.log(data);
 			const response = await registerUser(data);
 
 			if (!response.success) {

@@ -4,16 +4,9 @@ import { useForm } from "react-hook-form";
 import { validateUser } from "../actions/login";
 import { useEffect, useState } from "react";
 import { UserCredentials } from "../types/types";
-import { useSearchParams } from "next/navigation";
-import { verifyAccount } from "../actions/verification";
 
 export default function Login() {
-	const searchParams = useSearchParams();
-	const token = searchParams.get("token");
-
 	const [valid, setValid] = useState(false);
-	const [accountVerified, setAccountVerified] = useState(false);
-
 	const {
 		handleSubmit,
 		register,
@@ -24,21 +17,6 @@ export default function Login() {
 	} = useForm<UserCredentials>();
 
   const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
-
-	useEffect(() => {
-		const handleToken = async () => {
-			if (token !== null) {
-				const response = await verifyAccount(token);
-				if (response) {
-					setAccountVerified(true);
-				} else {
-					setAccountVerified(false);
-				}
-			}
-		};
-
-		handleToken();
-	}, [token, setAccountVerified]);
 
 	useEffect(() => {
 		if (watchEmail || watchPasswordHash) {
@@ -62,20 +40,13 @@ export default function Login() {
 
 	return (
 		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-			{token !== null && accountVerified && (
-				<div className="flex text-m p-5 max-w-md w-full justify-center mb-8 rounded-lg bg-green-200">
-					Account verified!
-				</div>
-			)}
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
 
 				<div className="flex justify-center text-amber-500 h-5 mb-3">
 					<p>{errors.errors && errors.errors.message}</p>
 					{/*this is just for testing*/}
-					{valid && (
-						<p className="text-green-500">Credentials correct!</p>
-					)}
+					{valid && <p className="text-green-500">Credentials correct!</p>}
 				</div>
 
         <form onSubmit={handleSubmit(handleLogin)}>

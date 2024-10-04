@@ -2,11 +2,10 @@ import { RegistrationData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const registerUser = async (
-	registrationData: RegistrationData
-): Promise<ResponseData<string>> => {
+export const registerUser = async (registrationData: RegistrationData): Promise<ResponseData<string>> => {
 	try {
-		const response = await fetch(`${API_BASE_URL}/api/register`, {
+        console.log(registrationData)
+		const response = await fetch(`${API_BASE_URL}/api/Register`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -21,6 +20,7 @@ export const registerUser = async (
 				return res.json();
 			})
 			.then((data: ResponseData<string>) => {
+				console.log(data)
 				return data;
 			});
 
