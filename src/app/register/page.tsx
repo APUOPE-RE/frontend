@@ -1,14 +1,47 @@
 "use client"
 import Link from "next/link";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Signup: React.FC = (): JSX.Element => {
+  const [username, setUsername] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const router = useRouter();
 
-  function handleSubmit(): void {
-    throw new Error("Function not implemented.");
+  async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
+    event.preventDefault();
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      setErrorMessage("passwords does not match");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:8080/register", {  //endpoint need to be checked!
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({username, email, password}),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Registration successful:", data);
+        setErrorMessage("");
+        // Redirect to login page after successful registration
+        router.push("/login"); // if needed
+      } else {
+        const errorData = await response.json();
+        setErrorMessage(errorData.message);
+      }
+      
+    } catch (error) {
+      console.error("Error during registration:", error);
+      setErrorMessage("Something went wrong. Please try again.");
+    }
   }
 
   return (
@@ -28,6 +61,7 @@ const Signup: React.FC = (): JSX.Element => {
               type="username"
               placeholder="Enter your name"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
@@ -96,6 +130,7 @@ const Signup: React.FC = (): JSX.Element => {
               Register
             </button>
           </div>
+          <p className="text-gray-400">{errorMessage}</p>
         </form>
       </div>
     </div>
