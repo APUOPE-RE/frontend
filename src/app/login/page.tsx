@@ -2,12 +2,12 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { validateUser } from "../actions/login";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { UserCredentials } from "../types/types";
 import { useSearchParams } from "next/navigation";
 import { verifyAccount } from "../actions/verification";
 
-export default function Login() {
+function Login() {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 
@@ -132,3 +132,11 @@ export default function Login() {
     </div>
   );
 }
+export default function LoginPageWrapper() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<Login />
+		</Suspense>
+	);
+}
+
