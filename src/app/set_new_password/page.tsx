@@ -2,10 +2,13 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { registerUser } from "../actions/registration";
-import { RegistrationData } from "../types/types";
+import { useRouter } from "next/router";
+import { setNewPassword } from "../actions/set_new_password";
+import { NewPasswordData } from "../types/types";
 
-export default function Register() {
+export default function SetNewPassword() {
+	const router = useRouter();
+
 	const {
 		handleSubmit,
 		register,
@@ -13,10 +16,10 @@ export default function Register() {
 		setError,
 		clearErrors,
 		formState: { errors },
-	} = useForm<RegistrationData>();
+	} = useForm<NewPasswordData>();
 
-	const [watchEmail, watchPasswordFirst, watchPasswordSecond, watchUsername] =
-		watch(["email", "passwordFirst", "passwordSecond", "username"]);
+	const [watchEmail, watchPasswordFirst, watchPasswordSecond] =
+		watch(["email", "passwordFirst", "passwordSecond"]);
 
 	useEffect(() => {
 		if (watchPasswordFirst || watchPasswordSecond) {
@@ -25,20 +28,18 @@ export default function Register() {
 	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
 
 	useEffect(() => {
-		if (watchEmail || watchUsername) {
+		if (watchEmail) {
 			clearErrors("errors");
 		}
-	}, [watchEmail, watchUsername, clearErrors]);
+	}, [watchEmail, clearErrors]);
 
-	const handleRegistration = async (
-		data: RegistrationData
-	): Promise<void> => {
+	const handleSetNewPass = async (data: NewPasswordData): Promise<void> => {
 		if (data.passwordFirst !== watchPasswordSecond) {
 			setError("passwordFirst", {
 				message: "Passwords don't match!",
 			});
 		} else {
-			const response = await registerUser(data);
+			const response = await setNewPassword(data);
 
 			if (!response.success) {
 				setError("errors", {
@@ -46,6 +47,7 @@ export default function Register() {
 				});
 			} else {
 				clearErrors("errors");
+				router.push("/login")
 			}
 		}
 	};
@@ -54,34 +56,15 @@ export default function Register() {
 		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">
-					Register
+					Set New Password
 				</h2>
-				<form onSubmit={handleSubmit(handleRegistration)}>
-					<div className="mb-4">
-						<div className="flex justify-center text-amber-500 h-5 mb-3">
-							<p>{errors.errors && errors.errors.message}</p>
-						</div>
-						<label
-							className="block text-gray-700 text-sm font-bold mb-2"
-							htmlFor="email"
-						>
-							Username
-						</label>
-						<input
-							id="username"
-							type="username"
-							placeholder="Enter your name"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-							{...register("username")}
-							required
-						/>
-					</div>
+				<form onSubmit={handleSubmit(handleSetNewPass)}>
 					<div className="mb-4">
 						<label
 							className="block text-gray-700 text-sm font-bold mb-2"
 							htmlFor="email"
 						>
-							Email
+							Registered Email
 						</label>
 						<input
 							id="email"
@@ -103,7 +86,7 @@ export default function Register() {
 							className="block text-gray-700 text-sm font-bold mb-2"
 							htmlFor="password"
 						>
-							Password
+							New Password
 						</label>
 						<input
 							id="password"
@@ -131,8 +114,8 @@ export default function Register() {
 						/>
 					</div>
 					<div className="flex items-center justify-between">
-						<p className="">
-							{"Already have an account? "}
+						<p className="text-sm">
+							{"Remember your password? "}
 							<span className="text-blue-800 font-semibold underline pl-1">
 								<Link href="/login">Login</Link>
 							</span>
@@ -140,7 +123,7 @@ export default function Register() {
 						<input
 							type="submit"
 							className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring"
-							value={"Register"}
+							value={"Set New Password"}
 						/>
 					</div>
 				</form>

@@ -1,11 +1,18 @@
 import { RegistrationData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+console.log("API Base URL:", API_BASE_URL);
 
 export const registerUser = async (
 	registrationData: RegistrationData
 ): Promise<ResponseData<string>> => {
 	try {
+		console.log("Request to:", `${API_BASE_URL}/api/register`);
+		console.log("Request body:", {
+			email: registrationData.email,
+			username: registrationData.username,
+			password: registrationData.passwordFirst,
+		});
 		const response = await fetch(`${API_BASE_URL}/api/register`, {
 			method: "POST",
 			headers: {
