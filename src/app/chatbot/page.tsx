@@ -36,11 +36,6 @@ export default function Chatbot() {
 
 
 
-	useEffect(() => {
-		console.log("Hello");
-	}, []);
-
-
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 
