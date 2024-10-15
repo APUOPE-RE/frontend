@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { setNewPassword } from "../actions/set_new_password";
+import { setNewPassword } from "../actions/reset_password";
 import { NewPasswordData } from "../types/types";
 
 export default function SetNewPassword() {
@@ -18,20 +18,14 @@ export default function SetNewPassword() {
 		formState: { errors },
 	} = useForm<NewPasswordData>();
 
-	const [watchEmail, watchPasswordFirst, watchPasswordSecond] =
-		watch(["email", "passwordFirst", "passwordSecond"]);
+	const [watchPasswordFirst, watchPasswordSecond] =
+		watch(["passwordFirst", "passwordSecond"]);
 
 	useEffect(() => {
 		if (watchPasswordFirst || watchPasswordSecond) {
 			clearErrors("passwordFirst");
 		}
 	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
-
-	useEffect(() => {
-		if (watchEmail) {
-			clearErrors("errors");
-		}
-	}, [watchEmail, clearErrors]);
 
 	const handleSetNewPass = async (data: NewPasswordData): Promise<void> => {
 		if (data.passwordFirst !== watchPasswordSecond) {
@@ -59,23 +53,7 @@ export default function SetNewPassword() {
 					Set New Password
 				</h2>
 				<form onSubmit={handleSubmit(handleSetNewPass)}>
-					<div className="mb-4">
-						<label
-							className="block text-gray-700 text-sm font-bold mb-2"
-							htmlFor="email"
-						>
-							Registered Email
-						</label>
-						<input
-							id="email"
-							type="email"
-							placeholder="Enter your email"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-							{...register("email")}
-							required
-						/>
-					</div>
-					<div className="flex justify-center text-amber-500">
+					<div className="flex justify-center text-amber-500 mb-4">
 						<p>
 							{errors.passwordFirst &&
 								errors.passwordFirst.message}
