@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { setNewPassword } from "../actions/set_new_password";
 import { NewPasswordData } from "../types/types";
 
