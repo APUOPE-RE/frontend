@@ -111,7 +111,7 @@ function Login() {
 						/>
 					</div>
 					<div className="flex w-auto pb-2 text-sm text-gray-600 hover:text-blue-400">
-						<Link href="/reset_password">Forgot your password?</Link>
+						<Link href="/forgot-password">Forgot your password?</Link>
 					</div>
 					<div className="flex items-center justify-between">
 						<p>

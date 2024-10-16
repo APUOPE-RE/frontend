@@ -23,6 +23,7 @@ export type EmailforPassReset = {
 }
 
 export type NewPasswordData = {
+    uuid: string;
     passwordFirst: string;
     passwordSecond: string;
     errors: string;

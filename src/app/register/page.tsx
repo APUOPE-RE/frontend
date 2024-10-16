@@ -4,8 +4,10 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { registerUser } from "../actions/registration";
 import { RegistrationData } from "../types/types";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+	const router = useRouter();
 	const {
 		handleSubmit,
 		register,
@@ -46,6 +48,7 @@ export default function Register() {
 				});
 			} else {
 				clearErrors("errors");
+				router.push("/login");
 			}
 		}
 	};
