@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { verifyEmail } from "../actions/reset_password";
+import { sendResetPasswordLink } from "../actions/resetPassword";
 import { EmailforPassReset } from "../types/types";
+import { useRouter } from "next/navigation";
 
 export default function ResetPassword() {
+	const router = useRouter();
 	const {
 		handleSubmit,
 		register,
@@ -23,7 +25,11 @@ export default function ResetPassword() {
 	}, [watchEmail]);
 
 	const handleResetPass = async (data: EmailforPassReset): Promise<void> => {
-		await verifyEmail(data);
+		const response = await sendResetPasswordLink(data);
+
+		if (response.success) {
+			router.push("/login");
+		}
 	};
 
 	return (

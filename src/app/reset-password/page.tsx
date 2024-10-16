@@ -2,12 +2,15 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { setNewPassword } from "../actions/reset_password";
+import { useRouter, useSearchParams } from "next/navigation";
 import { NewPasswordData } from "../types/types";
+import { resetPassword } from "../actions/resetPassword";
 
 export default function SetNewPassword() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
 
 	const {
 		handleSubmit,
@@ -18,8 +21,8 @@ export default function SetNewPassword() {
 		formState: { errors },
 	} = useForm<NewPasswordData>();
 
-	const [watchPasswordFirst, watchPasswordSecond] =
-		watch(["passwordFirst", "passwordSecond"]);
+	const [watchUuid, watchPasswordFirst, watchPasswordSecond] =
+		watch(["uuid", "passwordFirst", "passwordSecond"]);
 
 	useEffect(() => {
 		if (watchPasswordFirst || watchPasswordSecond) {
@@ -33,7 +36,11 @@ export default function SetNewPassword() {
 				message: "Passwords don't match!",
 			});
 		} else {
-			const response = await setNewPassword(data);
+			const input = {
+				...data,
+				uuid: token ?? "",
+			}
+			const response = await resetPassword(input);
 
 			if (!response.success) {
 				setError("errors", {
@@ -53,7 +60,7 @@ export default function SetNewPassword() {
 					Set New Password
 				</h2>
 				<form onSubmit={handleSubmit(handleSetNewPass)}>
-					<div className="flex justify-center text-amber-500 mb-4">
+					<div className="flex justify-center text-amber-500">
 						<p>
 							{errors.passwordFirst &&
 								errors.passwordFirst.message}
@@ -94,7 +101,8 @@ export default function SetNewPassword() {
 					<div className="flex items-center justify-between">
 						<p className="text-sm">
 							{"Remember your password? "}
-							<span className="text-blue-800 font-semibold underline pl-1">
+							<br/>
+							<span className="text-blue-800 font-semibold underline">
 								<Link href="/login">Login</Link>
 							</span>
 						</p>
