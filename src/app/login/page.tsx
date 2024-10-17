@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { validateUser } from "../actions/login";
 import { useEffect, useState } from "react";
 import { UserCredentials } from "../types/types";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { verifyAccount } from "../actions/verification";
 
 export default function Login() {
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 
@@ -57,6 +58,9 @@ export default function Login() {
 		} else {
 			setValid(true);
 			clearErrors("errors");
+			console.log(response);	//to print the JWT Token
+			localStorage.setItem("token", response.data);
+			router.push("/");
 		}
 	};
 
