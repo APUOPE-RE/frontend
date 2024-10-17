@@ -16,3 +16,14 @@ export type UserCredentials = {
     passwordHash: string;
     errors: string;
 };
+
+export type EmailforPassReset = {
+    email: string;
+    errors: string;
+}
+
+export type NewPasswordData = {
+    passwordFirst: string;
+    passwordSecond: string;
+    errors: string;
+};
