@@ -20,8 +20,7 @@ export default function ResetPassword() {
 		formState: { errors },
 	} = useForm<NewPasswordData>();
 
-	const [watchUuid, watchPasswordFirst, watchPasswordSecond] = watch([
-		"uuid",
+	const [watchPasswordFirst, watchPasswordSecond] = watch([
 		"passwordFirst",
 		"passwordSecond",
 	]);

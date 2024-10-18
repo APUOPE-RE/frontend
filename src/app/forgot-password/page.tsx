@@ -22,7 +22,7 @@ export default function ForgotPassword() {
 		if (watchEmail) {
 			clearErrors("errors");
 		}
-	}, [watchEmail]);
+	}, [watchEmail, clearErrors]);
 
 	const handleSendLink = async (data: EmailforPassReset): Promise<void> => {
 		const response = await sendResetPasswordLink(data);
