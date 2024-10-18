@@ -2,12 +2,14 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { setNewPassword } from "../actions/reset_password";
+import { useRouter, useSearchParams } from "next/navigation";
 import { NewPasswordData } from "../types/types";
+import { resetPassword } from "../actions/resetPassword";
 
-export default function SetNewPassword() {
+export default function ResetPassword() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
 
 	const {
 		handleSubmit,
@@ -18,8 +20,10 @@ export default function SetNewPassword() {
 		formState: { errors },
 	} = useForm<NewPasswordData>();
 
-	const [watchPasswordFirst, watchPasswordSecond] =
-		watch(["passwordFirst", "passwordSecond"]);
+	const [watchPasswordFirst, watchPasswordSecond] = watch([
+		"passwordFirst",
+		"passwordSecond",
+	]);
 
 	useEffect(() => {
 		if (watchPasswordFirst || watchPasswordSecond) {
@@ -27,13 +31,19 @@ export default function SetNewPassword() {
 		}
 	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
 
-	const handleSetNewPass = async (data: NewPasswordData): Promise<void> => {
+	const handleResetPassword = async (
+		data: NewPasswordData
+	): Promise<void> => {
 		if (data.passwordFirst !== watchPasswordSecond) {
 			setError("passwordFirst", {
 				message: "Passwords don't match!",
 			});
 		} else {
-			const response = await setNewPassword(data);
+			const input = {
+				...data,
+				uuid: token ?? "",
+			};
+			const response = await resetPassword(input);
 
 			if (!response.success) {
 				setError("errors", {
@@ -41,7 +51,7 @@ export default function SetNewPassword() {
 				});
 			} else {
 				clearErrors("errors");
-				router.push("/login")
+				router.push("/login");
 			}
 		}
 	};
@@ -50,10 +60,10 @@ export default function SetNewPassword() {
 		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">
-					Set New Password
+					Reset password
 				</h2>
-				<form onSubmit={handleSubmit(handleSetNewPass)}>
-					<div className="flex justify-center text-amber-500 mb-4">
+				<form onSubmit={handleSubmit(handleResetPassword)}>
+					<div className="flex justify-center text-amber-500">
 						<p>
 							{errors.passwordFirst &&
 								errors.passwordFirst.message}
@@ -92,12 +102,12 @@ export default function SetNewPassword() {
 						/>
 					</div>
 					<div className="flex items-center justify-between">
-						<p className="text-sm">
-							{"Remember your password? "}
-							<span className="text-blue-800 font-semibold underline pl-1">
+						<div>
+							<p className="text-sm">Remember your password?</p>
+							<p className="text-blue-800 font-semibold underline">
 								<Link href="/login">Login</Link>
-							</span>
-						</p>
+							</p>
+						</div>
 						<input
 							type="submit"
 							className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring"
