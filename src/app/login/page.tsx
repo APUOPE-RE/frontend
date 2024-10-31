@@ -57,7 +57,6 @@ function Login() {
 		} else {
 			setValid(true);
 			clearErrors("errors");
-			console.log(response);	//to print the JWT Token
 			localStorage.setItem("token", response.data);
 			router.push("/");
 		}
