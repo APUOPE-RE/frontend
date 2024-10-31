@@ -8,7 +8,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { verifyAccount } from "../actions/verification";
 
 function Login() {
-  const router = useRouter();
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 	const [valid, setValid] = useState(false);
@@ -57,7 +57,6 @@ function Login() {
 		} else {
 			setValid(true);
 			clearErrors("errors");
-			console.log(response);	//to print the JWT Token
 			localStorage.setItem("token", response.data);
 			router.push("/");
 		}
@@ -115,7 +114,7 @@ function Login() {
 						/>
 					</div>
 					<div className="flex w-auto pb-2 text-sm text-gray-600 hover:text-blue-400">
-						<Link href="/reset_password">Forgot your password?</Link>
+						<Link href="/forgot-password">Forgot your password?</Link>
 					</div>
 					<div className="flex items-center justify-between">
 						<p>

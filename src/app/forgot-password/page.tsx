@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { verifyEmail } from "../actions/reset_password";
+import { sendResetPasswordLink } from "../actions/resetPassword";
 import { EmailforPassReset } from "../types/types";
+import { useRouter } from "next/navigation";
 
-export default function ResetPassword() {
+export default function ForgotPassword() {
+	const router = useRouter();
 	const {
 		handleSubmit,
 		register,
@@ -20,19 +22,23 @@ export default function ResetPassword() {
 		if (watchEmail) {
 			clearErrors("errors");
 		}
-	}, [watchEmail]);
+	}, [watchEmail, clearErrors]);
 
-	const handleResetPass = async (data: EmailforPassReset): Promise<void> => {
-		await verifyEmail(data);
+	const handleSendLink = async (data: EmailforPassReset): Promise<void> => {
+		const response = await sendResetPasswordLink(data);
+
+		if (response.success) {
+			router.push("/login");
+		}
 	};
 
 	return (
 		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">
-					Reset Password
+					Forgot your password?
 				</h2>
-				<form onSubmit={handleSubmit(handleResetPass)}>
+				<form onSubmit={handleSubmit(handleSendLink)}>
 					<div className="mb-4">
 						<label
 							className="block text-gray-700 text-sm font-bold mb-2"
