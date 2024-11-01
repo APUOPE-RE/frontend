@@ -1,20 +1,31 @@
-// context to be use to manage the state globally, for the future
 "use client";
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, ReactNode } from "react";
 
-const AppContext = createContext("");
+interface AppContextType {
+  isAuthenticated: boolean;
+  setAuthenticated: (auth: boolean) => void;
+}
 
-export function Wrapper ({children} : {
-    children: React.ReactNode;
-}) {
-    let [state, setState] = useState("");
-    return (
-        <AppContext.Provider value={state}>
-            {children}
-        </AppContext.Provider>
-    )
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export function AppWrapper({ children }: { children: ReactNode }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const setAuthenticated = (auth: boolean) => {
+    setIsAuthenticated(auth);
+  };
+
+  return (
+    <AppContext.Provider value={{ isAuthenticated, setAuthenticated }}>
+      {children}
+    </AppContext.Provider>
+  );
 }
 
 export function useAppContext() {
-    return useContext(AppContext);
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppContext must be used within an AppContextProvider");
+  }
+  return context;
 }

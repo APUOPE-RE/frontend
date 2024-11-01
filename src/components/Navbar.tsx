@@ -3,15 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "../context";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const Navbar: React.FC = (): JSX.Element => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  //const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, setAuthenticated } = useAppContext();
   const router = useRouter();
 
   useEffect(() => {
     const isLoggedin = localStorage.getItem("token") !== null;
-    setIsAuthenticated(isLoggedin);
+    setAuthenticated(isLoggedin);
   }, []);
 
   const handleLogout = async () => {
@@ -28,7 +30,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 
       if (response.ok) {
         localStorage.removeItem("token");
-        setIsAuthenticated(false);
+        setAuthenticated(false);
 
         // Redirect to login page after logout
         router.push("/login");

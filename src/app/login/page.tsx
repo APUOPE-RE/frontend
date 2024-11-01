@@ -6,6 +6,7 @@ import { useEffect, useState, Suspense } from "react";
 import { UserCredentials } from "../types/types";
 import { useSearchParams, useRouter } from "next/navigation";
 import { verifyAccount } from "../actions/verification";
+import { useAppContext } from "@/src/context";
 
 function Login() {
 	const router = useRouter();
@@ -13,6 +14,7 @@ function Login() {
 	const token = searchParams.get("token");
 	const [valid, setValid] = useState(false);
 	const [accountVerified, setAccountVerified] = useState(false);
+	const { setAuthenticated } = useAppContext();
 
 	const {
 		handleSubmit,
@@ -58,6 +60,7 @@ function Login() {
 			setValid(true);
 			clearErrors("errors");
 			localStorage.setItem("token", response.data);
+			setAuthenticated(true);
 			router.push("/");
 		}
 	};
