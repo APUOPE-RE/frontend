@@ -5,9 +5,11 @@ import { useEffect } from "react";
 import { registerUser } from "../actions/registration";
 import { RegistrationData } from "../types/types";
 import { useRouter } from "next/navigation";
+import { useAppContext } from "@/src/context";
 
 export default function Register() {
 	const router = useRouter();
+	const { setRegisterSuccess } = useAppContext();
 	const {
 		handleSubmit,
 		register,
@@ -48,6 +50,7 @@ export default function Register() {
 				});
 			} else {
 				clearErrors("errors");
+				setRegisterSuccess("Registration successful! Please check your email to verify your account.")
 				router.push("/login");
 			}
 		}

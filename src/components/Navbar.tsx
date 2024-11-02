@@ -1,13 +1,12 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../context";
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-  //const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { isAuthenticated, setAuthenticated } = useAppContext();
   const router = useRouter();
 
@@ -15,32 +14,6 @@ export const Navbar: React.FC = (): JSX.Element => {
     const isLoggedin = localStorage.getItem("token") !== null;
     setAuthenticated(isLoggedin);
   }, []);
-
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_BASE_URL}/api/logout`, {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        localStorage.removeItem("token");
-        setAuthenticated(false);
-
-        // Redirect to login page after logout
-        router.push("/login");
-      } else {
-        console.error("Failed to log out");
-      }
-    } catch (error) {
-      console.error("An error occurred during logout:", error);
-    }
-  };
 
   return (
     <header className="fixed top-0 left-0 w-full">
@@ -73,7 +46,7 @@ export const Navbar: React.FC = (): JSX.Element => {
             </>
           ) : (
             <button
-              onClick={handleLogout}
+              onClick={() => handleLogout(setAuthenticated, router)}
               className="bg-red-500 text-white px-4 py-2 flex rounded-md hover:bg-red-700 active:bg-red-700 focus:outline-none focus:ring"
             >
               LOGOUT
