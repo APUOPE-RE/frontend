@@ -2,12 +2,15 @@
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { registerUser } from "../actions/registration";
-import { RegistrationData } from "../types/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { NewPasswordData } from "../types/types";
+import { resetPassword } from "../actions/resetPassword";
 
-export default function Register() {
+export default function ResetPassword() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
+
 	const {
 		handleSubmit,
 		register,
@@ -15,10 +18,12 @@ export default function Register() {
 		setError,
 		clearErrors,
 		formState: { errors },
-	} = useForm<RegistrationData>();
+	} = useForm<NewPasswordData>();
 
-	const [watchEmail, watchPasswordFirst, watchPasswordSecond, watchUsername] =
-		watch(["email", "passwordFirst", "passwordSecond", "username"]);
+	const [watchPasswordFirst, watchPasswordSecond] = watch([
+		"passwordFirst",
+		"passwordSecond",
+	]);
 
 	useEffect(() => {
 		if (watchPasswordFirst || watchPasswordSecond) {
@@ -26,21 +31,19 @@ export default function Register() {
 		}
 	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
 
-	useEffect(() => {
-		if (watchEmail || watchUsername) {
-			clearErrors("errors");
-		}
-	}, [watchEmail, watchUsername, clearErrors]);
-
-	const handleRegistration = async (
-		data: RegistrationData
+	const handleResetPassword = async (
+		data: NewPasswordData
 	): Promise<void> => {
 		if (data.passwordFirst !== watchPasswordSecond) {
 			setError("passwordFirst", {
 				message: "Passwords don't match!",
 			});
 		} else {
-			const response = await registerUser(data);
+			const input = {
+				...data,
+				uuid: token ?? "",
+			};
+			const response = await resetPassword(input);
 
 			if (!response.success) {
 				setError("errors", {
@@ -57,44 +60,9 @@ export default function Register() {
 		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">
-					Register
+					Reset password
 				</h2>
-				<form onSubmit={handleSubmit(handleRegistration)}>
-					<div className="mb-4">
-						<div className="flex justify-center text-amber-500 h-5 mb-3">
-							<p>{errors.errors && errors.errors.message}</p>
-						</div>
-						<label
-							className="block text-gray-700 text-sm font-bold mb-2"
-							htmlFor="email"
-						>
-							Username
-						</label>
-						<input
-							id="username"
-							type="username"
-							placeholder="Enter your name"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-							{...register("username")}
-							required
-						/>
-					</div>
-					<div className="mb-4">
-						<label
-							className="block text-gray-700 text-sm font-bold mb-2"
-							htmlFor="email"
-						>
-							Email
-						</label>
-						<input
-							id="email"
-							type="email"
-							placeholder="Enter your email"
-							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-							{...register("email")}
-							required
-						/>
-					</div>
+				<form onSubmit={handleSubmit(handleResetPassword)}>
 					<div className="flex justify-center text-amber-500">
 						<p>
 							{errors.passwordFirst &&
@@ -106,7 +74,7 @@ export default function Register() {
 							className="block text-gray-700 text-sm font-bold mb-2"
 							htmlFor="password"
 						>
-							Password
+							New Password
 						</label>
 						<input
 							id="password"
@@ -134,16 +102,16 @@ export default function Register() {
 						/>
 					</div>
 					<div className="flex items-center justify-between">
-						<p className="">
-							{"Already have an account? "}
-							<span className="text-blue-800 font-semibold underline pl-1">
+						<div>
+							<p className="text-sm">Remember your password?</p>
+							<p className="text-blue-800 font-semibold underline">
 								<Link href="/login">Login</Link>
-							</span>
-						</p>
+							</p>
+						</div>
 						<input
 							type="submit"
 							className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring"
-							value={"Register"}
+							value={"Set New Password"}
 						/>
 					</div>
 				</form>
