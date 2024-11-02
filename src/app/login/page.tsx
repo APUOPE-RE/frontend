@@ -4,14 +4,17 @@ import { useForm } from "react-hook-form";
 import { validateUser } from "../actions/login";
 import { useEffect, useState, Suspense } from "react";
 import { UserCredentials } from "../types/types";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { verifyAccount } from "../actions/verification";
+import { useAppContext } from "@/src/context";
 
 function Login() {
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 	const [valid, setValid] = useState(false);
 	const [accountVerified, setAccountVerified] = useState(false);
+	const { setAuthenticated, setRegisterSuccess, registerSuccess } = useAppContext();
 
 	const {
 		handleSubmit,
@@ -29,6 +32,7 @@ function Login() {
 			if (token !== null) {
 				const response = await verifyAccount(token);
 				if (response) {
+					setRegisterSuccess("");
 					setAccountVerified(true);
 				} else {
 					setAccountVerified(false);
@@ -56,6 +60,9 @@ function Login() {
 		} else {
 			setValid(true);
 			clearErrors("errors");
+			localStorage.setItem("token", response.data);
+			setAuthenticated(true);
+			router.push("/");
 		}
 	};
 
@@ -65,6 +72,11 @@ function Login() {
 				<div className="flex text-m p-5 max-w-md w-full justify-center mb-8 rounded-lg bg-green-200">
 					Account verified!
 				</div>
+			)}
+			{registerSuccess !== "" && (
+				<div className="flex text-m p-5 max-w-md w-full justify-center mb-8 rounded-lg bg-green-200">
+				{registerSuccess}
+			</div>
 			)}
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
