@@ -26,7 +26,11 @@ export const Navbar: React.FC = (): JSX.Element => {
         <div>
           <ul className="flex items-center h-full px-4 gap-5 text-black text-xl">
             <li className="font-semibold">Quis maker</li>
-            <li className="font-semibold">Chatbot</li>
+            <li className="font-semibold">
+              <Link href="/chatbot">
+                Chatbot
+              </Link>
+            </li>
           </ul>
         </div>
         <div className="flex items-center gap-7 mx-7">
