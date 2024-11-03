@@ -72,15 +72,15 @@ export default function Chatbot() {
 	};
 
 	return (
-		<div className="flex flex-row bg-gray-100 py-3 h-screen">
+		<div className="flex flex-row bg-gray-100 py-3"  style={{height: "88dvh"}}>
 			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
 
-				<div className="flex justify-between py-3" style={{height: "10%"}}>
+				<div className="flex justify-between py-3" style={{height: "10%	"}}>
 					<h1 className="text-4xl font-extrabold">
 						Chatbot
 					</h1>
-					<button className="bg-blue-500 text-white text-xl h-50 font-bold rounded w-10">
-						+	
+					<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold px-4 rounded">
+						+
 					</button>
 				</div>
 
@@ -95,7 +95,7 @@ export default function Chatbot() {
 					</div>
 					
 					<p className="mt-2 font-bold">This week </p>
-					<div className="w-full p-4 text-gray-500 border bg-gray-50 shadow-lg border-gray-300 rounded-lg mt-2">
+					<div className="w-full p-4 text-gray-500 border bg-white shadow-lg border-gray-300 rounded-lg mt-2">
 						<p>Conversation 1...</p>
 					</div>
 					<div className="w-full p-4 text-gray-500 border bg-white shadow-lg border-gray-300 rounded-lg mt-2">
@@ -106,7 +106,7 @@ export default function Chatbot() {
 					</div>
 
 					<p className="mt-2 font-bold">This month </p>
-					<div className="w-full p-4 text-gray-500 border bg-gray-50 shadow-lg border-gray-300 rounded-lg mt-2">
+					<div className="w-full p-4 text-gray-500 border bg-white shadow-lg border-gray-300 rounded-lg mt-2">
 						<p>Conversation 1...</p>
 					</div>
 					<div className="w-full p-4 text-gray-500 border bg-gray-50 shadow-lg border-gray-300 rounded-lg mt-2">
@@ -119,16 +119,16 @@ export default function Chatbot() {
 				</div>
 
 			</div>
-			<div className="basis-3/4 bg-white p-3 h-screen rounded">
+			<div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
 				<div className="w-100" style={{height: "90%"}}>
 					<div className="h-full w-full p-4 border bg-gray-100 border-gray-300 rounded-lg space-y-4 overflow-auto">
 						{messages.map((msg, idx) => (
 						<div key={idx}>
 							{msg.from === "user" && (
 								<div className="flex justify-end">
-								<div className="w-1/2 border p-2 bg-white border-gray-300 rounded-lg">
-									{msg.text}
-								</div>
+									<div className="w-1/2 border p-2 bg-white border-gray-300 rounded-lg">
+										{msg.text}
+									</div>
 								</div>
 							)}
 							{msg.from === "bot" && (
@@ -140,12 +140,13 @@ export default function Chatbot() {
 						))}
 					</div>
 				</div>
-				<div className="d-flex items-end py-2" style={{height: "10%"}}>
+				<div className="flex w-full items-center" style={{height: "10dvh"}}>
 
 					<form 
 					onSubmit={handleSubmit}
+					className="w-full"
 					>
-						<div className="flex align-center">
+						<div className="flex">
 							<input
 							type="search"
 							id="search"

@@ -8,7 +8,7 @@ export default function Quiz() {
 
 	return (
         <div className="flex w-full bg-gray-100 p-3" style={{height: "88dvh"}}>
-            <div className="basis-1/4 me-3 shadow-lg bg-white p-3 h-full rounded overflow-auto">
+            <div className="basis-1/4 me-3  bg-white p-3 h-full rounded overflow-auto">
             
                 <h3 className="font-bold">This week</h3>
 
@@ -101,7 +101,7 @@ export default function Quiz() {
             </div>
 
 
-            <div className="basis-3/4 flex flex-col shadow-lg p-3 h-full rounded">
+            <div className="basis-3/4 flex flex-col bg-white p-3 h-full rounded">
                 <div className="basis-2/12 flex flex-row justify-between" style={{height: "10%"}}>
                     <div className="flex flex-col justify-center">
                         <p>15/10/2024</p>
@@ -119,8 +119,8 @@ export default function Quiz() {
                 <div className="basis-10/12" style={{height: "90%"}}>
                 
 
-                    <div className="w-full h-full p-4 rounded-xl bg-gray-200 shadow-lg">
-                        <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white shadow-lg">
+                    <div className="w-full h-full p-4 rounded-xl bg-gray-200">
+                        <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white">
                             <div className="w-full h-full overflow-auto px-3">
                                 <div className="flex justify-between mb-2">
                                     <p className="text-gray-500">Question 1 topic</p>
