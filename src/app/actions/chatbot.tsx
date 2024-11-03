@@ -56,15 +56,17 @@ export const fetchConversation = async (conversationId: number): Promise<Message
 
 export const chatBotRequest = async (request: ChatBotRequestData): Promise<ResponseData<ChatBotResponseData | string>> => {
 	try {
+		const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/chatBot`, {
 			method: "POST",
 			headers: {
+				"Authorization": `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
+			credentials: 'include',
 			body: JSON.stringify({
-				userId: 2,
-				conversationId: 1,
-				chapterId: 0,
+				conversationId: request.conversationId ?? 0,
+				chapterId: 0, // Change this when chapter selection is done
 				data: request.content,
 			}),
 		})

@@ -1,5 +1,4 @@
 export type ChatBotRequestData = {
-	userId: number;
 	conversationId: number;
 	chapterId: number;
 	content: string;
