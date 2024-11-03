@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import {chatBotRequest } from "../actions/chatbot/chatbot";
+import {chatBotRequest } from "../actions/chatbot";
 import { useForm } from "react-hook-form";
 import { ChatBotRequestData, ChatBotResponseData } from "../types/types";
 
@@ -26,8 +26,8 @@ export default function Chatbot() {
 		try {
 			const response = await chatBotRequest(data);
 			if (response.success && typeof response.data !== "string") {
-				const data:ChatBotResponseData = response.data;
-				setMessages((list) => [...list, { from: "bot", message: data.content }]);
+				const responseData:ChatBotResponseData = response.data;
+				setMessages((list) => [...list, { from: "bot", message: responseData.content }]);
 			}
 		} catch (error) {
 			console.error("Error fetching chatbot response:", error);

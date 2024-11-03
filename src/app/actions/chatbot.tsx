@@ -1,23 +1,24 @@
-import { ChatBotRequestData, ChatBotResponseData, ConversationData, MessageData, ResponseData } from "../../types/types";
+import { ChatBotRequestData, ChatBotResponseData, ConversationData, MessageData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 
-export const fetchAllConversations = async (): Promise<ResponseData<ConversationData | string>> => {
+export const fetchAllConversations = async (): Promise<ConversationData[] | ResponseData<string>> => {
 	try {
         const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/conversations`, {
 			method: "GET",
 			headers: {
 				"Authorization": `Bearer ${token}`,
-            	"Content-Type": "application/json",
+				"Content-Type": "application/json",
 			},
 			credentials: 'include',
 		})
 			.then((res) => {
+				console.log(res);
 				return res.json();
 			})
-			.then((data: ResponseData<ConversationData>) => {
+			.then((data: ConversationData[]) => {
 				return data;
 			});
 
@@ -28,7 +29,7 @@ export const fetchAllConversations = async (): Promise<ResponseData<Conversation
 	}
 };
 
-export const fetchConversation = async (conversationId: number): Promise<ResponseData<MessageData | string>> => {
+export const fetchConversation = async (conversationId: number): Promise<MessageData[] | ResponseData<string>> => {
 	try {
         const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/conversation/${conversationId}`, {
@@ -42,7 +43,7 @@ export const fetchConversation = async (conversationId: number): Promise<Respons
 			.then((res) => {
 				return res.json();
 			})
-			.then((data: ResponseData<MessageData>) => {
+			.then((data: MessageData[]) => {
 				return data;
 			});
 
@@ -61,8 +62,8 @@ export const chatBotRequest = async (request: ChatBotRequestData): Promise<Respo
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				userId: 1,
-				conversationId: 0,
+				userId: 2,
+				conversationId: 1,
 				chapterId: 0,
 				data: request.content,
 			}),
