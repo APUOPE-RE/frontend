@@ -28,13 +28,13 @@ export const Navbar: React.FC = (): JSX.Element => {
           </div>
           <div className="flex items-center gap-7 mx-7">
             <Link href="/login">
-            <button className="bg-blue-500 text-white px-4 py-2 flex rounded-md hover:bg-blue-700 active:bg-blue-700 focus:outline-none focus:ring">
+            <button className="bg-blue-500 text-white px-4 flex items-center justify-center rounded-md hover:bg-blue-700 active:bg-blue-700 focus:outline-none focus:ring" style={{height: "6dvh", width:"8dvw", fontSize: "2dvh"}}>
                 LOG IN
               </button>
             </Link>
             
             <Link href="/register">
-              <button className="bg-blue-500 text-white px-4 py-2 flex rounded-md hover:bg-blue-700 active:bg-blue-700 focus:outline-none focus:ring">
+              <button className="bg-blue-500 text-white px-4 flex items-center justify-center rounded-md hover:bg-blue-700 active:bg-blue-700 focus:outline-none focus:ring" style={{height: "6dvh", width:"8dvw", fontSize: "2dvh"}}>
                 SIGN UP
               </button>
             </Link>

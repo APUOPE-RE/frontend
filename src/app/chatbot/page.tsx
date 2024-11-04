@@ -75,7 +75,7 @@ export default function Chatbot() {
 		<div className="flex flex-row bg-gray-100 py-3"  style={{height: "88dvh"}}>
 			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
 
-				<div className="flex justify-between py-3" style={{height: "10%	"}}>
+				<div className="flex justify-between items-center">
 					<h1 className="text-4xl font-extrabold">
 						Chatbot
 					</h1>
