@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { registerUser } from "../actions/registration";
 import { RegistrationData } from "../types/types";
 import { useRouter } from "next/navigation";
-import { useAppContext } from "@/src/context";
+import { useAppContext } from "@/src/context/index";
+import { usePasswordStrength } from "@/src/context/usePasswordStrength";
 
 export default function Register() {
 	const router = useRouter();
@@ -16,16 +17,26 @@ export default function Register() {
 		watch,
 		setError,
 		clearErrors,
+		trigger,
+		setValue,
 		formState: { errors },
 	} = useForm<RegistrationData>();
 
 	const [watchEmail, watchPasswordFirst, watchPasswordSecond, watchUsername] =
 		watch(["email", "passwordFirst", "passwordSecond", "username"]);
+	const passwordStrength = usePasswordStrength(watchPasswordFirst || "");
+
+	useEffect(() => {
+		if (!watchPasswordFirst) {
+			setValue("passwordSecond", "");
+		}
+	}, [watchPasswordFirst, setValue]);
 
 	useEffect(() => {
 		if (watchPasswordFirst || watchPasswordSecond) {
-			clearErrors("passwordFirst");
+			trigger("passwordFirst");
 		}
+		clearErrors("passwordFirst");
 	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
 
 	useEffect(() => {
@@ -116,7 +127,18 @@ export default function Register() {
 							type="password"
 							placeholder="Enter your password"
 							className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-indigo-500"
-							{...register("passwordFirst")}
+							{...register("passwordFirst", {
+								validate: {
+									containsInvalidCharacters: value => !value || /^[a-zA-Z0-9@$!%*?&()#^]*$/.test(value) ||
+										"Password contains invalid characters. Only letters, numbers, and @$!%*?&()#^ are allowed.",
+									minLength: value => !value || value.length >= 8 || "Password must be at least 8 characters long",
+									maxLength: value => !value || value.length <= 20 || "Password cannot exceed 20 characters",
+									containLowercase: value => !value || /[a-z]/.test(value) || "Password must include at least one lowercase letter",
+									containsUppercase: value => !value || /[A-Z]/.test(value) || "Password must include at least one uppercase letter",
+									containsNumber: value => !value || /[0-9]/.test(value) || "Password must include at least one number",
+									containsSpecial: value => !value || /[@$!%*?&()#^]/.test(value) || "Password must include at least one special character",
+								}
+							})}
 							required
 						/>
 					</div>
