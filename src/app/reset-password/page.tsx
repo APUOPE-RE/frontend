@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { NewPasswordData } from "../types/types";
 import { resetPassword } from "../actions/resetPassword";
-import { usePasswordStrength } from "@/src/context/usePasswordStrength";
+import { usePasswordStrength } from "../actions/usePasswordStrength";
 
 export default function ResetPassword() {
 	const router = useRouter();

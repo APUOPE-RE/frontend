@@ -6,7 +6,7 @@ import { registerUser } from "../actions/registration";
 import { RegistrationData } from "../types/types";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/src/context/index";
-import { usePasswordStrength } from "@/src/context/usePasswordStrength";
+import { usePasswordStrength } from "../actions/usePasswordStrength";
 
 export default function Register() {
 	const router = useRouter();
