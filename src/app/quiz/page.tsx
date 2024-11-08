@@ -2,29 +2,10 @@
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { fetchQuiz } from "../actions/generateQuiz";
+import { useAppContext } from "@/src/context";
 
 export default function Quiz() {
-  const items: { value: string; label: string }[] = [
-    { value: "Lecture_1_introdcution", label: "L1_introdcution" },
-    { value: "Lecture_2_product value", label: "L2_product value" },
-    {
-      value: "Lecture_3_vision_scope_stakeholders",
-      label: "L3_vision_scope_stakeholders",
-    },
-    { value: "Lecture_4_types of req.", label: "L4_types of req." },
-    {
-      value: "Lecture_5_elicitation techniques",
-      label: "L5_elicitation techniques",
-    },
-    { value: "Lecture_6_good requirements", label: "L6_good requirements" },
-    { value: "Lecture_7_prioritization", label: "L7_prioritization" },
-    { value: "Lecture_8_validation", label: "L8_validation" },
-    { value: "Lecture_9_RM", label: "L9_RM" },
-    {
-      value: "Lecture_10_traceability&research",
-      label: "L10_traceability&research",
-    },
-  ];
+  const { materials } = useAppContext();
 
   const date = new Date();
   let currentDate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
@@ -33,7 +14,7 @@ export default function Quiz() {
   const [topic, setTopic] = useState("");
   const [response, setResponse] = useState<String | null>("");
 
-  const filteredItems = items.filter((item) =>
+  const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
 
