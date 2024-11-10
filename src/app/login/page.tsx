@@ -1,11 +1,21 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { UserCredentials, validateUser } from "../actions/login";
-import { useEffect, useState } from "react";
+import { validateUser } from "../actions/login";
+import { useEffect, useState, Suspense } from "react";
+import { UserCredentials } from "../types/types";
+import { useSearchParams, useRouter } from "next/navigation";
+import { verifyAccount } from "../actions/verification";
+import { useAppContext } from "@/src/context";
 
-export default function Login() {
+function Login() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
 	const [valid, setValid] = useState(false);
+	const [accountVerified, setAccountVerified] = useState(false);
+	const { setAuthenticated, setRegisterSuccess, registerSuccess } = useAppContext();
+
 	const {
 		handleSubmit,
 		register,
@@ -18,34 +28,65 @@ export default function Login() {
 	const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
 
 	useEffect(() => {
+		const handleToken = async () => {
+			if (token !== null) {
+				const response = await verifyAccount(token);
+				if (response) {
+					setRegisterSuccess("");
+					setAccountVerified(true);
+				} else {
+					setAccountVerified(false);
+				}
+			}
+		};
+
+		handleToken();
+	}, [token, setAccountVerified]);
+
+	useEffect(() => {
 		if (watchEmail || watchPasswordHash) {
-			clearErrors("passwordHash");
+			clearErrors("errors");
 		}
 	}, [watchEmail, watchPasswordHash, clearErrors]);
 
 	const handleLogin = async (data: UserCredentials): Promise<void> => {
-		const valid = await validateUser(data);
+		const response = await validateUser(data);
 
-		if (!valid) {
-			setError("passwordHash", {
-				message: "Invalid credentials. Please try again.",
+		if (!response.success) {
+			setError("errors", {
+				message: response.data,
 			});
 			setValid(false);
 		} else {
 			setValid(true);
-			clearErrors("passwordHash");
+			clearErrors("errors");
+			localStorage.setItem("token", response.data);
+			setAuthenticated(true);
+			router.push("/");
 		}
 	};
 
 	return (
 		<div className="flex flex-col items-center justify-center h-screen bg-gray-100">
+			{token !== null && accountVerified && (
+				<div className="flex text-m p-5 max-w-md w-full justify-center mb-8 rounded-lg bg-green-200">
+					Account verified!
+				</div>
+			)}
+			{registerSuccess !== "" && (
+				<div className="flex text-m p-5 max-w-md w-full justify-center mb-8 rounded-lg bg-green-200">
+				{registerSuccess}
+			</div>
+			)}
 			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
 
 				<div className="flex justify-center text-amber-500 h-5 mb-3">
-					<p>{errors.passwordHash && errors.passwordHash.message}</p>
+					<p>{errors.errors && errors.errors.message}</p>
 					{/*this is just for testing*/}
-					{valid && <p className="text-green-500">Credentials correct!</p>}
+					{valid && (
+						<p className="text-green-500">Credentials correct!</p>
+					)}
 				</div>
 
 				<form onSubmit={handleSubmit(handleLogin)}>
@@ -82,13 +123,13 @@ export default function Login() {
 						/>
 					</div>
 					<div className="flex w-auto pb-2 text-sm text-gray-600 hover:text-blue-400">
-						<a href="">Forgot your password?</a>
+						<Link href="/forgot-password">Forgot your password?</Link>
 					</div>
 					<div className="flex items-center justify-between">
 						<p>
-							{"Don't have an account"}
+							{"Don't have an account "}
 							<span className=" text-blue-800 font-semibold underline pl-1">
-								<Link href="/register"> Register</Link>
+								<Link href="/register">Register</Link>
 							</span>
 						</p>
 						<input
@@ -100,5 +141,13 @@ export default function Login() {
 				</form>
 			</div>
 		</div>
+	);
+}
+
+export default function LoginPageWrapper() {
+	return (
+		<Suspense fallback={<div>Loading...</div>}>
+			<Login />
+		</Suspense>
 	);
 }
