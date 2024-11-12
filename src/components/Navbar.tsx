@@ -15,6 +15,11 @@ export const Navbar: React.FC = (): JSX.Element => {
 		setAuthenticated(isLoggedin);
 	}, []);
 
+	const logoutAndRedirect = async () => {
+		await handleLogout(setAuthenticated);
+		router.push("/login");
+	};
+
 	return (
 		<>
 			<header className="fixed top-0 left-0 w-full">
@@ -55,9 +60,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 							</>
 						) : (
 							<button
-								onClick={() =>
-									handleLogout(setAuthenticated, router)
-								}
+								onClick={logoutAndRedirect}
 								className="bg-red-500 text-white px-4 py-2 flex rounded-md hover:bg-red-700 active:bg-red-700 focus:outline-none focus:ring"
 							>
 								LOGOUT
