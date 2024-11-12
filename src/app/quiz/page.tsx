@@ -28,7 +28,7 @@ export default function Quiz() {
       <div className="basis-1/4 me-3 shadow-lg bg-white px-3 h-full rounded overflow-auto">
         <form
           className="w-full relative py-3"
-          style={{ position: "sticky", top: 0, zIndex: 10, backdropFilter: "blur(10px)" }}
+          style={{ position: "sticky", top: 0, zIndex: 10, backdropFilter: "blur(1px)" }}
         >
           <div className="relative">
             <input

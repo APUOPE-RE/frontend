@@ -62,7 +62,7 @@ function Login() {
 			clearErrors("errors");
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
-			router.push("/");
+			router.push("/chatbot");
 		}
 	};
 
