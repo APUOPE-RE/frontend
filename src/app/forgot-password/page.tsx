@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { sendResetPasswordLink } from "../actions/resetPassword";
 import { EmailforPassReset } from "../types/types";
 import { useRouter } from "next/navigation";
 
 export default function ForgotPassword() {
 	const router = useRouter();
+	const [isSending, setIsSending] = useState(false);
 	const {
 		handleSubmit,
 		register,
@@ -25,10 +26,16 @@ export default function ForgotPassword() {
 	}, [watchEmail, clearErrors]);
 
 	const handleSendLink = async (data: EmailforPassReset): Promise<void> => {
+		setIsSending(true);
 		const response = await sendResetPasswordLink(data);
-
-		if (response.success) {
+		if (response && response.success) {
+			setIsSending(false);
 			router.push("/login");
+		} else {
+			setTimeout(() => {
+				setIsSending(false);
+				router.push("/login");
+			}, 4000);
 		}
 	};
 
@@ -51,13 +58,7 @@ export default function ForgotPassword() {
 							type="email"
 							placeholder="Enter your email"
 							className={`w-full px-3 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:outline-none focus:border-indigo-500`}
-							{...register("email", {
-								required: "Email is required",
-								pattern: {
-									value: /^[A-Za-z0-9][A-Za-z0-9_.+-]*@[A-Za-z0-9-]+(\.[A-Za-z]{2,})+$/,
-									message: "Invalid email format"
-								}
-							})}
+							{...register("email")}
 							required
 						/>
 						<p className="block text-gray-700 text-xs mt-4">
@@ -67,6 +68,7 @@ export default function ForgotPassword() {
 							{"If you do not receive an email, it may be because the email address is not registered."}
 						</p>
 					</div>
+					{isSending && <p className="text-blue-600 text-sm text-center">Now Sending...</p>}
 
 					<div className="flex items-center justify-between">
 						<p className="">
