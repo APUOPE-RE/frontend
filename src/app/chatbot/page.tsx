@@ -1,10 +1,10 @@
 "use client";
 import { useState } from "react";
-
-import { ChatBotRequestData, chatBotRequest } from "../actions/chatbot";
-import { useForm } from "react-hook-form";
 import { useAppContext } from "@/src/context";
 import { fetchConversation } from "../actions/conversationSelection";
+import {chatBotRequest } from "../actions/chatbot";
+import { useForm } from "react-hook-form";
+import { ChatBotRequestData, ChatBotResponseData } from "../types/types";
 
 type Message = {
   from: string;
@@ -25,25 +25,26 @@ export default function Chatbot() {
   const [topic, setTopic] = useState("");
   const { materials } = useAppContext();
 
+
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
 
-  const handleRequest = async (data: ChatBotRequestData) => {
-    if (!data.data.trim()) return;
+	const handleRequest = async (data: ChatBotRequestData) => {
+		if (!data.content.trim()) return;
 
-    setMessages((list) => [...list, { from: "user", message: data.data }]);
+		setMessages((list) => [...list, { from: "user", message: data.content }]);
 
-    try {
-      const response = await chatBotRequest(data);
-      setMessages((list) => [...list, { from: "bot", message: response.data }]);
-    } catch (error) {
-      console.error("Error fetching chatbot response:", error);
-      setMessages((list) => [
-        ...list,
-        { from: "bot", message: "Sorry, something went wrong." },
-      ]);
-    }
+		try {
+			const response = await chatBotRequest(data);
+			if (response.success && typeof response.data !== "string") {
+				const responseData:ChatBotResponseData = response.data;
+				setMessages((list) => [...list, { from: "bot", message: responseData.content }]);
+			}
+		} catch (error) {
+			console.error("Error fetching chatbot response:", error);
+			setMessages((list) => [...list, { from: "bot", message: "Sorry, something went wrong." }]);
+		}
 
     // Reset form input
     reset();
@@ -99,7 +100,7 @@ export default function Chatbot() {
                 id="input"
                 className="basis-11/12 me-2 p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
                 placeholder="Say something..."
-                {...register("data", { required: true })}
+                {...register("content", { required: true })}
               />
               <input
                 type="submit"
@@ -179,3 +180,4 @@ export default function Chatbot() {
     </div>
   );
 }
+
