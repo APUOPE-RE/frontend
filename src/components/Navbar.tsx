@@ -20,6 +20,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 			<header className="fixed top-0 left-0 w-full">
 				<div className="w-full h-20 shadow-xl bg-blue-200 flex justify-between border-b-2 border-blue-400">
 					<div className="flex items-center h-full px-4">
+
 						<Link href="/chatbot">
 							<Image
 								src="/logo.png"
@@ -36,7 +37,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 								<Link href="/quiz">Quis maker</Link>
 							</li>
 							<li className="font-semibold">
-								<Link href="/chatbot">Chatbot</Link>
+								<Link href="/chatbot">
+									Chatbot
+								</Link>
 							</li>
 						</ul>
 					</div>
