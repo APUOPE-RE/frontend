@@ -26,7 +26,11 @@ export const Navbar: React.FC = (): JSX.Element => {
 					</div>
 					<div>
 						<ul className="flex items-center h-full px-4 gap-5 text-black text-xl">
-							<li className="font-semibold">Quis maker</li>
+							<li className="font-semibold">
+                <Link href="/quiz">
+									Quiz maker
+								</Link>
+              </li>
 							<li className="font-semibold">
 								<Link href="/chatbot">
 									Chatbot
@@ -62,6 +66,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 					</div>
 				</div>
 			</header>
+      <div className="w-full bg-blue-200" style={{height: "12dvh"}}>
+
+      </div>
 		</>
 	);
 };

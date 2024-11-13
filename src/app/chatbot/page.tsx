@@ -39,7 +39,7 @@ export default function Chatbot() {
 	};
 
 	return (
-		<div className="flex flex-row bg-gray-100 py-3 h-screen">
+		<div className="flex flex-row bg-gray-100 py-3"  style={{height: "88dvh"}}>
 			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
 				<div className="flex justify-between py-3" style={{ height: "10%" }}>
 					<h1 className="text-4xl font-extrabold">Chatbot</h1>
@@ -47,7 +47,7 @@ export default function Chatbot() {
 				<div className="overflow-auto" style={{ height: "90%" }} />
 			</div>
 
-			<div className="basis-3/4 bg-white p-3 h-screen rounded">
+			<div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
 				<div className="w-100" style={{ height: "90%" }}>
 					<div className="h-full w-full p-4 border bg-gray-100 border-gray-300 rounded-lg space-y-4 overflow-auto">
 						{messages.map((msg, idx) => (
@@ -69,9 +69,9 @@ export default function Chatbot() {
 					</div>
 				</div>
 
-				<div className="d-flex items-end py-2" style={{ height: "10%" }}>
-					<form onSubmit={handleSubmit(handleRequest)}>
-						<div className="flex align-center">
+				<div className="flex w-full items-center" style={{height: "10dvh"}}>
+					<form className="w-full" onSubmit={handleSubmit(handleRequest)}>
+						<div className="flex">
 							<input
 								type="text"
 								id="input"
