@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { NewPasswordData } from "../types/types";
 import { resetPassword } from "../actions/resetPassword";
-import { usePasswordStrength } from "../actions/usePasswordStrength";
 
 export default function ResetPassword() {
 	const router = useRouter();
@@ -27,8 +26,6 @@ export default function ResetPassword() {
 		"passwordFirst",
 		"passwordSecond",
 	]);
-
-	const passwordStrength = usePasswordStrength(watchPasswordFirst || "");
 
 	useEffect(() => {
 		if (!watchPasswordFirst) {
