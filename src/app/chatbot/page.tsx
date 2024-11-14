@@ -3,6 +3,8 @@ import { useState } from "react";
 import {chatBotRequest } from "../actions/chatbot";
 import { useForm } from "react-hook-form";
 import { ChatBotRequestData, ChatBotResponseData } from "../types/types";
+import { IoSendSharp } from "react-icons/io5";
+
 
 type Message = {
 	from: string;
@@ -79,11 +81,14 @@ export default function Chatbot() {
 								placeholder="Say something..."
 								{...register("content", { required: true })}
 							/>
-							<input
-								type="submit"
-								className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2"
-								value="Submit"
-							/>
+							<button
+							type="submit"
+							className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
+							>
+								<IoSendSharp
+								className="text-2xl" 
+								/>
+							</button>
 						</div>
 					</form>
 				</div>
