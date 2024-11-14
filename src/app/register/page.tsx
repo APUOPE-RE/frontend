@@ -6,7 +6,6 @@ import { registerUser } from "../actions/registration";
 import { RegistrationData } from "../types/types";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "@/src/context/index";
-import { usePasswordStrength } from "../actions/usePasswordStrength";
 
 export default function Register() {
 	const router = useRouter();
@@ -24,7 +23,6 @@ export default function Register() {
 
 	const [watchEmail, watchPasswordFirst, watchPasswordSecond, watchUsername] =
 		watch(["email", "passwordFirst", "passwordSecond", "username"]);
-	const passwordStrength = usePasswordStrength(watchPasswordFirst || "");
 
 	useEffect(() => {
 		if (!watchPasswordFirst) {

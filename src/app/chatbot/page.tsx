@@ -5,6 +5,8 @@ import { fetchConversation } from "../actions/conversationSelection";
 import {chatBotRequest } from "../actions/chatbot";
 import { useForm } from "react-hook-form";
 import { ChatBotRequestData, ChatBotResponseData } from "../types/types";
+import { IoSendSharp } from "react-icons/io5";
+
 
 type Message = {
   from: string;
@@ -53,16 +55,17 @@ export default function Chatbot() {
 	const selectConversation = async (value: String | null): Promise<void> => {
 		const conversation = await fetchConversation(value);
 		setResponse(conversation);					// use the respone later to display old conversation
+    setIsModelOpen(false);
 	}
 
   return (
-    <div className="flex flex-row bg-gray-100 py-3 h-screen">
+    <div className="flex flex-row bg-gray-100 py-3" style={{height: "88dvh"}}>
       <div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
         <div className="flex justify-between py-3" style={{ height: "10%" }}>
           <h1 className="text-4xl font-extrabold">Chatbot</h1>
           <button
             onClick={() => setIsModelOpen(true)}
-            className="bg-blue-500 text-white text-xl h-50 font-bold rounded w-10"
+            className="bg-blue-500 text-white text-xl h-50 font-bold rounded w-10 min-h-10"
           >
             +
           </button>
@@ -70,7 +73,7 @@ export default function Chatbot() {
         <div className="overflow-auto" style={{ height: "90%" }} />
       </div>
 
-      <div className="basis-3/4 bg-white p-3 h-screen rounded">
+      <div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
         <div className="w-100" style={{ height: "90%" }}>
           <div className="h-full w-full p-4 border bg-gray-100 border-gray-300 rounded-lg space-y-4 overflow-auto">
             {messages.map((msg, idx) => (
@@ -92,9 +95,9 @@ export default function Chatbot() {
           </div>
         </div>
 
-        <div className="d-flex items-end py-2" style={{ height: "10%" }}>
-          <form onSubmit={handleSubmit(handleRequest)}>
-            <div className="flex align-center">
+        <div className="flex w-full items-center" style={{height: "10dvh"}}>
+          <form className="w-full" onSubmit={handleSubmit(handleRequest)}>
+            <div className="flex">
               <input
                 type="text"
                 id="input"
@@ -102,26 +105,29 @@ export default function Chatbot() {
                 placeholder="Say something..."
                 {...register("content", { required: true })}
               />
-              <input
-                type="submit"
-                className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2"
-                value="Submit"
-              />
+              <button
+							type="submit"
+							className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
+							>
+								<IoSendSharp
+								className="text-2xl" 
+								/>
+							</button>
             </div>
           </form>
         </div>
       </div>
       {isModelOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[33%] h-[50%] text-center">
+          <div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[40%] h-[70%] text-center">
             <div>
-              <h2 className="text-2xl font-bold mb-4">New Conversation</h2>
+              <h2 className="text-2xl font-bold mb-2">New Conversation</h2>
               <p className="mb-6">
-                Select topic for your new conversation context:
+                Select a topic for your next conversation:
               </p>
             </div>
 
-            <div className="flex flex-col items-center border rounded-lg w-[80%] h-[60%] overflow-auto">
+            <div className="flex flex-col items-center border rounded-lg w-[80%] h-[70%] overflow-auto">
               <form
                 className="w-full relative"
                 style={{
@@ -137,7 +143,7 @@ export default function Chatbot() {
                     placeholder="Search topic"
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
-                    className="w-full bg-slate-100 p-2 rounded-md mb-4"
+                    className="w-full bg-slate-100 p-2 rounded-md outline-none"
                   />
                 </div>
               </form>
@@ -165,7 +171,7 @@ export default function Chatbot() {
             </div>
             <div className="w-full flex justify-end pt-4 gap-4 px-4">
               <button
-                className="bg-blue-500 text-white py-2 px-4 rounded"
+                className="bg-rose-500 text-white py-2 px-4 rounded"
                 onClick={() => setIsModelOpen(false)}
               >
                 Close

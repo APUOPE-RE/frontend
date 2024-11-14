@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { fetchQuiz } from "../actions/generateQuiz";
@@ -6,7 +7,6 @@ import { useAppContext } from "@/src/context";
 
 export default function Quiz() {
   const { materials } = useAppContext();
-
   const date = new Date();
   let currentDate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
 
@@ -17,6 +17,7 @@ export default function Quiz() {
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
+
 
   const generateQuiz = async (value: String | null): Promise<void> => {
     const quizResponse = await fetchQuiz(value);
@@ -36,11 +37,11 @@ export default function Quiz() {
               placeholder="Search topic"
               value={topic}
               onChange={(e) => setTopic(e.target.value)}
-              className="w-full bg-slate-200 p-4 rounded-2xl"
+              className="w-full bg-slate-200 p-4 rounded-2xl outline-none"
             />
-            <button className="right-1 absolute top-1/2 -translate-y-1/2 p-2">
+{/*             <button className="right-1 absolute top-1/2 -translate-y-1/2 p-2">
               <CiSearch size={40} color="gray" />
-            </button>
+            </button> */}
           </div>
         </form>
 
