@@ -67,7 +67,7 @@ const QUIZ_LIST = [
           text: "What affects UX?",
           type: "multiple_choice",
           options: [
-            { text: "Ease of use", is_correct: true },
+            { text: "Company's income", is_correct: false },
             { text: "Aesthetics", is_correct: true },
             { text: "Company's internal process", is_correct: false, is_selected: true }
           ],
@@ -115,11 +115,6 @@ export default function Quiz() {
 
 
             <div className="basis-3/4 flex flex-col bg-white p-3 h-full rounded">
-
-
-
-
-
                 {selectedQuiz && (
                     <>
                         <div className="basis-2/12 flex flex-row justify-between" style={{ height: "10%" }}>
@@ -190,15 +185,8 @@ export default function Quiz() {
                             </div>
                         </div>
                     </>
-
                 )}
-                    
-            
-
-            
-
-        </div>
-
+            </div>
         </div>
 	);
 }
