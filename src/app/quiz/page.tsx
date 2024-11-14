@@ -9,7 +9,6 @@ export default function Quiz() {
     return (
         <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
             <div className="basis-1/4 me-3  bg-white p-3 h-full rounded overflow-auto">
-
                 <h3 className="font-bold">This week</h3>
 
                 <div className="flex w-100 h-20 rounded-xl mt-3 p-3 bg-gray-200 shadow-lg">
@@ -170,9 +169,9 @@ export default function Quiz() {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
 
-        </div>
+        </div >
     );
 }
