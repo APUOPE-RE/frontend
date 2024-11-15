@@ -66,7 +66,7 @@ export const chatBotRequest = async (request: ChatBotRequestData): Promise<Respo
 			credentials: 'include',
 			body: JSON.stringify({
 				conversationId: request.conversationId ?? 0,
-				chapterId: 0, // Change this when chapter selection is done
+				lectureId: request.lectureId,
 				data: request.content,
 			}),
 		})

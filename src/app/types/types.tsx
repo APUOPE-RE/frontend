@@ -1,6 +1,6 @@
 export type ChatBotRequestData = {
 	conversationId: number;
-	chapterId: number;
+	lectureId: number;
 	content: string;
 };
 

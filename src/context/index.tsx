@@ -20,16 +20,15 @@ export function AppWrapper({ children }: { children: ReactNode }) {
   };
 
   const materials: { value: string; label: string }[] = [
-    { value: "Lecture_1_introdcution", label: "L1_introdcution" },
-    { value: "Lecture_2_product value", label: "L2_product value" },
-    { value: "Lecture_3_vision_scope_stakeholders", label: "L3_vision_scope_stakeholders" },
-    { value: "Lecture_4_types of req.", label: "L4_types of req." },
-    { value: "Lecture_5_elicitation techniques", label: "L5_elicitation techniques" },
-    { value: "Lecture_6_good requirements", label: "L6_good requirements" },
-    { value: "Lecture_7_prioritization", label: "L7_prioritization" },
-    { value: "Lecture_8_validation", label: "L8_validation" },
-    { value: "Lecture_9_RM", label: "L9_RM" },
-    { value: "Lecture_10_traceability&research", label: "L10_traceability&research" },
+    { value: "2", label: "Lecture 2" },
+    { value: "3", label: "Lecture 3" },
+    { value: "4", label: "Lecture 4" },
+    { value: "5", label: "Lecture 5" },
+    { value: "6", label: "Lecture 6" },
+    { value: "7", label: "Lecture 7" },
+    { value: "8", label: "Lecture 8" },
+    { value: "9", label: "Lecture 9" },
+    { value: "10", label: "Lecture 10" },
   ];
 
   return (
