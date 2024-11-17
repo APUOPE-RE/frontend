@@ -22,8 +22,9 @@ const QUIZ_LIST = [
           type: "open",
           answer: "This is a test answer for open question number 1.",
           feedback: "This is some feedback from the AI.",
-          status: "Correct",
-          score: 1
+          correct: false,
+          value: 1,
+          score: 0
         },
         {
           id: 2,
@@ -32,12 +33,13 @@ const QUIZ_LIST = [
           type: "multiple_choice",
           options: [
             { text: "Option 1", is_correct: false },
-            { text: "Option 2", is_correct: true },
-            { text: "Option 3", is_correct: false, is_selected: true }
+            { text: "Option 2", is_correct: true, is_selected: true },
+            { text: "Option 3", is_correct: false }
           ],
           feedback: "This is some feedback from the AI.",
-          status: "Incorrect",
-          score: 0
+          correct: false,
+          value: 1,
+          score: 1
         }
       ]
     },
@@ -58,7 +60,8 @@ const QUIZ_LIST = [
           type: "open",
           answer: "A broad term related to the end-user's interaction with a product.",
           feedback: "Great explanation!",
-          status: "Correct",
+          correct: true,
+          value: 1,
           score: 1
         },
         {
@@ -72,7 +75,8 @@ const QUIZ_LIST = [
             { text: "Company's internal process", is_correct: false, is_selected: true }
           ],
           feedback: "Consider the user's perspective.",
-          status: "Incorrect",
+          correct: false,
+          value: 1,
           score: 0
         }
       ]
@@ -138,34 +142,49 @@ export default function Quiz() {
                                             <div key={question.id}>
                                                 <div className="flex justify-between mb-2">
                                                     <p className="text-gray-500">{question.topic}</p>
-                                                    <p className="text-gray-500">{question.score}/{question.type === 'open' ? 1 : question.options.length}</p>
+                                                    <p className="text-gray-500">{question.score}/{question.value}</p>
                                                 </div>
                                                 
                                                 <p className="mb-2"><strong>{index + 1}. {question.text}</strong></p>
 
                                                 {question.type === 'open' ? (
-                                                    <div className="flex border border-lime-500 p-2 mb-2 rounded-xl">
+                                                    <div 
+                                                    className={`flex border p-2 mb-2 rounded-xl ${
+                                                        question.correct ? "border-lime-500" : "border-red-500"
+                                                      }`}
+                                                    >
                                                         <div className="basis-11/12">
                                                             <strong>Answer:</strong>
                                                             <p>{question.answer}</p>
                                                         </div>
                                                         <div className="basis-1/12">
-                                                            <p className="text-lime-500">{question.status === "Correct" ? "Correct!" : "Incorrect"}</p>
+                                                            <p className={`${question.correct ? "text-lime-500" : "text-red-500"}`}>
+                                                                {question.correct ? "Correct!" : "Incorrect!"}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 ) : (
                                                     question.options.map((option, optionIndex) => (
-                                                        <div key={optionIndex} className="flex items-center mb-2">
-                                                            <input 
-                                                                type="radio" 
-                                                                disabled 
-                                                                checked={option.is_selected || false} 
-                                                                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2" 
-                                                            />
-                                                            <label className="ms-2 text-gray-900">
-                                                                {option.text} 
-                                                                {option.is_correct && <span className="ms-3 text-gray-400">Correct answer</span>}
-                                                            </label>
+                                                        <div key={optionIndex} className={`flex items-center mb-2 p-2 ${option.is_selected && "border rounded-xl"} ${option.is_selected && option.is_correct ? "border-lime-500" : "border-red-500"}`}>
+                                                            <div className="basis-11/12">
+                                                                <input 
+                                                                    type="radio" 
+                                                                    disabled 
+                                                                    checked={option.is_selected || false} 
+                                                                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 focus:ring-2" 
+                                                                />
+                                                                <label className="ms-2 text-gray-900">
+                                                                    {option.text} 
+                                                                    {option.is_correct && <span className="ms-3 text-gray-400">Correct answer</span>}
+                                                                </label>
+                                                            </div>
+                                                            {option.is_selected && (
+                                                                <div className="basis-1/12">
+                                                                    <p className={`${option.is_correct ? "text-lime-500" : "text-red-500"}`}>
+                                                                        {option.is_correct ? "Correct!" : "Incorrect!"}
+                                                                    </p>
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     ))
                                                 )}
