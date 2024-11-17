@@ -77,10 +77,7 @@ export default function Chatbot() {
 			style={{ height: "88dvh" }}
 		>
 			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
-				<div
-					className="flex justify-between py-3"
-					style={{ height: "10%" }}
-				>
+				<div className="flex justify-between py-3">
 					<h1 className="text-4xl font-extrabold">Chatbot</h1>
 					<button
 						onClick={() => setIsModelOpen(true)}
@@ -89,7 +86,7 @@ export default function Chatbot() {
 						+
 					</button>
 				</div>
-				<div className="overflow-auto" style={{ height: "90%" }}>
+				<div className="overflow-auto">
 					<Conversations
 						currentConversation={conversationId}
 						setMessages={setMessages}
