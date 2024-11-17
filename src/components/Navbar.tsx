@@ -11,7 +11,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const router = useRouter();
 
 	useEffect(() => {
-		//localStorage.removeItem("token");
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
 	}, []);
