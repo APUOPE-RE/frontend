@@ -14,7 +14,7 @@ function Login() {
 	const token = searchParams.get("token");
 	const [valid, setValid] = useState(false);
 	const [accountVerified, setAccountVerified] = useState(false);
-	const { setAuthenticated, setRegisterSuccess, registerSuccess } = useAppContext();
+	const { setAuthenticated, setRegisterSuccess, registerSuccess, setFetchData } = useAppContext();
 
 	const {
 		handleSubmit,
@@ -63,6 +63,7 @@ function Login() {
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
 			router.push("/chatbot");
+			setFetchData(true);
 		}
 	};
 
@@ -78,17 +79,8 @@ function Login() {
 				{registerSuccess}
 			</div>
 			)}
-			<div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
-				<h2 className="text-2xl font-bold mb-3 text-center">Login</h2>
-
-				<div className="flex justify-center text-amber-500 h-5 mb-3">
-					<p>{errors.errors && errors.errors.message}</p>
-					{/*this is just for testing*/}
-					{valid && (
-						<p className="text-green-500">Credentials correct!</p>
-					)}
-				</div>
-
+			<div className="w-full max-w-md p-8 pt-16 bg-white rounded-lg shadow-md">
+				<h2 className="text-2xl font-bold mb-3 text-center mb-10">Login</h2>
 				<form onSubmit={handleSubmit(handleLogin)}>
 					<div className="mb-4">
 						<label

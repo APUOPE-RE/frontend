@@ -16,7 +16,7 @@ export type ConversationData = {
     id: number;
     accountId: number;
     chapterId: number;
-    datetime: Date;
+    dateTime: Date;
     subject: string;
 }
 
@@ -32,6 +32,11 @@ export type MessageData = {
     source: number;
     timeStamp: Date;
 }
+
+export type Message = {
+	from: string;
+	message: string;
+};
 
 export type NewPasswordData = {
     uuid: string;
