@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppContext } from "@/src/context";
 import { chatBotRequest } from "../actions/chatbot";
 import { useForm, useWatch } from "react-hook-form";
@@ -49,17 +49,20 @@ export default function Chatbot() {
 			const response = await chatBotRequest(inputData);
 			if (response.success && typeof response.data !== "string") {
 				const responseData: ChatBotResponseData = response.data;
+
 				setMessages((list) => [
 					...list,
 					{ from: "bot", message: responseData.content },
 				]);
 				setFetchData(true);
+
 				if (conversationId === undefined) {
 					setValue("conversationId", response.data.conversationId);
 				}
 			}
 		} catch (error) {
 			console.error("Error fetching chatbot response:", error);
+
 			setMessages((list) => [
 				...list,
 				{ from: "bot", message: "Sorry, something went wrong." },
@@ -166,7 +169,7 @@ export default function Chatbot() {
 									backdropFilter: "blur(10px)",
 								}}
 							>
-								<div className=" ">
+								<div>
 									<input
 										type="search"
 										placeholder="Search topic"
@@ -180,7 +183,7 @@ export default function Chatbot() {
 							</form>
 							{filteredItems.map((item) => (
 								<div
-									className="flex justify-between items-center w-full px-4 h-20 rounded-xl mt-3 py-2 bg-gray-100 shadow-lg cursor-pointer"
+									className="flex justify-between items-center my-1 px-4 w-[98%] h-20 rounded-xl py-2 bg-gray-100 shadow-md cursor-pointer hover:bg-blue-100"
 									key={item.id}
 									onClick={() => setSelectedTopic(item.id)}
 								>
@@ -204,7 +207,9 @@ export default function Chatbot() {
 						<div className="w-full flex justify-end pt-4 gap-4 px-4">
 							<button
 								className="bg-rose-500 text-white py-2 px-4 rounded"
-								onClick={() => setIsModelOpen(false)}
+								onClick={() => (
+									setSelectedTopic(0), setIsModelOpen(false)
+								)}
 							>
 								Close
 							</button>

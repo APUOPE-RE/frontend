@@ -47,7 +47,7 @@ export const Conversations = ({
 				return (
 					<button
 						key={c.id}
-						className="w-[99%] h-20 border p-2 bg-white border-gray-300 rounded-lg mb-2 hover:bg-blue-100"
+						className="w-[99%] h-20 border p-2 border-none rounded-lg mb-2 bg-gray-100 shadow-md hover:bg-blue-100"
 						onClick={() => fetchMessages(c.id)}
 					>
 						<p className="text-xs text-right">

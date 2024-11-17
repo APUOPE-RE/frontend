@@ -69,7 +69,6 @@ export const chatBotRequest = async (
 	request: ChatBotRequestData
 ): Promise<ResponseData<ChatBotResponseData | string>> => {
 	try {
-		console.log(request)
 		const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/chatBot`, {
 			method: "POST",
