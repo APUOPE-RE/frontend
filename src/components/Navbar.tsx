@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
@@ -9,6 +9,7 @@ import { handleLogout } from "../app/actions/logout";
 export const Navbar: React.FC = (): JSX.Element => {
   const { isAuthenticated, setAuthenticated } = useAppContext();
   const router = useRouter();
+  const [currentLink, setCurrentLink] = useState("");
 
   useEffect(() => {
     const isLoggedin = localStorage.getItem("token") !== null;
@@ -19,6 +20,11 @@ export const Navbar: React.FC = (): JSX.Element => {
     await handleLogout(setAuthenticated);
     router.push("/login");
   };
+
+  useEffect(() => {
+    console.log("currentLink: ", currentLink);
+  }, [currentLink]);
+
 
   return (
     <>
@@ -38,13 +44,13 @@ export const Navbar: React.FC = (): JSX.Element => {
           <div>
             <ul className="flex items-center h-full px-4 text-black text-xl">
               <li className="font-semibold h-full">
-                <Link href="/previous-quizzes" className="hover:bg-blue-100 px-3 transition-colors duration-300 hover:border-b-2 border-blue-600 h-full flex items-center">Previous Quizzes</Link>
+                <Link href="/previous-quizzes" onClick={() => setCurrentLink("previous-quizzes")} className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "previous-quizzes" ? "border-b-2  border-blue-600" : "hover:bg-blue-100" }`}>Previous Quizzes</Link>
               </li>
               <li className="font-semibold h-full">
-                <Link href="/quiz" className="hover:bg-blue-100 px-3 transition-colors duration-300 hover:border-b-2 border-blue-600 h-full flex items-center">Quiz maker</Link>
+                <Link href="/quiz" onClick={() => setCurrentLink("quiz")} className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "quiz" ? "border-b-2  border-blue-600" : "hover:bg-blue-100" }`}>Quiz maker</Link>
               </li>
               <li className="font-semibold h-full">
-                <Link href="/chatbot" className="hover:bg-blue-100 px-3 transition-colors duration-300 hover:border-b-2 border-blue-600 h-full flex items-center">Chatbot</Link>
+                <Link href="/chatbot" onClick={() => setCurrentLink("chatbot")} className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "chatbot" ? "border-b-2  border-blue-600" : "hover:bg-blue-100" }`}>Chatbot</Link>
               </li>
             </ul>
           </div>
