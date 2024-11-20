@@ -36,15 +36,15 @@ export const Navbar: React.FC = (): JSX.Element => {
             </Link>
           </div>
           <div>
-            <ul className="flex items-center h-full px-4 gap-5 text-black text-xl">
-              <li className="font-semibold">
-                <Link href="/previous-quizzes">Previous Quizzes</Link>
+            <ul className="flex items-center h-full px-4 text-black text-xl">
+              <li className="font-semibold h-full">
+                <Link href="/previous-quizzes" className="hover:bg-blue-100 px-3 transition-colors duration-300 hover:border-b-2 border-blue-600 h-full flex items-center">Previous Quizzes</Link>
               </li>
-              <li className="font-semibold">
-                <Link href="/quiz">Quiz maker</Link>
+              <li className="font-semibold h-full">
+                <Link href="/quiz" className="hover:bg-blue-100 px-3 transition-colors duration-300 hover:border-b-2 border-blue-600 h-full flex items-center">Quiz maker</Link>
               </li>
-              <li className="font-semibold">
-                <Link href="/chatbot">Chatbot</Link>
+              <li className="font-semibold h-full">
+                <Link href="/chatbot" className="hover:bg-blue-100 px-3 transition-colors duration-300 hover:border-b-2 border-blue-600 h-full flex items-center">Chatbot</Link>
               </li>
             </ul>
           </div>
