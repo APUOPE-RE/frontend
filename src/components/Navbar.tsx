@@ -63,10 +63,12 @@ export const Navbar: React.FC = (): JSX.Element => {
             </ul>
           </div>
           <div className="flex items-center gap-7 mx-7 relative">
-            <img
+            <Image
               src="/user_icon.png"
               alt="User Icon"
-              className="w-10 h-10 cursor-pointer"
+              width={40}
+              height={40}
+              className="cursor-pointer"
               onClick={() => setMenuOpen((prev) => !prev)}
             />
             {menuOpen && (
