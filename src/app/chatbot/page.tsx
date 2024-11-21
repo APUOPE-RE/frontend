@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useAppContext } from "@/src/context";
-import { fetchConversation } from "../actions/conversationSelection";
 import { chatBotRequest } from "../actions/chatbot";
 import { useForm } from "react-hook-form";
 import { ChatBotRequestData, ChatBotResponseData } from "../types/types";
@@ -36,23 +35,28 @@ export default function Chatbot() {
 
         setMessages((list) => [...list, { from: "user", message: data.content }]);
 
-        try {
-            const response = await chatBotRequest({ ...data, lectureId }); // Include lectureId
-            if (response.success && typeof response.data !== "string") {
-                const responseData: ChatBotResponseData = response.data;
-                setMessages((list) => [...list, { from: "bot", message: responseData.content }]);
-            }
-        } catch (error) {
-            console.error("Error fetching chatbot response:", error);
-            setMessages((list) => [...list, { from: "bot", message: "Sorry, something went wrong." }]);
-        }
+    try {
+      const response = await chatBotRequest({ ...data, lectureId });
+      if (response.success && typeof response.data !== "string") {
+        const responseData: ChatBotResponseData = response.data;
+        setMessages((list) => [
+          ...list,
+          { from: "bot", message: responseData.content },
+        ]);
+      }
+    } catch (error) {
+      console.error("Error fetching chatbot response:", error);
+      setMessages((list) => [
+        ...list,
+        { from: "bot", message: "Sorry, something went wrong." },
+      ]);
+    }
 
         reset();
     };
 
     const selectConversation = async () => {
         if (!value) return;
-
         setLectureId(Number(value));
         setIsModelOpen(false);
     };
@@ -166,7 +170,7 @@ export default function Chatbot() {
                             </button>
                             <button
                                 className="bg-blue-500 text-white py-2 px-4 rounded"
-                                onClick={selectConversation}
+                                onClick={ selectConversation}
                             >
                                 Create
                             </button>
@@ -177,4 +181,3 @@ export default function Chatbot() {
         </div>
     );
 }
-

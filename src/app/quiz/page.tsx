@@ -1,25 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { CiSearch } from "react-icons/ci";
 import { fetchQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
 
 export default function Quiz() {
   const { materials } = useAppContext();
   const date = new Date();
-  let currentDate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
+  const currentDate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
 
-  const [value, setValue] = useState<String | null>("");
+  const [value, setValue] = useState<string | null>("");
   const [topic, setTopic] = useState("");
-  const [response, setResponse] = useState<String | null>("");
+  const [response, setResponse] = useState<string | null>("");
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
 
-
-  const generateQuiz = async (value: String | null): Promise<void> => {
+  const generateQuiz = async (value: string | null): Promise<void> => {
     const quizResponse = await fetchQuiz(value);
     setResponse(quizResponse);
   };
@@ -29,7 +27,12 @@ export default function Quiz() {
       <div className="basis-1/4 me-3 shadow-lg bg-white px-3 h-full rounded overflow-auto">
         <form
           className="w-full relative py-3"
-          style={{ position: "sticky", top: 0, zIndex: 10, backdropFilter: "blur(1px)" }}
+          style={{
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            backdropFilter: "blur(1px)",
+          }}
         >
           <div className="relative">
             <input
@@ -39,7 +42,7 @@ export default function Quiz() {
               onChange={(e) => setTopic(e.target.value)}
               className="w-full bg-slate-200 p-4 rounded-2xl outline-none"
             />
-{/*             <button className="right-1 absolute top-1/2 -translate-y-1/2 p-2">
+            {/*             <button className="right-1 absolute top-1/2 -translate-y-1/2 p-2">
               <CiSearch size={40} color="gray" />
             </button> */}
           </div>
@@ -52,7 +55,9 @@ export default function Quiz() {
               key={item.value}
               onClick={() => setValue(item.value)}
             >
-              <label htmlFor={item.value} className="cursor-pointer">{item.label}</label>
+              <label htmlFor={item.value} className="cursor-pointer">
+                {item.label}
+              </label>
               <input
                 name="topics"
                 type="radio"
@@ -103,7 +108,7 @@ export default function Quiz() {
               <div className="flex justify-center align-middle">
                 <button
                   className="bg-blue-500 text-white p-4 m-4 rounded-lg"
-                  disabled={value===""}
+                  disabled={value === ""}
                   onClick={() => generateQuiz(value)}
                 >
                   Generate quiz!
@@ -112,7 +117,7 @@ export default function Quiz() {
             </div>
           ) : (
             <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white shadow-lg">
-                <p>Something Went Wrong!</p>
+              <p>Something Went Wrong!</p>
             </div>
           )}
         </div>
