@@ -51,9 +51,14 @@ export default function Chatbot() {
       <div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
         <div className="flex justify-between py-3" style={{ height: "10%" }}>
           <h1 className="text-4xl font-extrabold">Chatbot</h1>
-          <ChatOptions />
         </div>
-        <div className="overflow-auto" style={{ height: "90%" }} />
+        <div className="overflow-auto" style={{ height: "90%" }}>
+          {/* Example of conversation node */}
+          <div className="flex justify-between px-6 py-4 border shadow-lg rounded-lg">
+            <p className="text-lg text-gray-500">Some preset title</p>
+            <ChatOptions />
+          </div>
+        </div>
       </div>
 
       <div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
