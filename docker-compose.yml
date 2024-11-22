@@ -1,7 +1,6 @@
 name: "apuope-re"
 services:
   apuopere-frontend:
-    container_name: apuopere-frontend
     build: .
     ports:
       - 8000:3000
