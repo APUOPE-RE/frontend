@@ -7,16 +7,16 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-  const { isAuthenticated, setAuthenticated } = useAppContext();
+	const { isAuthenticated, setAuthenticated } = useAppContext();
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const [currentLink, setCurrentLink] = useState("");
 
-  useEffect(() => {
-    const isLoggedin = localStorage.getItem("token") !== null;
-    setAuthenticated(isLoggedin);
-  }, []);
+	useEffect(() => {
+		const isLoggedin = localStorage.getItem("token") !== null;
+		setAuthenticated(isLoggedin);
+	}, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
