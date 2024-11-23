@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
 import { useAppContext } from "@/src/context";
 import { chatBotRequest } from "../actions/chatbot";
@@ -36,8 +37,8 @@ export default function Chatbot() {
 		item.label.toLowerCase().includes(topic.toLowerCase())
 	);
 
-	const handleRequest = async (data: ChatBotRequestData) => {
-		if (!data.content.trim()) return;
+  const handleRequest = async (data: ChatBotRequestData) => {
+    if (!data.content.trim()) return;
 
 		setMessages((list) => [
 			...list,
@@ -72,28 +73,20 @@ export default function Chatbot() {
 	};
 
 	return (
-		<div
-			className="flex flex-row bg-gray-100 py-3"
-			style={{ height: "88dvh" }}
-		>
-			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
-				<div className="flex justify-between py-3">
-					<h1 className="text-4xl font-extrabold">Chatbot</h1>
-					<button
-						onClick={() => setIsModelOpen(true)}
-						className="bg-blue-500 text-white text-xl h-50 font-bold rounded w-10 min-h-10"
-					>
-						+
-					</button>
-				</div>
-				<div className="overflow-auto">
-					<Conversations
-						currentConversation={conversationId}
-						setMessages={setMessages}
-						setValue={setValue}
-					/>
-				</div>
-			</div>
+    <div className="flex flex-row bg-gray-100 py-3" style={{ height: "88dvh" }}>
+      <div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
+        <div className="flex justify-between items-center w-full">
+          <h1 className="font-extrabold text-[4vw]">Chatbot</h1>
+          <Image
+            src="/new_conversation.png"
+            alt="Icon for creating new conversation"
+            width={36}
+            height={36}
+            className="cursor-pointer object-contain"
+            onClick={() => setIsModelOpen(true)}
+          />
+        </div>
+      </div>
 
 			<div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
 				<div className="w-100" style={{ height: "90%" }}>
