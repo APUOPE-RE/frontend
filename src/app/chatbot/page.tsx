@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { useState } from "react";
 import { useAppContext } from "@/src/context";
 import { fetchConversation } from "../actions/conversationSelection";
@@ -17,7 +18,7 @@ export default function Chatbot() {
     handleSubmit,
     reset,
     register,
-    formState: {},
+    formState: { },
   } = useForm<ChatBotRequestData>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isModelOpen, setIsModelOpen] = useState(false);
@@ -66,16 +67,17 @@ export default function Chatbot() {
   return (
     <div className="flex flex-row bg-gray-100 py-3" style={{ height: "88dvh" }}>
       <div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
-        <div className="flex justify-between py-3" style={{ height: "10%" }}>
-          <h1 className="text-4xl font-extrabold">Chatbot</h1>
-          <button
+        <div className="flex justify-between items-center w-full">
+          <h1 className="font-extrabold text-[4vw]">Chatbot</h1>
+          <Image
+            src="/new_conversation.png"
+            alt="Icon for creating new conversation"
+            width={36}
+            height={36}
+            className="cursor-pointer object-contain"
             onClick={() => setIsModelOpen(true)}
-            className="bg-blue-500 text-white text-xl h-50 font-bold rounded w-10 min-h-10"
-          >
-            +
-          </button>
+          />
         </div>
-        <div className="overflow-auto" style={{ height: "90%" }} />
       </div>
 
       <div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
