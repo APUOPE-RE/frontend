@@ -11,6 +11,7 @@ export const Navbar: React.FC = (): JSX.Element => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const [currentLink, setCurrentLink] = useState("");
 
   useEffect(() => {
     const isLoggedin = localStorage.getItem("token") !== null;
@@ -34,6 +35,11 @@ export const Navbar: React.FC = (): JSX.Element => {
     router.push("/login");
   };
 
+  useEffect(() => {
+    console.log("currentLink: ", currentLink);
+  }, [currentLink]);
+
+
   return (
     <>
       <header className="fixed top-0 left-0 w-full">
@@ -50,15 +56,15 @@ export const Navbar: React.FC = (): JSX.Element => {
             </Link>
           </div>
           <div>
-            <ul className="flex items-center h-full px-4 gap-5 text-black text-xl">
-              <li className="font-semibold">
-                <Link href="/previous-quizzes">Previous Quizzes</Link>
+            <ul className="flex items-center h-full px-4 text-black text-xl">
+              <li className="font-semibold h-full">
+                <Link href="/previous-quizzes" onClick={() => setCurrentLink("previous-quizzes")} className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "previous-quizzes" ? "border-b-2  border-blue-600" : "hover:bg-blue-100"}`}>Previous Quizzes</Link>
               </li>
-              <li className="font-semibold">
-                <Link href="/quiz">Quiz maker</Link>
+              <li className="font-semibold h-full">
+                <Link href="/quiz" onClick={() => setCurrentLink("quiz")} className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "quiz" ? "border-b-2  border-blue-600" : "hover:bg-blue-100"}`}>Quiz maker</Link>
               </li>
-              <li className="font-semibold">
-                <Link href="/chatbot">Chatbot</Link>
+              <li className="font-semibold h-full">
+                <Link href="/chatbot" onClick={() => setCurrentLink("chatbot")} className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "chatbot" ? "border-b-2  border-blue-600" : "hover:bg-blue-100"}`}>Chatbot</Link>
               </li>
             </ul>
           </div>

@@ -8,7 +8,6 @@ import { useForm } from "react-hook-form";
 import { ChatBotRequestData, ChatBotResponseData } from "../types/types";
 import { IoSendSharp } from "react-icons/io5";
 
-
 type Message = {
   from: string;
   message: string;
@@ -23,11 +22,10 @@ export default function Chatbot() {
   } = useForm<ChatBotRequestData>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [isModelOpen, setIsModelOpen] = useState(false);
-  const [value, setValue] = useState<String | null>("");
-  const [response, setResponse] = useState<String | null>("");
+  const [value, setValue] = useState<string | null>("");
+  const [response, setResponse] = useState<string | null>("");
   const [topic, setTopic] = useState("");
   const { materials } = useAppContext();
-
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
@@ -42,22 +40,29 @@ export default function Chatbot() {
       const response = await chatBotRequest(data);
       if (response.success && typeof response.data !== "string") {
         const responseData: ChatBotResponseData = response.data;
-        setMessages((list) => [...list, { from: "bot", message: responseData.content }]);
+        setMessages((list) => [
+          ...list,
+          { from: "bot", message: responseData.content },
+        ]);
       }
     } catch (error) {
       console.error("Error fetching chatbot response:", error);
-      setMessages((list) => [...list, { from: "bot", message: "Sorry, something went wrong." }]);
+      setMessages((list) => [
+        ...list,
+        { from: "bot", message: "Sorry, something went wrong." },
+      ]);
     }
 
     // Reset form input
     reset();
   };
 
-  const selectConversation = async (value: String | null): Promise<void> => {
+  const selectConversation = async (value: string | null): Promise<void> => {
     const conversation = await fetchConversation(value);
-    setResponse(conversation);					// use the respone later to display old conversation
+    setResponse(conversation); // use the respone later to display old conversation
+    console.log(response);
     setIsModelOpen(false);
-  }
+  };
 
   return (
     <div className="flex flex-row bg-gray-100 py-3" style={{ height: "88dvh" }}>
@@ -111,9 +116,7 @@ export default function Chatbot() {
                 type="submit"
                 className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
               >
-                <IoSendSharp
-                  className="text-2xl"
-                />
+                <IoSendSharp className="text-2xl" />
               </button>
             </div>
           </form>
@@ -124,9 +127,7 @@ export default function Chatbot() {
           <div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[40%] h-[70%] text-center">
             <div>
               <h2 className="text-2xl font-bold mb-2">New Conversation</h2>
-              <p className="mb-6">
-                Select a topic for your next conversation:
-              </p>
+              <p className="mb-6">Select a topic for your next conversation:</p>
             </div>
 
             <div className="flex flex-col items-center border rounded-lg w-[80%] h-[70%] overflow-auto">
@@ -178,7 +179,10 @@ export default function Chatbot() {
               >
                 Close
               </button>
-              <button className="bg-blue-500 text-white py-2 px-4 rounded" onClick={() => selectConversation(value)}>
+              <button
+                className="bg-blue-500 text-white py-2 px-4 rounded"
+                onClick={() => selectConversation(value)}
+              >
                 Create
               </button>
             </div>
@@ -188,4 +192,3 @@ export default function Chatbot() {
     </div>
   );
 }
-
