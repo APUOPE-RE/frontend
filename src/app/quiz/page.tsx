@@ -7,10 +7,9 @@ import { useAppContext } from "@/src/context";
 export default function Quiz() {
   const { materials } = useAppContext();
   const date = new Date();
-  const currentDate = `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`;
-
-  const [value, setValue] = useState<string | null>("");
+  const currentDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   const [topic, setTopic] = useState("");
+  const [selectedTopic, setSelectedTopic] = useState<string | null>("");
   const [response, setResponse] = useState<string | null>("");
 
   const filteredItems = materials.filter((item) =>
@@ -24,7 +23,7 @@ export default function Quiz() {
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
-      <div className="basis-1/4 me-3 shadow-lg bg-white px-3 h-full rounded overflow-auto">
+      <div className="basis-1/4 me-3 bg-white px-3 h-full rounded overflow-auto">
         <form
           className="w-full relative py-3"
           style={{
@@ -48,31 +47,31 @@ export default function Quiz() {
           </div>
         </form>
 
-        <div>
-          {filteredItems.map((item) => (
-            <div
-              className="flex justify-between items-center w-100 h-20 rounded-xl mt-3 p-3 bg-gray-100 shadow-lg cursor-pointer"
-              key={item.value}
-              onClick={() => setValue(item.value)}
+
+        {filteredItems.map((item) => (
+          <div
+            className="flex justify-between items-center w-[99%] h-20 border p-2 border-none rounded-lg mb-2 bg-gray-100 shadow-md hover:bg-blue-100"
+            key={item.id}
+            onClick={() => setSelectedTopic(item.label)}
+          >
+            <label
+              htmlFor={item.label}
+              className="cursor-pointer"
             >
-              <label htmlFor={item.value} className="cursor-pointer">
-                {item.label}
-              </label>
-              <input
-                name="topics"
-                type="radio"
-                value={item.value}
-                id={item.value}
-                checked={value === item.value}
-                onChange={(e) => setValue(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-              />
-            </div>
-          ))}
-        </div>
+              {item.label}
+            </label>
+            <input
+              id={item.label}
+              type="radio"
+              value={item.label}
+              checked={selectedTopic === item.label}
+              onChange={() => setSelectedTopic(item.label)}
+            />
+          </div>
+        ))}
       </div>
 
-      <div className="basis-3/4 flex flex-col shadow-lg p-3 h-full rounded">
+      <div className="basis-3/4 flex flex-col p-3 h-full rounded bg-white">
         <div
           className="basis-2/12 flex flex-row justify-between"
           style={{ height: "10%" }}
@@ -94,22 +93,22 @@ export default function Quiz() {
         </div>
         <div className="basis-10/12 py-10" style={{ height: "90%" }}>
           {response === "" ? (
-            <div className=" flex flex-col justify-between w-full h-full p-4 rounded-xl bg-gray-200 shadow-lg">
-              {value === "" ? (
+            <div className=" flex flex-col justify-between w-full h-full p-4 border bg-gray-100 border-gray-300 rounded-lg">
+              {selectedTopic === "" ? (
                 <p className="flex align-middle justify-center font-semibold text-3xl">
                   Please Select a Topic{" "}
                 </p>
               ) : (
                 <p className="flex align-middle justify-center font-semibold text-3xl">
-                  {value}
+                  {selectedTopic}
                 </p>
               )}
 
               <div className="flex justify-center align-middle">
                 <button
                   className="bg-blue-500 text-white p-4 m-4 rounded-lg"
-                  disabled={value === ""}
-                  onClick={() => generateQuiz(value)}
+                  disabled={selectedTopic === ""}
+                  onClick={() => generateQuiz(selectedTopic)}
                 >
                   Generate quiz!
                 </button>
