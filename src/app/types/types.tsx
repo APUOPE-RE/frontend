@@ -45,6 +45,43 @@ export type NewPasswordData = {
 	errors: string;
 };
 
+export type QuestionData = {
+    id: number;
+    question: string;
+    optionA: string;
+    optionB: string;
+    optionC: string;
+    correctOption: string;
+    points: number;
+}
+
+export type QuizData = {
+    id: number;
+    accountId: number;
+    lectureId: number;
+    maxPoints: number;
+    questionDataList: QuestionData[];
+}
+
+export type QuizResultData = {
+    id: number;
+    accountId: number;
+    quizId: number;
+    score: number;
+    maxScore: number;
+    dateTime: Date;
+    quizAnswerDataList: QuizAnswerData[];
+}
+
+export type QuizAnswerData = {
+    id: number;
+    quizResultId: number;
+    questionId: number;
+    answer: string;
+    correct: boolean;
+    points: number;
+}
+
 export type RegistrationData = {
 	email: string;
 	username: string;
