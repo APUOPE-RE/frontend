@@ -1,21 +1,27 @@
-import { ChatBotRequestData, ChatBotResponseData, ConversationData, MessageData, ResponseData } from "../types/types";
+import {
+	ChatBotRequestData,
+	ChatBotResponseData,
+	ConversationData,
+	MessageData,
+	ResponseData,
+} from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-
-export const fetchAllConversations = async (): Promise<ConversationData[] | ResponseData<string>> => {
+export const fetchAllConversations = async (): Promise<
+	ConversationData[] | ResponseData<string>
+> => {
 	try {
-        const token = localStorage.getItem("token");
+		const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/conversations`, {
 			method: "GET",
 			headers: {
-				"Authorization": `Bearer ${token}`,
+				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
-			credentials: 'include',
+			credentials: "include",
 		})
 			.then((res) => {
-				console.log(res);
 				return res.json();
 			})
 			.then((data: ConversationData[]) => {
@@ -29,17 +35,22 @@ export const fetchAllConversations = async (): Promise<ConversationData[] | Resp
 	}
 };
 
-export const fetchConversation = async (conversationId: number): Promise<MessageData[] | ResponseData<string>> => {
+export const fetchConversation = async (
+	conversationId: number
+): Promise<MessageData[] | ResponseData<string>> => {
 	try {
-        const token = localStorage.getItem("token");
-		const response = await fetch(`${API_BASE_URL}/api/conversation/${conversationId}`, {
-			method: "GET",
-			headers: {
-				"Authorization": `Bearer ${token}`,
-            	"Content-Type": "application/json",
-			},
-			credentials: 'include',
-		})
+		const token = localStorage.getItem("token");
+		const response = await fetch(
+			`${API_BASE_URL}/api/conversation/${conversationId}`,
+			{
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+				credentials: "include",
+			}
+		)
 			.then((res) => {
 				return res.json();
 			})
@@ -54,16 +65,18 @@ export const fetchConversation = async (conversationId: number): Promise<Message
 	}
 };
 
-export const chatBotRequest = async (request: ChatBotRequestData): Promise<ResponseData<ChatBotResponseData | string>> => {
+export const chatBotRequest = async (
+	request: ChatBotRequestData
+): Promise<ResponseData<ChatBotResponseData | string>> => {
 	try {
 		const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/chatBot`, {
 			method: "POST",
 			headers: {
-				"Authorization": `Bearer ${token}`,
+				Authorization: `Bearer ${token}`,
 				"Content-Type": "application/json",
 			},
-			credentials: 'include',
+			credentials: "include",
 			body: JSON.stringify({
 				conversationId: request.conversationId ?? 0,
 				lectureId: request.lectureId,

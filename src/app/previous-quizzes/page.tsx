@@ -1,8 +1,9 @@
 "use client";
+import Image from "next/image";
 // import Link from "next/link";
 // import { useForm } from "react-hook-form";
 // import { UserCredentials, validateUser } from "../actions/login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const QUIZ_LIST = [
   {
@@ -99,9 +100,8 @@ export default function Quiz() {
         {QUIZ_LIST.map((quiz) => (
           <div
             key={quiz.id}
-            className={`flex w-100 h-20 rounded-xl mt-3 p-3 cursor-pointer hover:bg-gray-200 shadow-lg ${
-              selectedQuizId === quiz.id ? "border border-gray-400" : "bg-white"
-            }`}
+            className={`flex w-100 h-20 rounded-xl mt-3 p-3 cursor-pointer hover:bg-gray-200 shadow-lg ${selectedQuizId === quiz.id ? "border border-gray-400" : "bg-white"
+              }`}
             onClick={() => setSelectedQuizId(quiz.id)}
           >
             <div className="basis-3/4">
@@ -154,47 +154,35 @@ export default function Quiz() {
                           </p>
                         </div>
 
-                        <p className="mb-2">
-                          <strong>
-                            {index + 1}. {question.text}
-                          </strong>
-                        </p>
-
                         {question.type === "open" ? (
                           <div
-                            className={`flex border p-2 mb-2 rounded-xl ${
-                              question.correct
-                                ? "border-lime-500"
-                                : "border-red-500"
-                            }`}
+                            className={`flex border p-2 mb-2 rounded-xl ${question.correct
+                              ? "border-lime-500"
+                              : "border-red-500"
+                              }`}
                           >
                             <div className="basis-11/12">
                               <strong>Answer:</strong>
                               <p>{question.answer}</p>
                             </div>
-                            <div className="basis-1/12">
-                              <p
-                                className={`${
-                                  question.correct
-                                    ? "text-lime-500"
-                                    : "text-red-500"
-                                }`}
-                              >
-                                {question.correct ? "Correct!" : "Incorrect!"}
-                              </p>
+                            <div className="basis-1/12 flex items-center justify-center">
+                              <Image
+                                src={question.correct ? "/correct.png" : "/incorrect.png"}
+                                alt={question.correct ? "Correct" : "Incorrect"}
+                                width={40}
+                                height={40}
+                              />
                             </div>
                           </div>
                         ) : (
                           question?.options?.map((option, optionIndex) => (
                             <div
                               key={optionIndex}
-                              className={`flex items-center mb-2 p-2 ${
-                                option.is_selected && "border rounded-xl"
-                              } ${
-                                option.is_selected && option.is_correct
+                              className={`flex items-center mb-2 p-2 ${option.is_selected && "border rounded-xl"
+                                } ${option.is_selected && option.is_correct
                                   ? "border-lime-500"
                                   : "border-red-500"
-                              }`}
+                                }`}
                             >
                               <div className="basis-11/12">
                                 <input
@@ -214,17 +202,21 @@ export default function Quiz() {
                               </div>
                               {option.is_selected && (
                                 <div className="basis-1/12">
-                                  <p
-                                    className={`${
-                                      option.is_correct
-                                        ? "text-lime-500"
-                                        : "text-red-500"
-                                    }`}
+                                  <div
+                                    className={`${option.is_correct
+                                      ? "text-lime-500"
+                                      : "text-red-500"
+                                      }`}
                                   >
-                                    {option.is_correct
-                                      ? "Correct!"
-                                      : "Incorrect!"}
-                                  </p>
+                                    <div className="basis-1/12 flex items-center justify-center">
+                                      <Image
+                                        src={option.is_correct ? "/correct.png" : "/incorrect.png"}
+                                        alt={option.is_correct ? "Correct" : "Incorrect"}
+                                        width={40}
+                                        height={40}
+                                      />
+                                    </div>
+                                  </div>
                                 </div>
                               )}
                             </div>
@@ -246,8 +238,9 @@ export default function Quiz() {
               </div>
             </div>
           </>
-        )}
-      </div>
-    </div>
+        )
+        }
+      </div >
+    </div >
   );
 }
