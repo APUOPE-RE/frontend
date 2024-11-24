@@ -100,8 +100,9 @@ export default function Quiz() {
         {QUIZ_LIST.map((quiz) => (
           <div
             key={quiz.id}
-            className={`flex w-100 h-20 rounded-xl mt-3 p-3 cursor-pointer hover:bg-gray-200 shadow-lg ${selectedQuizId === quiz.id ? "border border-gray-400" : "bg-white"
-              }`}
+            className={`flex w-[99%] h-20 p-2 rounded-lg mb-2 cursor-pointer hover:bg-blue-100 shadow-md 
+            ${selectedQuizId === quiz.id ? "border border-gray-400 bg-blue-100" : "bg-gray-100"}
+            shadow-md hover:bg-blue-100`}
             onClick={() => setSelectedQuizId(quiz.id)}
           >
             <div className="basis-3/4">

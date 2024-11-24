@@ -50,7 +50,9 @@ export default function Quiz() {
 
         {filteredItems.map((item) => (
           <div
-            className="flex justify-between items-center w-[99%] h-20 border p-2 border-none rounded-lg mb-2 bg-gray-100 shadow-md hover:bg-blue-100"
+            className={`flex justify-between items-center w-[99%] h-20 p-2 mb-2 rounded-lg 
+            ${selectedTopic === item.label ? "border border-gray-400 bg-blue-100" : "bg-gray-100"}
+            shadow-md hover:bg-blue-100`}
             key={item.id}
             onClick={() => setSelectedTopic(item.label)}
           >
