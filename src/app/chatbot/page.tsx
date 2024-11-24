@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useAppContext } from "@/src/context";
 import { chatBotRequest } from "../actions/chatbot";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
 	ChatBotRequestData,
 	ChatBotResponseData,
@@ -28,17 +28,17 @@ export default function Chatbot() {
 		formState: {},
 	} = useForm<ChatBotRequestData>();
 
-	const chapterId = watch("chapterId");
+	const lectureId = watch("lectureId");
 	const conversationId = watch("conversationId");
 	const disableInputField =
-		isModelOpen || chapterId === undefined || chapterId === 0;
+		isModelOpen || lectureId === undefined || lectureId === 0;
 
 	const filteredItems = materials.filter((item) =>
 		item.label.toLowerCase().includes(topic.toLowerCase())
 	);
 
-  const handleRequest = async (data: ChatBotRequestData) => {
-    if (!data.content.trim()) return;
+	const handleRequest = async (data: ChatBotRequestData) => {
+		if (!data.content.trim() || !lectureId) return;
 
 		setMessages((list) => [
 			...list,
@@ -73,20 +73,30 @@ export default function Chatbot() {
 	};
 
 	return (
-    <div className="flex flex-row bg-gray-100 py-3" style={{ height: "88dvh" }}>
-      <div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
-        <div className="flex justify-between items-center w-full">
-          <h1 className="font-extrabold text-[4vw]">Chatbot</h1>
-          <Image
-            src="/new_conversation.png"
-            alt="Icon for creating new conversation"
-            width={36}
-            height={36}
-            className="cursor-pointer object-contain"
-            onClick={() => setIsModelOpen(true)}
-          />
-        </div>
-      </div>
+		<div
+			className="flex flex-row bg-gray-100 py-3"
+			style={{ height: "88dvh" }}
+		>
+			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
+				<div className="flex justify-between items-center w-full">
+					<h1 className="font-extrabold text-[4vw]">Chatbot</h1>
+					<Image
+						src="/new_conversation.png"
+						alt="Icon for creating new conversation"
+						width={36}
+						height={36}
+						className="cursor-pointer object-contain"
+						onClick={() => setIsModelOpen(true)}
+					/>
+				</div>
+				<div className="overflow-auto" style={{ height: "90%" }}>
+					<Conversations
+						currentConversation={conversationId}
+						setMessages={setMessages}
+						setValue={setValue}
+					/>
+				</div>
+			</div>
 
 			<div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
 				<div className="w-100" style={{ height: "90%" }}>
@@ -178,13 +188,13 @@ export default function Chatbot() {
 									onClick={() => setSelectedTopic(item.id)}
 								>
 									<label
-										htmlFor={item.value}
+										htmlFor={item.label}
 										className="cursor-pointer"
 									>
 										{item.label}
 									</label>
 									<input
-										id={item.value}
+										id={item.label}
 										type="radio"
 										value={item.id}
 										checked={selectedTopic === item.id}
@@ -207,7 +217,7 @@ export default function Chatbot() {
 								className="bg-blue-500 text-white py-2 px-4 rounded"
 								onClick={() => (
 									reset(),
-									setValue("chapterId", selectedTopic),
+									setValue("lectureId", selectedTopic),
 									setIsModelOpen(false),
 									setSelectedTopic(0),
 									setMessages([])

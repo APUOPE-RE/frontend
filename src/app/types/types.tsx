@@ -1,6 +1,6 @@
 export type ChatBotRequestData = {
 	conversationId: number;
-	chapterId: number;
+	lectureId: number;
 	content: string;
 };
 
@@ -13,25 +13,25 @@ export type ChatBotResponseData = {
 };
 
 export type ConversationData = {
-    id: number;
-    accountId: number;
-    chapterId: number;
-    dateTime: Date;
-    subject: string;
-}
+	id: number;
+	accountId: number;
+	chapterId: number;
+	dateTime: Date;
+	subject: string;
+};
 
 export type EmailforPassReset = {
-    email: string;
-    errors: string;
-}
+	email: string;
+	errors: string;
+};
 
 export type MessageData = {
-    conversationId: number;
-    messageId: number;
-    content: string;
-    source: number;
-    timeStamp: Date;
-}
+	conversationId: number;
+	messageId: number;
+	content: string;
+	source: number;
+	timeStamp: Date;
+};
 
 export type Message = {
 	from: string;
@@ -39,27 +39,27 @@ export type Message = {
 };
 
 export type NewPasswordData = {
-    uuid: string;
-    passwordFirst: string;
-    passwordSecond: string;
-    errors: string;
+	uuid: string;
+	passwordFirst: string;
+	passwordSecond: string;
+	errors: string;
 };
 
 export type RegistrationData = {
-    email: string;
-    username: string;
-    passwordFirst: string;
-    passwordSecond: string;
-    errors: string;
+	email: string;
+	username: string;
+	passwordFirst: string;
+	passwordSecond: string;
+	errors: string;
 };
 
 export type ResponseData<T> = {
-    success: boolean;
-    data: T;
-}
+	success: boolean;
+	data: T;
+};
 
 export type UserCredentials = {
-    email: string;
-    passwordHash: string;
-    errors: string;
+	email: string;
+	passwordHash: string;
+	errors: string;
 };

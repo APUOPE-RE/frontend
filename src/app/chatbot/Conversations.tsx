@@ -29,7 +29,7 @@ export const Conversations = ({
 	const fetchMessages = async (conversationId: number) => {
 		if (conversationId !== currentConversation) {
 			setValue("conversationId", 0);
-			setValue("chapterId", 0);
+			setValue("lectureId", 0);
 			const response = await fetchConversation(conversationId);
 			if (Array.isArray(response)) {
 				const messages: Message[] = response.map((m) => ({
@@ -53,10 +53,10 @@ export const Conversations = ({
 						<p className="text-xs text-right">
 							{new Date(c.dateTime).toLocaleDateString()}
 						</p>
-						<p className="pt-3 text-left">
+						<p className="pt-3 pl-3 text-left">
 							{
 								filterSubject(c.chapterId > 0 ? c.chapterId : 1)
-									?.value
+									?.label
 							}
 						</p>
 					</button>

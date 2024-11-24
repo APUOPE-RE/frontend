@@ -79,7 +79,7 @@ export const chatBotRequest = async (
 			credentials: "include",
 			body: JSON.stringify({
 				conversationId: request.conversationId ?? 0,
-				chapterId: request.chapterId,
+				lectureId: request.lectureId,
 				data: request.content,
 			}),
 		})
