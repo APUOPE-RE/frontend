@@ -91,20 +91,34 @@ const QUIZ_LIST = [
 
 export default function Quiz() {
   const [selectedQuizId, setSelectedQuizId] = useState(QUIZ_LIST[0].id);
+  const [title, setTitle] = useState("");
 
-  const selectedQuiz = QUIZ_LIST.find((quiz) => quiz.id === selectedQuizId);
+  const filteredQuizzes = QUIZ_LIST.filter((quiz) =>
+      quiz.title.toLowerCase().includes(title.toLowerCase())
+    );
+
+  const selectedQuiz = QUIZ_LIST.find(quiz => quiz.id === selectedQuizId);
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
       <div className="basis-1/4 me-3  bg-white p-3 h-full rounded overflow-auto">
-        {QUIZ_LIST.map((quiz) => (
-          <div
-            key={quiz.id}
-            className={`flex w-[99%] h-20 p-2 rounded-lg mb-2 cursor-pointer hover:bg-blue-100 shadow-md 
-            ${selectedQuizId === quiz.id ? "border border-gray-400 bg-blue-100" : "bg-gray-100"}
-            shadow-md hover:bg-blue-100`}
-            onClick={() => setSelectedQuizId(quiz.id)}
-          >
+        <div className="">
+            <input
+            type="search"
+            placeholder="Search title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full bg-slate-200 p-4 rounded-2xl outline-none"
+            />
+        </div>
+        {filteredQuizzes.map((quiz) => (
+            <div
+                key={quiz.id}
+                className={`flex w-100 h-20 rounded-xl mt-3 p-3 cursor-pointer hover:bg-gray-200 shadow-lg ${
+                    selectedQuizId === quiz.id ? 'border border-gray-400' : 'bg-white'
+                    }`}
+                onClick={() => setSelectedQuizId(quiz.id)}
+                >
             <div className="basis-3/4">
               <p>{quiz.title}</p>
             </div>
@@ -143,7 +157,7 @@ export default function Quiz() {
             </div>
 
             <div className="basis-10/12" style={{ height: "90%" }}>
-              <div className="w-full h-full p-4 rounded-xl bg-gray-200">
+              <div className="w-full h-full p-4 rounded-xl bg-gray-200" style={{height: "90%"}}>
                 <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white">
                   <div className="w-full h-full overflow-auto px-3">
                     {selectedQuiz.questions.map((question, index) => (
@@ -237,6 +251,9 @@ export default function Quiz() {
                   </div>
                 </div>
               </div>
+              <div className="flex items-end justify-end w-full" style={{height: "10%"}}>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Export as pdf</button>
+            </div>
             </div>
           </>
         )
