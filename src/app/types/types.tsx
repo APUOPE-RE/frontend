@@ -48,9 +48,9 @@ export type NewPasswordData = {
 export type QuestionData = {
     id: number;
     question: string;
-    optionA: string;
-    optionB: string;
-    optionC: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
     correctOption: string;
     points: number;
 }

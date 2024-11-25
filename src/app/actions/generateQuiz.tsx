@@ -1,21 +1,21 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const fetchQuiz = async (value: string | null) => {
+export const fetchQuiz = async (value: number | null) => {
   try {
     const token = localStorage.getItem("token");
-    const response = await fetch(`${API_BASE_URL}/api/quiz`, {
-      // endpoint need to be checked
+    const response = await fetch(`${API_BASE_URL}/api/generateQuiz`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ value }),
+      body: JSON.stringify(value),
       credentials: "include",
     });
 
     if (response.ok) {
-      return await response.json();
+      const data = await response.json();
+      return data.questionDataList;
     } else {
       return console.error("Failed");
     }
