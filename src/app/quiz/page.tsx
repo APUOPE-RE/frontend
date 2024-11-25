@@ -1,9 +1,9 @@
 "use client";
-
+import Image from "next/image";
 import { useState } from "react";
 import { fetchQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
-import { QuestionData } from "../types/types";
+import { QuestionData, QuizAnswerData } from "../types/types";
 
 export default function Quiz() {
   const { materials } = useAppContext();
@@ -14,13 +14,16 @@ export default function Quiz() {
   const [topic, setTopic] = useState("");
   const [selectedTopic, setSelectedTopic] = useState<number | null>(0);
   const [response, setResponse] = useState<QuestionData[]>([]);
+  const [result, setResult] = useState<QuizAnswerData[]>([]);
+  const [score, setScore] = useState<number>(0);
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
 
   const generateQuiz = async (value: number | null): Promise<void> => {
-    const quizResponse = await fetchQuiz(value);
+    const res = await fetchQuiz(value);
+    const quizResponse = res.questionDataList;
     if (quizResponse) {
       setResponse(quizResponse);
       console.log(quizResponse);
@@ -29,9 +32,47 @@ export default function Quiz() {
     }
   };
 
-  const submitQuiz = async(): Promise<void> => {
+  const handleAnswerChange = (
+questionId: number, id: number, selectedOption: string, correctOption: string  ) => {
+    setResult((prev) => {
+      const existingAnswerIndex = prev.findIndex(
+        (answer) => answer.questionId === questionId
+      );
 
-  }
+      if (existingAnswerIndex !== -1) {
+        const updatedAnswers = [...prev];
+        updatedAnswers[existingAnswerIndex] = {
+          ...updatedAnswers[existingAnswerIndex],
+          answer: selectedOption,
+          correct: correctOption === selectedOption,
+        };
+        return updatedAnswers;
+      } else {
+        return [
+          ...prev,
+          {
+            id: id,
+            quizResultId: questionId, // I am not sure what should I put in here
+            questionId: questionId,
+            answer: selectedOption,
+            correct: correctOption === selectedOption,
+            points: 1,
+          },
+        ];
+      }
+    });
+  };
+
+  const submitQuiz = async (): Promise<void> => {
+    const calculatedScore = result.reduce((total, answer) => {
+      return total + (answer.correct ? 1 : 0);
+    }, 0);
+    
+    setScore(calculatedScore);
+  
+    console.log("Submitted results: ", result);
+    console.log("Final score: ", calculatedScore);
+  };
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
@@ -92,13 +133,10 @@ export default function Quiz() {
           </div>
           <div className="flex items-center font-bold text-2xl">
             {response.length === 0 ? (
-                <p>Selected Topic</p>
+              <p>Selected Topic</p>
             ) : (
-                <p>Questions for lecture{" "}
-                  {selectedTopic}
-                </p>
+              <p>Questions for lecture {selectedTopic}</p>
             )}
-            
           </div>
           <div className="flex items-center">
             <p>
@@ -109,7 +147,7 @@ export default function Quiz() {
                 </span>
               ) : (
                 <span className="bg-blue-500 text-white rounded-md px-2 py-1">
-                  0/{response.length}
+                  {score}/{response.length}
                 </span>
               )}
             </p>
@@ -148,46 +186,45 @@ export default function Quiz() {
                     {index + 1}. {question.question}
                   </p>
                   <div className="flex flex-col pl-6">
-                    <div>
-                      <input
-                        id={`${question.id}_a`}
-                        name={`question_${question.id}`}
-                        value="option_a"
-                        type="radio"
-                        className="mr-3"
-                      />
-                      {question.option_a}
-                    </div>
-
-                    <div>
-                      <input
-                        id={`${question.id}_b`}
-                        name={`question_${question.id}`}
-                        value="option_b"
-                        type="radio"
-                        className="mr-3"
-                      />
-                      {question.option_b}
-                    </div>
-
-                    <div>
-                      <input
-                        id={`${question.id}_c`}
-                        name={`question_${question.id}`}
-                        value="option_c"
-                        type="radio"
-                        className="mr-3"
-                      />
-                      {question.option_c}
-                    </div>
+                    {(['option_a', 'option_b', 'option_c'] as Array<keyof QuestionData>).map((optionKey) => (
+                      <div key={optionKey}>
+                        <input
+                          id={`${question.id}_${optionKey}`}
+                          name={`question_${question.id}`}
+                          value={optionKey}
+                          type="radio"
+                          className="mr-3"
+                          onChange={(e) =>
+                            handleAnswerChange(
+                              question.question_id,
+                              question.id,
+                              e.target.value,
+                              question.correct_option
+                            )
+                          }
+                        />
+                        {question[optionKey]}
+                      </div>
+                    ))}
                   </div>
                 </div>
               ))}
               <div className="flex justify-end">
-                <button className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
-                  onClick={() => submitQuiz()}>
+                {score === 0 ? (
+                  <button
+                  className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
+                  onClick={submitQuiz}
+                >
                   Send Answers
                 </button>
+                ) : (
+                  <button
+                  className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
+                  onClick={submitQuiz}
+                >
+                  Export as pdf
+                </button>
+                )}
               </div>
             </div>
           )}

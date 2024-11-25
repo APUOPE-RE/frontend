@@ -15,7 +15,7 @@ export const fetchQuiz = async (value: number | null) => {
 
     if (response.ok) {
       const data = await response.json();
-      return data.questionDataList;
+      return data;
     } else {
       return console.error("Failed");
     }

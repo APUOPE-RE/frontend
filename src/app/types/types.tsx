@@ -51,8 +51,9 @@ export type QuestionData = {
     option_a: string;
     option_b: string;
     option_c: string;
-    correctOption: string;
+    correct_option: string;
     points: number;
+	question_id: number;
 }
 
 export type QuizData = {
