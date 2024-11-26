@@ -1,9 +1,18 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
-import { QuestionData, QuizAnswerData } from "../types/types";
+import {
+  QuestionData,
+  QuizData,
+  QuizResultData,
+  QuizSubmitAnswerData,
+  QuizSubmitData,
+} from "../types/types";
+import { fetchResult } from "../actions/generateResult";
+import { CgSoftwareDownload } from "react-icons/cg";
+import html2pdf from "html2pdf.js";
 
 export default function Quiz() {
   const { materials } = useAppContext();
@@ -12,31 +21,47 @@ export default function Quiz() {
     date.getMonth() + 1
   }/${date.getFullYear()}`;
   const [topic, setTopic] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<number | null>(0);
   const [response, setResponse] = useState<QuestionData[]>([]);
-  const [result, setResult] = useState<QuizAnswerData[]>([]);
+  const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
   const [score, setScore] = useState<number>(0);
+  const [quizResultWithScore, setQuizResultWithScore] = useState<
+    QuizResultData[]
+  >([]);
+
+  /*
+  useEffect(() => {
+    const storedData = localStorage.getItem("quizResponse");
+    if (storedData) {
+      const quizResult: QuizData = JSON.parse(storedData);
+      const questionDataList: QuestionData[] = quizResult.questionDataList; 
+      setResponse(questionDataList); 
+    }
+  }, [result]);
+  */
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
 
   const generateQuiz = async (value: number | null): Promise<void> => {
+    setIsLoading(true);
     const res = await fetchQuiz(value);
     const quizResponse = res.questionDataList;
     if (quizResponse) {
       setResponse(quizResponse);
+      setIsLoading(false);
       console.log(quizResponse);
     } else {
       console.error("Failed to fetch quiz.");
     }
   };
 
-  const handleAnswerChange = (
-questionId: number, id: number, selectedOption: string, correctOption: string  ) => {
+  const handleAnswerChange = (questionId: number, selectedOption: string) => {
     setResult((prev) => {
       const existingAnswerIndex = prev.findIndex(
-        (answer) => answer.questionId === questionId
+        (answer) => answer.questionNumber === questionId
       );
 
       if (existingAnswerIndex !== -1) {
@@ -44,19 +69,14 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
         updatedAnswers[existingAnswerIndex] = {
           ...updatedAnswers[existingAnswerIndex],
           answer: selectedOption,
-          correct: correctOption === selectedOption,
         };
         return updatedAnswers;
       } else {
         return [
           ...prev,
           {
-            id: id,
-            quizResultId: questionId, // I am not sure what should I put in here
-            questionId: questionId,
+            questionNumber: questionId,
             answer: selectedOption,
-            correct: correctOption === selectedOption,
-            points: 1,
           },
         ];
       }
@@ -64,15 +84,27 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
   };
 
   const submitQuiz = async (): Promise<void> => {
-    const calculatedScore = result.reduce((total, answer) => {
-      return total + (answer.correct ? 1 : 0);
-    }, 0);
-    
-    setScore(calculatedScore);
-  
-    console.log("Submitted results: ", result);
-    console.log("Final score: ", calculatedScore);
+    if (!selectedTopic) {
+      console.error("No topic selected.");
+      return;
+    }
+
+    const submissionPayload: QuizSubmitData = {
+      quizId: selectedTopic,
+      quizSubmitAnswerDataList: result,
+    };
+
+    const quizResult = await fetchResult(submissionPayload);
+    setScore(quizResult.score);
+    console.log("Submitting quiz with result:", quizResult);
+    console.log("Submitting quiz with payload:", submissionPayload);
+    setQuizResultWithScore(quizResult);
   };
+
+  async function downloadQuiz() {
+    const element = document.querySelector("#answers");
+    html2pdf().from(element).save();
+  }
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
@@ -123,7 +155,10 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
         ))}
       </div>
 
-      <div className="basis-3/4 flex flex-col p-3 h-full rounded bg-white">
+      <div
+        className="basis-3/4 flex flex-col p-3 h-full rounded bg-white"
+        id="answers"
+      >
         <div
           className="basis-2/12 flex flex-row justify-between"
           style={{ height: "10%" }}
@@ -167,7 +202,12 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
                 </p>
               )}
 
-              <div className="flex justify-center align-middle">
+              {isLoading? (
+                <div className="flex justify-center mt-4">
+                  <p className="text-xl font-semibold">Loading...</p>
+                </div>
+              ) : (
+                <div className="flex justify-center align-middle">
                 <button
                   className="bg-blue-500 text-white p-4 m-4 rounded-lg"
                   disabled={selectedTopic === 0}
@@ -176,17 +216,21 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
                   Generate quiz!
                 </button>
               </div>
+              )}
             </div>
           ) : (
             <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white shadow-lg overflow-auto">
-              {/* Display Quiz Questions */}
               {response.map((question, index) => (
                 <div key={question.id} className="mb-4 border-b-2 p-2 py-4">
                   <p className="font-semibold pb-2">
                     {index + 1}. {question.question}
                   </p>
                   <div className="flex flex-col pl-6">
-                    {(['option_a', 'option_b', 'option_c'] as Array<keyof QuestionData>).map((optionKey) => (
+                    {(
+                      ["option_a", "option_b", "option_c"] as Array<
+                        keyof QuestionData
+                      >
+                    ).map((optionKey) => (
                       <div key={optionKey}>
                         <input
                           id={`${question.id}_${optionKey}`}
@@ -197,13 +241,27 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
                           onChange={(e) =>
                             handleAnswerChange(
                               question.question_id,
-                              question.id,
-                              e.target.value,
-                              question.correct_option
+                              e.target.value
                             )
                           }
                         />
-                        {question[optionKey]}
+                        <span className="mr-2">{question[optionKey]}</span>
+                        {score > 0 && optionKey === question.correct_option && (
+                          <Image
+                            src="/correct.png"
+                            alt="Correct"
+                            width={20}
+                            height={20}
+                          />
+                        )}
+                        {score > 0 && optionKey !== question.correct_option && (
+                          <Image
+                            src="/incorrect.png"
+                            alt="Incorrect"
+                            width={20}
+                            height={20}
+                          />
+                        )}
                       </div>
                     ))}
                   </div>
@@ -212,18 +270,20 @@ questionId: number, id: number, selectedOption: string, correctOption: string  )
               <div className="flex justify-end">
                 {score === 0 ? (
                   <button
-                  className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
-                  onClick={submitQuiz}
-                >
-                  Send Answers
-                </button>
+                    className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
+                    onClick={submitQuiz}
+                  >
+                    Send Answers
+                  </button>
                 ) : (
                   <button
-                  className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
-                  onClick={submitQuiz}
-                >
-                  Export as pdf
-                </button>
+                    className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 flex align-middle justify-center "
+                    data-html2canvas-ignore
+                    onClick={downloadQuiz}
+                  >
+                    <CgSoftwareDownload className="w-6 h-6" />
+                    <span>Download as PDF</span>
+                  </button>
                 )}
               </div>
             </div>
