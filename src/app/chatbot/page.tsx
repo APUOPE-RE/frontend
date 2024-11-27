@@ -74,10 +74,10 @@ export default function Chatbot() {
 
 	return (
 		<div
-			className="flex flex-row bg-gray-100 py-3"
+			className="grid lg:grid-cols-4 bg-gray-100 py-3"
 			style={{ height: "88dvh" }}
 		>
-			<div className="basis-1/4 bg-white p-3 h-full mx-3 rounded">
+			<div className="lg:col-span-1 bg-white p-3 h-full mx-3 rounded">
 				<div className="flex justify-between items-center w-full">
 					<h1 className="font-extrabold text-[4vw]">Chatbot</h1>
 					<Image
@@ -98,9 +98,9 @@ export default function Chatbot() {
 				</div>
 			</div>
 
-			<div className="basis-3/4 bg-white p-3 me-3 h-full rounded">
-				<div className="w-100" style={{ height: "90%" }}>
-					<div className="h-full w-full p-4 border bg-gray-100 border-gray-300 rounded-lg space-y-4 overflow-auto">
+			<div className="lg:mb-0 lg:col-span-3 bg-white p-3 mx-3 mt-3 lg:m-0 lg:me-3 lg:h-full rounded">
+				<div className="w-100 h-[85%] lg:h-[90%]">
+					<div className="w-full h-[98%]  p-4 border bg-gray-100 border-gray-300 rounded-lg space-y-4 overflow-auto">
 						{messages.map((msg, idx) => (
 							<div key={idx}>
 								{msg.from === "user" && (
@@ -121,27 +121,26 @@ export default function Chatbot() {
 				</div>
 
 				<div
-					className="flex w-full items-center"
-					style={{ height: "10dvh" }}
+					className="flex w-full h-[15%] lg:h-[10%] items-top"
 				>
 					<form
 						className="w-full"
 						onSubmit={handleSubmit(handleRequest)}
 					>
-						<div className="flex">
+						<div className="flex h-full">
 							<input
 								type="text"
 								id="input"
-								className="basis-11/12 me-2 p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
+								className="basis-11/12 h-full me-2 px-2 lg:text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
 								placeholder="Say something..."
 								{...register("content", { required: true })}
 								disabled={disableInputField}
 							/>
 							<button
 								type="submit"
-								className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
+								className="text-white bg-blue-700 font-medium rounded-lg px-4 py-2 basis-1/12 flex justify-center items-center"
 							>
-								<IoSendSharp className="text-2xl" />
+								<IoSendSharp className="lg:text-2xl" />
 							</button>
 						</div>
 					</form>
@@ -149,7 +148,7 @@ export default function Chatbot() {
 			</div>
 			{isModelOpen && (
 				<div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-					<div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[40%] h-[70%] text-center">
+					<div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[80%] lg:w-[40%] h-[70%] text-center">
 						<div>
 							<h2 className="text-2xl font-bold mb-2">
 								New Conversation
