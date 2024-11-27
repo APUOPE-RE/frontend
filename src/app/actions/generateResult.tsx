@@ -17,7 +17,6 @@ export const fetchResult = async (submissionPayload: QuizSubmitData) => {
 
     if (response.ok) {
       const data = await response.json();
-      // localStorage.setItem("quizResult", JSON.stringify(data));
       return data;
     } else {
       return console.error("Failed");

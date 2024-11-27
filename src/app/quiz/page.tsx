@@ -30,17 +30,6 @@ export default function Quiz() {
     QuizResultData[]
   >([]);
 
-  /*
-  useEffect(() => {
-    const storedData = localStorage.getItem("quizResponse");
-    if (storedData) {
-      const quizResult: QuizData = JSON.parse(storedData);
-      const questionDataList: QuestionData[] = quizResult.questionDataList; 
-      setResponse(questionDataList); 
-    }
-  }, [result]);
-  */
-
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
