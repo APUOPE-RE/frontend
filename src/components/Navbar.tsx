@@ -38,10 +38,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 		router.push("/login");
 	};
 
-	useEffect(() => {
-		console.log("currentLink: ", currentLink);
-	}, [currentLink]);
-
 	return (
 		<>
 			<header className="fixed top-0 left-0 w-full">
