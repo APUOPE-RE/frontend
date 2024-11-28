@@ -12,7 +12,6 @@ import {
 } from "../types/types";
 import { fetchResult } from "../actions/generateResult";
 import { CgSoftwareDownload } from "react-icons/cg";
-import html2pdf from "html2pdf.js";
 
 export default function Quiz() {
   const { materials } = useAppContext();
@@ -91,8 +90,7 @@ export default function Quiz() {
   };
 
   async function downloadQuiz() {
-    const element = document.querySelector("#answers");
-    html2pdf().from(element).save();
+    
   }
 
   return (
@@ -146,7 +144,6 @@ export default function Quiz() {
 
       <div
         className="basis-3/4 flex flex-col p-3 h-full rounded bg-white"
-        id="answers"
       >
         <div
           className="basis-2/12 flex flex-row justify-between"
@@ -267,7 +264,6 @@ export default function Quiz() {
                 ) : (
                   <button
                     className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 flex align-middle justify-center "
-                    data-html2canvas-ignore
                     onClick={downloadQuiz}
                   >
                     <CgSoftwareDownload className="w-6 h-6" />
