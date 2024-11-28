@@ -120,6 +120,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 									<>
 										<Link href="/login">
 											<button
+												id="login-button"
 												className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
 												onClick={() =>
 													setMenuOpen(false)
@@ -130,6 +131,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 										</Link>
 										<Link href="/register">
 											<button
+												id="register-button"
 												className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
 												onClick={() =>
 													setMenuOpen(false)
@@ -141,6 +143,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 									</>
 								) : (
 									<button
+										//id="logout-button"
 										className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md"
 										onClick={() => {
 											logoutAndRedirect();
