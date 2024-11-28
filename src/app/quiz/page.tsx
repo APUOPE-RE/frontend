@@ -12,6 +12,7 @@ import {
 } from "../types/types";
 import { fetchResult } from "../actions/generateResult";
 import { CgSoftwareDownload } from "react-icons/cg";
+import { downloadQuizPdf } from "../actions/quizDownloader";
 
 export default function Quiz() {
   const { materials } = useAppContext();
@@ -95,7 +96,9 @@ export default function Quiz() {
     setQuizResultWithScore(quizResult);
   };
 
-  async function downloadQuiz() {}
+  async function downloadQuiz() {
+    await downloadQuizPdf(quizid);
+  }
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
