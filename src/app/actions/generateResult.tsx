@@ -19,9 +19,12 @@ export const fetchResult = async (submissionPayload: QuizSubmitData) => {
       const data = await response.json();
       return data;
     } else {
-      return console.error("Failed");
+      const errorData = await response.text(); 
+      console.error("Failed", errorData);
+      return null
     }
   } catch (error) {
-    return console.error("Error", error);
+    console.error("Error", error);
+    throw error;
   }
 };

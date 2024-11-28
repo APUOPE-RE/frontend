@@ -63,7 +63,7 @@ export type QuestionData = {
     option_c: string;
     correct_option: string;
     points: number;
-	question_id: number;
+	question_number: number;
 }
 
 export type QuizData = {

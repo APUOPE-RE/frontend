@@ -81,17 +81,24 @@ export default function Quiz() {
       quizId: selectedTopic,
       quizSubmitAnswerDataList: result,
     };
+    console.log("the payload is: ", submissionPayload)
 
     const quizResult = await fetchResult(submissionPayload);
+    if (!quizResult || !quizResult.score) {
+      console.error(
+        "Quiz result is invalid or score is not available.",
+        quizResult
+      );
+      return;
+    }
     setScore(quizResult.score);
+
     console.log("Submitting quiz with result:", quizResult);
     console.log("Submitting quiz with payload:", submissionPayload);
     setQuizResultWithScore(quizResult);
   };
 
-  async function downloadQuiz() {
-    
-  }
+  async function downloadQuiz() {}
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
@@ -142,9 +149,7 @@ export default function Quiz() {
         ))}
       </div>
 
-      <div
-        className="basis-3/4 flex flex-col p-3 h-full rounded bg-white"
-      >
+      <div className="basis-3/4 flex flex-col p-3 h-full rounded bg-white">
         <div
           className="basis-2/12 flex flex-row justify-between"
           style={{ height: "10%" }}
@@ -188,20 +193,20 @@ export default function Quiz() {
                 </p>
               )}
 
-              {isLoading? (
+              {isLoading ? (
                 <div className="flex justify-center mt-4">
                   <p className="text-xl font-semibold">Loading...</p>
                 </div>
               ) : (
                 <div className="flex justify-center align-middle">
-                <button
-                  className="bg-blue-500 text-white p-4 m-4 rounded-lg"
-                  disabled={selectedTopic === 0}
-                  onClick={() => generateQuiz(selectedTopic)}
-                >
-                  Generate quiz!
-                </button>
-              </div>
+                  <button
+                    className="bg-blue-500 text-white p-4 m-4 rounded-lg"
+                    disabled={selectedTopic === 0}
+                    onClick={() => generateQuiz(selectedTopic)}
+                  >
+                    Generate quiz!
+                  </button>
+                </div>
               )}
             </div>
           ) : (
@@ -226,7 +231,7 @@ export default function Quiz() {
                           className="mr-3"
                           onChange={(e) =>
                             handleAnswerChange(
-                              question.question_id,
+                              question.question_number,
                               e.target.value
                             )
                           }
