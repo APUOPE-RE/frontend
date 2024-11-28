@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { fetchQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
 import {
@@ -25,6 +25,7 @@ export default function Quiz() {
   const [response, setResponse] = useState<QuestionData[]>([]);
   const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
   const [score, setScore] = useState<number>(0);
+  const [quizid, setQuizid] = useState<number>(0);
   const [quizResultWithScore, setQuizResultWithScore] = useState<
     QuizResultData[]
   >([]);
@@ -35,12 +36,12 @@ export default function Quiz() {
 
   const generateQuiz = async (value: number | null): Promise<void> => {
     setIsLoading(true);
-    const res = await fetchQuiz(value);
+    const res: QuizData = await fetchQuiz(value);
+    setQuizid(res.id);
     const quizResponse = res.questionDataList;
     if (quizResponse) {
       setResponse(quizResponse);
       setIsLoading(false);
-      console.log(quizResponse);
     } else {
       console.error("Failed to fetch quiz.");
     }
@@ -78,10 +79,9 @@ export default function Quiz() {
     }
 
     const submissionPayload: QuizSubmitData = {
-      quizId: selectedTopic,
+      quizId: quizid,
       quizSubmitAnswerDataList: result,
     };
-    console.log("the payload is: ", submissionPayload)
 
     const quizResult = await fetchResult(submissionPayload);
     if (!quizResult || !quizResult.score) {
@@ -92,9 +92,6 @@ export default function Quiz() {
       return;
     }
     setScore(quizResult.score);
-
-    console.log("Submitting quiz with result:", quizResult);
-    console.log("Submitting quiz with payload:", submissionPayload);
     setQuizResultWithScore(quizResult);
   };
 
