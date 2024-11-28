@@ -17,7 +17,7 @@ export default function Chatbot() {
 	const [isModelOpen, setIsModelOpen] = useState(false);
 	const [topic, setTopic] = useState("");
 	const [selectedTopic, setSelectedTopic] = useState(0);
-	const { setFetchData, materials } = useAppContext();
+	const { setFetchConversationsData, materials } = useAppContext();
 
 	const {
 		handleSubmit,
@@ -55,7 +55,7 @@ export default function Chatbot() {
 					...list,
 					{ from: "bot", message: responseData.content },
 				]);
-				setFetchData(true);
+				setFetchConversationsData(true);
 
 				if (conversationId === undefined) {
 					setValue("conversationId", response.data.conversationId);

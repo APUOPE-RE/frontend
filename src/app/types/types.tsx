@@ -53,6 +53,7 @@ export type QuestionData = {
     optionC: string;
     correctOption: string;
     points: number;
+    questionNumber: number;
 }
 
 export type QuizData = {
@@ -63,13 +64,19 @@ export type QuizData = {
     questionDataList: QuestionData[];
 }
 
+export type QuizSummaryData = {
+    quizId: number;
+    quizData: QuizData;
+    quizResultData: QuizResultData;
+}
+
 export type QuizResultData = {
     id: number;
     accountId: number;
     quizId: number;
     score: number;
     maxScore: number;
-    dateTime: Date;
+    datetime: Date;
     quizAnswerDataList: QuizAnswerData[];
 }
 
@@ -80,6 +87,7 @@ export type QuizAnswerData = {
     answer: string;
     correct: boolean;
     points: number;
+    questionNumber: number;
 }
 
 export type RegistrationData = {

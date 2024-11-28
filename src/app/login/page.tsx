@@ -17,7 +17,7 @@ function Login() {
 		setAuthenticated,
 		setRegisterSuccess,
 		registerSuccess,
-		setFetchData,
+		setFetchConversationsData,
 	} = useAppContext();
 
 	const {
@@ -65,7 +65,7 @@ function Login() {
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
 			router.push("/chatbot");
-			setFetchData(true);
+			setFetchConversationsData(true);
 		}
 	};
 
