@@ -47,7 +47,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 			<header className="fixed top-0 left-0 w-full">
 				<div className="w-full h-20 shadow-xl bg-blue-200 flex justify-between border-b-2 border-blue-400">
 					<div className="flex items-center h-full px-4">
-						<Link href="/chatbot">
+						<Link 
+							id="logo-link"
+							href="/chatbot">
 							<Image
 								src="/logo.png"
 								alt="logo"
@@ -61,6 +63,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 						<ul className="flex items-center h-full px-4 text-black text-xl">
 							<li className="font-semibold h-full">
 								<Link
+									id="previous-quizzes-link"
 									href="/previous-quizzes"
 									onClick={() =>
 										setCurrentLink("previous-quizzes")
@@ -76,6 +79,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 							</li>
 							<li className="font-semibold h-full">
 								<Link
+									id="quiz-maker-link"
 									href="/quiz"
 									onClick={() => setCurrentLink("quiz")}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
@@ -89,6 +93,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 							</li>
 							<li className="font-semibold h-full">
 								<Link
+									id="chatbot-link"
 									href="/chatbot"
 									onClick={() => setCurrentLink("chatbot")}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
@@ -104,6 +109,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 					</div>
 					<div className="flex items-center gap-7 mx-7 relative">
 						<Image
+							id="user-icon"
 							src="/user_icon.png"
 							alt="User Icon"
 							width={40}
@@ -143,7 +149,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 									</>
 								) : (
 									<button
-										//id="logout-button"
+										id="logout-button"
 										className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md"
 										onClick={() => {
 											logoutAndRedirect();
