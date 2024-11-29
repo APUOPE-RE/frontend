@@ -45,15 +45,25 @@ export type NewPasswordData = {
 	errors: string;
 };
 
+export type QuizSubmitAnswerData = {
+	questionNumber: number;
+	answer: string;
+  };
+
+export type QuizSubmitData = {
+	quizId: number;
+	quizSubmitAnswerDataList: QuizSubmitAnswerData[];
+  };
+  
 export type QuestionData = {
     id: number;
     question: string;
-    optionA: string;
-    optionB: string;
-    optionC: string;
-    correctOption: string;
+    option_a: string;
+    option_b: string;
+    option_c: string;
+    correct_option: string;
     points: number;
-    questionNumber: number;
+	question_number: number;
 }
 
 export type QuizData = {

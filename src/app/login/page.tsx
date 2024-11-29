@@ -82,7 +82,7 @@ function Login() {
 				</div>
 			)}
 			<div className="w-full max-w-md p-8 pt-16 bg-white rounded-lg shadow-md">
-				<h2 className="text-2xl font-bold mb-3 text-center mb-10">
+				<h2 className="text-2xl font-bold mb-3 text-center">
 					Login
 				</h2>
 				<form onSubmit={handleSubmit(handleLogin)}>

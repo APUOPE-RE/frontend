@@ -1,12 +1,10 @@
 "use client";
 import Image from "next/image";
-// import Link from "next/link";
-// import { useForm } from "react-hook-form";
-// import { UserCredentials, validateUser } from "../actions/login";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { QuestionData, QuizAnswerData, QuizSummaryData } from "../types/types";
 import { PreviousQuizzes } from "./PreviousQuizzes";
 import { CgSoftwareDownload } from "react-icons/cg";
+import { downloadQuizPdf } from "../actions/quizDownloader";
 
 export default function Quiz() {
 	const [quizSummaryData, setQuizSummaryData] = useState<QuizSummaryData>();
@@ -15,53 +13,6 @@ export default function Quiz() {
 	);
 	const [answerDataList, setAnswerDataList] = useState<QuizAnswerData[]>([]);
 	const [title, setTitle] = useState("");
-
-	// temp here
-	const downloadQuiz = async () => {
-		try {
-			const token = localStorage.getItem("token");
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/fetchQuizPdf/${quizSummaryData?.quizId}`,
-				{
-					method: "GET",
-					headers: {
-						Authorization: `Bearer ${token}`,
-						"Content-Type": "application/json",
-					},
-					credentials: "include",
-				}
-			)
-				.then((response) => {
-					if (!response.ok) {
-						throw new Error("Failed to fetch the PDF");
-					}
-					return response.blob(); // Convert the response to a Blob
-				})
-				.then((blob) => {
-					const now = new Date();
-					const datetime =
-						now.getFullYear() +
-						"-" +
-						(now.getMonth() + 1) +
-						"-" +
-						now.getDate() +
-						"-";
-					const url = window.URL.createObjectURL(blob);
-					const a = document.createElement("a"); // Create a download link
-					a.style.display = "none";
-					a.href = url;
-					a.download = datetime + "quiz-" + quizSummaryData?.quizId; // Set the downloaded file name
-					document.body.appendChild(a);
-					a.click(); // Trigger the download
-					window.URL.revokeObjectURL(url); // Clean up the Blob URL
-				})
-				.catch((error) => console.error("Error fetching PDF:", error));
-			console.log(response);
-		} catch (error) {
-			console.error("Error during conversation fetch:", error);
-			return { success: false, data: "An error occurred" };
-		}
-	};
 
 	return (
 		<div
@@ -152,10 +103,10 @@ export default function Quiz() {
 												className="mr-2 p-2"
 												style={
 													answerDataList.at(
-														question.questionNumber
+														question.question_number
 													)?.answer === "option_a" &&
 													answerDataList.at(
-														question.questionNumber
+														question.question_number
 													)?.answer ===
 														question.correct_option
 														? {
@@ -164,11 +115,11 @@ export default function Quiz() {
 																	"5px",
 														  }
 														: answerDataList.at(
-																question.questionNumber
+																question.question_number
 														  )?.answer ===
 																"option_a" &&
 														  answerDataList.at(
-																question.questionNumber
+																question.question_number
 														  )?.answer !==
 																question.correct_option
 														? {
@@ -208,10 +159,10 @@ export default function Quiz() {
 												className="mr-2 p-2"
 												style={
 													answerDataList.at(
-														question.questionNumber
+														question.question_number
 													)?.answer === "option_b" &&
 													answerDataList.at(
-														question.questionNumber
+														question.question_number
 													)?.answer ===
 														question.correct_option
 														? {
@@ -220,11 +171,11 @@ export default function Quiz() {
 																	"5px",
 														  }
 														: answerDataList.at(
-																question.questionNumber
+																question.question_number
 														  )?.answer ===
 																"option_b" &&
 														  answerDataList.at(
-																question.questionNumber
+																question.question_number
 														  )?.answer !==
 																question.correct_option
 														? {
@@ -264,10 +215,10 @@ export default function Quiz() {
 												className="mr-2 p-2"
 												style={
 													answerDataList.at(
-														question.questionNumber
+														question.question_number
 													)?.answer === "option_c" &&
 													answerDataList.at(
-														question.questionNumber
+														question.question_number
 													)?.answer ===
 														question.correct_option
 														? {
@@ -276,11 +227,11 @@ export default function Quiz() {
 																	"5px",
 														  }
 														: answerDataList.at(
-																question.questionNumber
+																question.question_number
 														  )?.answer ===
 																"option_c" &&
 														  answerDataList.at(
-																question.questionNumber
+																question.question_number
 														  )?.answer !==
 																question.correct_option
 														? {
@@ -318,7 +269,7 @@ export default function Quiz() {
 						{quizSummaryData?.quizId && (
 							<button
 								className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 flex align-middle justify-center "
-								onClick={() => downloadQuiz()}
+								onClick={() => downloadQuizPdf(quizSummaryData.quizId)}
 							>
 								<CgSoftwareDownload className="w-6 h-6" />
 								<span>Download as PDF</span>
