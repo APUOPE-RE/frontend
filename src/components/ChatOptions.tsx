@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Dialog,
   DialogPanel,
@@ -13,26 +12,58 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import { FiEdit3 } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
 
-export default function ChatOptions() {
+export default function ChatOptions({ conversation }: any) {
   const [dialogWindow, setDialogWindow] = useState<string | null>(null);
   const [chatTitle, setChatTitle] = useState<string>("Conversation title 1");
 
+  const { id } = conversation;
+  const token = localStorage.getItem("token");
+
   const handleTitleChange = () => {
-    console.log("CHANGE TITLE");
+    const changeTitle = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/updateConversationTitle/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ newTitle: chatTitle }),
+        }
+      );
+
+      console.log("CHANGE TITLE RESPONSE: ", response);
+    };
+
+    changeTitle();
   };
 
   const handleDeleteChat = () => {
-    console.log("DELETE CHAT");
+    const deleteConversation = async () => {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/deleteConversation/${id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      console.log("DELETE CHAT RESPONSE: ", response);
+    };
+
+    deleteConversation();
   };
 
   return (
     <>
       <Popover className="relative">
-        <PopoverButton
-          // onMouseEnter={() => setIsOpen(true)}
-          // onMouseLeave={() => setIsOpen(false)}
-          className="flex rounded-full items-center"
-        >
+        <PopoverButton className="flex rounded-full items-center">
           <FiMoreHorizontal size={26} />
         </PopoverButton>
         <PopoverPanel
