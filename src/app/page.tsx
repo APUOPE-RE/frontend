@@ -1,9 +1,5 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
-  return (
-    <div>
-      <h2>APUOPE-RE</h2>
-    </div>
-  );
+  redirect("/login");
 }
