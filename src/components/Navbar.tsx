@@ -10,7 +10,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const { isAuthenticated, setAuthenticated } = useAppContext();
 	const router = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
+	const mobileMenuRef = useRef<HTMLDivElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
 
 	useEffect(() => {
@@ -20,11 +22,11 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				menuRef.current &&
-				!menuRef.current.contains(event.target as Node)
-			) {
+			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
 				setMenuOpen(false);
+			}
+			if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+				setMobileMenuOpen(false);
 			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
@@ -41,6 +43,22 @@ export const Navbar: React.FC = (): JSX.Element => {
 	useEffect(() => {
 		console.log("currentLink: ", currentLink);
 	}, [currentLink]);
+
+	useEffect(() => {
+		console.log("Menu state changed: ", menuOpen);
+	}, [menuOpen]);
+
+	useEffect(() => {
+		if (menuRef.current) {
+			console.log("MenuRef current:", menuRef.current);
+		}
+	}, [menuOpen]);
+
+	useEffect(() => {
+		if (mobileMenuRef.current) {
+			console.log("MenuRef current:", mobileMenuRef.current);
+		}
+	}, [mobileMenuOpen]);
 
 	return (
 		<>
@@ -108,58 +126,55 @@ export const Navbar: React.FC = (): JSX.Element => {
 						)}
 					</div>
 
-					<div className="flex items-center ml-auto mr-6">
-						<nav className="hidden md:flex space-x-6">
-							<Image
-								src="/user_icon.png"
-								alt="User Icon"
-								width={40}
-								height={40}
-								className="cursor-pointer"
-								onClick={() => setMenuOpen((prev) => !prev)}
-							/>
-							{menuOpen && (
-								<div
-									ref={menuRef}
-									className="absolute top-full right-0 w-28 bg-white shadow-lg rounded-md z-50"
-								>
-									{isAuthenticated ? (
-										<button
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md"
-											onClick={() => { logoutAndRedirect(); setMenuOpen(false); }}
+
+					<div className="hidden md:flex items-center ml-auto mr-6 relative">
+						<Image
+							src="/user_icon.png"
+							alt="User Icon"
+							width={40}
+							height={40}
+							className="cursor-pointer"
+							onClick={() => setMenuOpen((prev) => !prev)}
+						/>
+
+						{menuOpen && (
+							<div
+								ref={menuRef}
+								className="absolute top-full right-0 w-28 bg-white rounded-md z-50"
+							>
+								{isAuthenticated ? (
+									<button
+										className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md"
+										onClick={() => { logoutAndRedirect(); setMenuOpen(false); }}
+									>
+										Log out
+									</button>
+								) : (
+									<>
+										<Link href="/login"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
+											onClick={() => setMenuOpen(false)}
 										>
-											Log out
-										</button>
-									) : (
-										<>
-											<Link href="/login">
-												<button
-													className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
-													onClick={() => setMenuOpen(false)}
-												>
-													Log in
-												</button>
-											</Link>
-											<Link href="/register">
-												<button
-													className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
-													onClick={() => setMenuOpen(false)}
-												>
-													Sign up
-												</button>
-											</Link>
-										</>
-									)}
-								</div>
-							)}
-						</nav>
+											Log in
+										</Link>
+										<Link href="/register"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
+											onClick={() => setMenuOpen(false)}
+										>
+											Sign up
+										</Link>
+									</>
+
+								)}
+							</div>
+						)}
 					</div>
 
 					{/* Mobile Menu */}
 					<div>
 						<button
 							className="md:hidden p-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center"
-							onClick={() => setMenuOpen((prev) => !prev)}
+							onClick={() => setMobileMenuOpen((prev) => !prev)}
 						>
 							<span className="sr-only">Open menu</span>
 							<svg
@@ -177,56 +192,55 @@ export const Navbar: React.FC = (): JSX.Element => {
 								/>
 							</svg>
 						</button>
-						{menuOpen && (
-							<div ref={menuRef}
-								className="flex flex-col items-start bg-white absolute top-16 right-0 w-40 shadow-lg rounded-md z-50 md:hidden">
+						{mobileMenuOpen && (
+							<div ref={mobileMenuRef}
+								className="flex flex-col items-start bg-white absolute top-16 right-0 w-40 rounded-md z-50 md:hidden">
 								{isAuthenticated ? (
 									<>
 										<Link
 											href="/chatbot"
-											onClick={() => setMenuOpen(false)}
-											className="w-full px-4 py-2 text-left hover:bg-gray-200"
+											onClick={() => setMobileMenuOpen(false)}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
 										>
 											Chatbot
 										</Link>
 										<Link
 											href="/quiz"
-											onClick={() => setMenuOpen(false)}
-											className="w-full px-4 py-2 text-left hover:bg-gray-200"
+											onClick={() => setMobileMenuOpen(false)}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left"
 										>
 											Quiz Maker
 										</Link>
 										<Link
 											href="/previous-quizzes"
-											onClick={() => setMenuOpen(false)}
-											className="w-full px-4 py-2 text-left hover:bg-gray-200"
+											onClick={() => setMobileMenuOpen(false)}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left"
 										>
 											Previous Quizzes
 										</Link>
-
 										<button
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
 											onClick={() => {
 												logoutAndRedirect();
-												setMenuOpen(false);
+												setMobileMenuOpen(false);
 											}}
-											className="w-full px-4 py-2 text-left hover:bg-gray-200"
 										>
-											Log Out
+											Log out
 										</button>
 									</>
 								) : (
 									<>
 										<Link
 											href="/login"
-											onClick={() => setMenuOpen(false)}
-											className="w-full px-4 py-2 text-left hover:bg-gray-200"
+											onClick={() => setMobileMenuOpen(false)}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
 										>
 											Log In
 										</Link>
 										<Link
-											href="/signin"
-											onClick={() => setMenuOpen(false)}
-											className="w-full px-4 py-2 text-left hover:bg-gray-200"
+											href="/register"
+											onClick={() => setMobileMenuOpen(false)}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
 										>
 											Sign In
 										</Link>
@@ -235,7 +249,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 							</div>
 						)}
 					</div>
-				</div>
+				</div >
 			</header >
 			<div className="w-full bg-white" style={{ height: "12dvh" }}></div>
 		</>
