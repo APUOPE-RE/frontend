@@ -7,17 +7,22 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FiEdit3 } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
 
 export default function ChatOptions({ conversation }: any) {
   const [dialogWindow, setDialogWindow] = useState<string | null>(null);
-  const [chatTitle, setChatTitle] = useState<string>("Conversation title 1");
+  const [newTitle, setNewTitle] = useState<string>("");
 
   const { id } = conversation;
   const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    console.log("CONVERSATION: ", conversation);
+    setNewTitle(conversation.title);
+  }, []);
 
   const handleTitleChange = () => {
     const changeTitle = async () => {
@@ -30,7 +35,7 @@ export default function ChatOptions({ conversation }: any) {
             "Content-Type": "application/json",
           },
           credentials: "include",
-          body: JSON.stringify({ newTitle: chatTitle }),
+          body: newTitle,
         }
       );
 
@@ -103,13 +108,14 @@ export default function ChatOptions({ conversation }: any) {
                   <h2 className="text-2xl">Change title</h2>
 
                   <p className="mt-4 text-lg">
-                    Introduce a new title for this <strong>{chatTitle}</strong>:
+                    Introduce a new title for this{" "}
+                    <strong>{conversation.title}</strong>:
                   </p>
 
                   <Input
                     type="text"
-                    value={chatTitle}
-                    onChange={(e: any) => setChatTitle(e.target.value)}
+                    value={newTitle}
+                    onChange={(e: any) => setNewTitle(e.target.value)}
                     className="mt-4 border w-full border-gray-500 rounded-lg py-2 px-3 text-lg"
                   />
 

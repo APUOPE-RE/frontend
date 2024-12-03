@@ -25,7 +25,7 @@ export default function Chatbot() {
     reset,
     setValue,
     watch,
-    formState: {},
+    formState: { errors },
   } = useForm<ChatBotRequestData>();
 
   const lectureId = watch("lectureId");
@@ -36,6 +36,8 @@ export default function Chatbot() {
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
+
+  console.log("CONVERSATION ID: ", conversationId);
 
   const handleRequest = async (data: ChatBotRequestData) => {
     if (!data.content.trim() || !lectureId) return;
@@ -54,7 +56,7 @@ export default function Chatbot() {
         ]);
         setFetchData(true);
 
-        if (conversationId === undefined) {
+        if (conversationId === undefined || conversationId === 0) {
           setValue("conversationId", response.data.conversationId);
         }
       }
@@ -88,6 +90,9 @@ export default function Chatbot() {
             currentConversation={conversationId}
             setMessages={setMessages}
             setValue={setValue}
+            setCurrentConversationId={(id: number) =>
+              setValue("conversationId", id)
+            }
           />
         </div>
       </div>
