@@ -81,6 +81,7 @@ export default function Chatbot() {
 				<div className="flex justify-between items-center w-full">
 					<h1 className="font-extrabold text-[4vw]">Chatbot</h1>
 					<Image
+						id="new_conversation"
 						src="/new_conversation.png"
 						alt="Icon for creating new conversation"
 						width={36}
@@ -105,7 +106,7 @@ export default function Chatbot() {
 							<div key={idx}>
 								{msg.from === "user" && (
 									<div className="flex justify-end">
-										<div className="w-1/2 border p-2 bg-white border-gray-300 rounded-lg">
+										<div id="bot_response" className="w-1/2 border p-2 bg-white border-gray-300 rounded-lg">
 											{msg.message}
 										</div>
 									</div>
@@ -139,6 +140,7 @@ export default function Chatbot() {
 								disabled={disableInputField}
 							/>
 							<button
+								id="submit_prompt"
 								type="submit"
 								className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
 							>
@@ -215,6 +217,7 @@ export default function Chatbot() {
 								Close
 							</button>
 							<button
+								id="create_chat"
 								className="bg-blue-500 text-white py-2 px-4 rounded"
 								onClick={() => (
 									reset(),
