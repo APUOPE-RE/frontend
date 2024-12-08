@@ -14,6 +14,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const menuRef = useRef<HTMLDivElement>(null);
 	const mobileMenuRef = useRef<HTMLDivElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
+	const [isToggleButtonClicked, setIsToggleButtonClicked] = useState(false);
 
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
@@ -22,6 +23,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
+			if (isToggleButtonClicked) {
+				setIsToggleButtonClicked(false);
+				return;
+			}
 			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
 				setMenuOpen(false);
 			}
@@ -33,7 +38,22 @@ export const Navbar: React.FC = (): JSX.Element => {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, []);
+	}, [isToggleButtonClicked]);
+
+	const handleToggleMenu = () => {
+		console.log("Toggle menu clicked");
+		setIsToggleButtonClicked(true);
+		if (menuOpen) {
+			setMenuOpen(false);
+		} else {
+			setMenuOpen(true);
+		}
+		if (mobileMenuOpen) {
+			setMobileMenuOpen(false);
+		} else {
+			setMobileMenuOpen(true);
+		}
+	}
 
 	const logoutAndRedirect = async () => {
 		await handleLogout(setAuthenticated);
@@ -65,7 +85,17 @@ export const Navbar: React.FC = (): JSX.Element => {
 			<header className="fixed top-0 left-0 w-full">
 				<div className="w-full h-20 shadow-xl bg-blue-200 flex justify-between border-b-2 border-blue-400">
 					<div className="flex items-center h-full px-4">
-						<Link href="/chatbot">
+						{isAuthenticated ? (
+							<Link href="/chatbot">
+								<Image
+									src="/logo.png"
+									alt="logo"
+									width={205}
+									height={75}
+									priority={true}
+								/>
+							</Link>
+						) : (
 							<Image
 								src="/logo.png"
 								alt="logo"
@@ -73,7 +103,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 								height={75}
 								priority={true}
 							/>
-						</Link>
+						)}
 					</div>
 
 					<div className="w-full hidden md:flex justify-center">
@@ -131,10 +161,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 						<Image
 							src="/user_icon.png"
 							alt="User Icon"
-							width={40}
-							height={40}
+							width={48}
+							height={48}
 							className="cursor-pointer"
-							onClick={() => setMenuOpen((prev) => !prev)}
+							onClick={() => handleToggleMenu()}
 						/>
 
 						{menuOpen && (
@@ -171,10 +201,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 					</div>
 
 					{/* Mobile Menu */}
-					<div>
+					<div className="md:hidden items-center ml-auto relative">
 						<button
-							className="md:hidden p-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center"
-							onClick={() => setMobileMenuOpen((prev) => !prev)}
+							className="p-4"
+							onClick={() => handleToggleMenu()}
 						>
 							<span className="sr-only">Open menu</span>
 							<svg
@@ -194,7 +224,8 @@ export const Navbar: React.FC = (): JSX.Element => {
 						</button>
 						{mobileMenuOpen && (
 							<div ref={mobileMenuRef}
-								className="flex flex-col items-start bg-white absolute top-16 right-0 w-40 rounded-md z-50 md:hidden">
+								className="absolute top-full right-0 w-28 bg-white rounded-md z-50 md:hidden"
+							>
 								{isAuthenticated ? (
 									<>
 										<Link
