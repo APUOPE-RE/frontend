@@ -92,8 +92,7 @@ const QUIZ_LIST = [
 
 export default function Quiz() {
   const [selectedQuizId, setSelectedQuizId] = useState(QUIZ_LIST[0].id);
-  const [title, setTitle] = useState("");
-  const { dropdownOpen, setDropdownOpen } = useAppContext();
+  const { dropdownOpen, setDropdownOpen, title, setTitle, searchInputRef } = useAppContext();
 
   const filteredQuizzes = QUIZ_LIST.filter((quiz) =>
     quiz.title.toLowerCase().includes(title.toLowerCase())
@@ -112,6 +111,7 @@ export default function Quiz() {
               type="search"
               placeholder="Search title"
               value={title}
+              ref={searchInputRef}
               onChange={(e) => setTitle(e.target.value)}
               className="w-[90%] h-8 mt-2 mb-2 mx-auto bg-slate-200 p-2 outline-none border border-gray-500"
             />
@@ -127,7 +127,6 @@ export default function Quiz() {
                 }}
               >
                 {quiz.title}
-                {/* <p className="text-lg font-semibold">{quiz.title}</p> */}
                 <div className="flex justify-between items-center mt-2">
                   <p className="text-sm text-gray-500">{quiz.date}</p>
                   <p className="bg-blue-500 text-center text-white rounded-xl px-2 py-1">

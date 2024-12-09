@@ -12,14 +12,18 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-	const { dropdownOpen, setDropdownOpen } = useAppContext();
+	const { dropdownOpen, setDropdownOpen, setTitle, searchInputRef } = useAppContext();
 	const menuRef = useRef<HTMLDivElement>(null);
 	const mobileMenuRef = useRef<HTMLDivElement>(null);
 	const imageRef = useRef<HTMLImageElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
+	const dropdownRef = useRef<HTMLButtonElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
 
 	const isOnPreviousQuizzesPage = pathname === "/previous-quizzes";
+	const navigate = async () => {
+		await new Promise((resolve) => setTimeout(resolve, 200));
+	};
 
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
@@ -40,6 +44,15 @@ export const Navbar: React.FC = (): JSX.Element => {
 			if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
 				setMobileMenuOpen(false);
 			}
+			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
+				searchInputRef.current && !searchInputRef.current.contains(event.target as Node)) {
+				const closeDropdownAfterNavigation = async () => {
+					await navigate();
+					setDropdownOpen(false);
+					setTitle("");
+				};
+				closeDropdownAfterNavigation();
+			}
 		};
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
@@ -54,6 +67,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 	const toggleDropdown = () => {
 		setDropdownOpen(!dropdownOpen);
+		if (!dropdownOpen) {
+			setTitle("");
+		}
 	};
 
 	const logoutAndRedirect = async () => {
@@ -203,8 +219,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 						{isOnPreviousQuizzesPage ? (
 							<button
 								className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+								ref={dropdownRef}
 								onClick={toggleDropdown}>
-								My Quizzes
+								Quiz Results
 							</button>
 						) : (
 							isAuthenticated ? (

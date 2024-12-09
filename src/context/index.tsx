@@ -5,6 +5,7 @@ import {
 	useContext,
 	ReactNode,
 	useEffect,
+	useRef,
 } from "react";
 import { fetchAllConversations } from "../app/actions/chatbot";
 import { ConversationData } from "../app/types/types";
@@ -21,6 +22,9 @@ interface AppContextType {
 	setDropdownOpen: (value: boolean) => void;
 	selectedQuizId: number;
 	setSelectedQuizId: (id: number) => void;
+	title: string;
+	setTitle: (value: string) => void;
+	searchInputRef: React.RefObject<HTMLInputElement>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -32,6 +36,8 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [selectedQuizId, setSelectedQuizId] = useState(0);
+	const [title, setTitle] = useState("");
+	const searchInputRef = useRef<HTMLInputElement>(null);
 
 	const setAuthenticated = (auth: boolean) => {
 		setIsAuthenticated(auth);
@@ -78,6 +84,9 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				setDropdownOpen,
 				selectedQuizId,
 				setSelectedQuizId,
+				title,
+				setTitle,
+				searchInputRef,
 			}}
 		>
 			{children}
