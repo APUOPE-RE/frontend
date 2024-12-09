@@ -7,7 +7,7 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated } = useAppContext();
+	const { isAuthenticated, setAuthenticated, setFetchData } = useAppContext();
 	const router = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -37,10 +37,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 		await handleLogout(setAuthenticated);
 		router.push("/login");
 	};
-
-	useEffect(() => {
-		console.log("currentLink: ", currentLink);
-	}, [currentLink]);
 
 	return (
 		<>
@@ -90,7 +86,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 							<li className="font-semibold h-full">
 								<Link
 									href="/chatbot"
-									onClick={() => setCurrentLink("chatbot")}
+									onClick={() => (
+										setCurrentLink("chatbot"),
+										setFetchData(true)
+									)}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "chatbot"
 											? "border-b-2  border-blue-600"
