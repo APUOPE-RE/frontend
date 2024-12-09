@@ -2,19 +2,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
 	const { isAuthenticated, setAuthenticated } = useAppContext();
 	const router = useRouter();
+	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const mobileMenuRef = useRef<HTMLDivElement>(null);
+	const imageRef = useRef<HTMLImageElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
-	const [isToggleButtonClicked, setIsToggleButtonClicked] = useState(false);
+
+	const isOnPreviousQuizzesPage = pathname === "/previous-quizzes";
 
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
@@ -23,8 +27,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (isToggleButtonClicked) {
-				setIsToggleButtonClicked(false);
+			if (imageRef.current && imageRef.current.contains(event.target as Node)) {
+				return;
+			}
+			if (buttonRef.current && buttonRef.current.contains(event.target as Node)) {
 				return;
 			}
 			if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -38,22 +44,12 @@ export const Navbar: React.FC = (): JSX.Element => {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, [isToggleButtonClicked]);
+	}, []);
 
 	const handleToggleMenu = () => {
-		console.log("Toggle menu clicked");
-		setIsToggleButtonClicked(true);
-		if (menuOpen) {
-			setMenuOpen(false);
-		} else {
-			setMenuOpen(true);
-		}
-		if (mobileMenuOpen) {
-			setMobileMenuOpen(false);
-		} else {
-			setMobileMenuOpen(true);
-		}
-	}
+		setMenuOpen(prev => !prev);
+		setMobileMenuOpen(prev => !prev);
+	};
 
 	const logoutAndRedirect = async () => {
 		await handleLogout(setAuthenticated);
@@ -65,10 +61,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 	}, [currentLink]);
 
 	useEffect(() => {
-		console.log("Menu state changed: ", menuOpen);
-	}, [menuOpen]);
-
-	useEffect(() => {
 		if (menuRef.current) {
 			console.log("MenuRef current:", menuRef.current);
 		}
@@ -76,7 +68,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 	useEffect(() => {
 		if (mobileMenuRef.current) {
-			console.log("MenuRef current:", mobileMenuRef.current);
+			console.log("Mobile menuRef current:", mobileMenuRef.current);
 		}
 	}, [mobileMenuOpen]);
 
@@ -84,7 +76,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 		<>
 			<header className="fixed top-0 left-0 w-full">
 				<div className="w-full h-20 shadow-xl bg-blue-200 flex justify-between border-b-2 border-blue-400">
-					<div className="flex items-center h-full px-4">
+					<div className="hidden md:flex items-center h-full px-4">
 						{isAuthenticated ? (
 							<Link href="/chatbot">
 								<Image
@@ -164,17 +156,18 @@ export const Navbar: React.FC = (): JSX.Element => {
 							width={48}
 							height={48}
 							className="cursor-pointer"
+							ref={imageRef}
 							onClick={() => handleToggleMenu()}
 						/>
 
 						{menuOpen && (
 							<div
 								ref={menuRef}
-								className="absolute top-full right-0 w-28 bg-white rounded-md z-50"
+								className="absolute top-full right-0 w-28 bg-white border border border-gray-500 rounded-md z-50"
 							>
 								{isAuthenticated ? (
 									<button
-										className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md"
+										className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md border border-gray-500"
 										onClick={() => { logoutAndRedirect(); setMenuOpen(false); }}
 									>
 										Log out
@@ -182,13 +175,13 @@ export const Navbar: React.FC = (): JSX.Element => {
 								) : (
 									<>
 										<Link href="/login"
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md border border-gray-500 "
 											onClick={() => setMenuOpen(false)}
 										>
 											Log in
 										</Link>
 										<Link href="/register"
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md border border-gray-500 "
 											onClick={() => setMenuOpen(false)}
 										>
 											Sign up
@@ -201,10 +194,38 @@ export const Navbar: React.FC = (): JSX.Element => {
 					</div>
 
 					{/* Mobile Menu */}
+					<div className="md:hidden flex items-center h-full px-4">
+						{isOnPreviousQuizzesPage ? (
+							<button
+								className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+								My Quizzes
+							</button>
+						) : (
+							isAuthenticated ? (
+								<Link href="/chatbot">
+									<Image
+										src="/logo.png"
+										alt="logo"
+										width={205}
+										height={75}
+										priority={true}
+									/>
+								</Link>
+							) : (
+								<Image
+									src="/logo.png"
+									alt="logo"
+									width={205}
+									height={75}
+									priority={true}
+								/>
+							))}
+					</div>
 					<div className="md:hidden items-center ml-auto relative">
 						<button
 							className="p-4"
-							onClick={() => handleToggleMenu()}
+							ref={buttonRef}
+							onClick={() => { handleToggleMenu(); }}
 						>
 							<span className="sr-only">Open menu</span>
 							<svg
@@ -224,33 +245,33 @@ export const Navbar: React.FC = (): JSX.Element => {
 						</button>
 						{mobileMenuOpen && (
 							<div ref={mobileMenuRef}
-								className="absolute top-full right-0 w-28 bg-white rounded-md z-50 md:hidden"
+								className="absolute top-full right-0 w-28 bg-white rounded-md border border-gray-500 z-50 md:hidden"
 							>
 								{isAuthenticated ? (
 									<>
 										<Link
 											href="/chatbot"
-											onClick={() => setMobileMenuOpen(false)}
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
+											onClick={() => { setMobileMenuOpen(false); setCurrentLink("chatbot") }}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md border border-gray-500"
 										>
 											Chatbot
 										</Link>
 										<Link
 											href="/quiz"
-											onClick={() => setMobileMenuOpen(false)}
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left"
+											onClick={() => { setMobileMenuOpen(false); setCurrentLink("quiz") }}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left border border-gray-500"
 										>
 											Quiz Maker
 										</Link>
 										<Link
 											href="/previous-quizzes"
-											onClick={() => setMobileMenuOpen(false)}
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left"
+											onClick={() => { setMobileMenuOpen(false); setCurrentLink("previous-quizzes") }}
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left border border-gray-500"
 										>
 											Previous Quizzes
 										</Link>
 										<button
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md border border-gray-500"
 											onClick={() => {
 												logoutAndRedirect();
 												setMobileMenuOpen(false);
@@ -264,14 +285,14 @@ export const Navbar: React.FC = (): JSX.Element => {
 										<Link
 											href="/login"
 											onClick={() => setMobileMenuOpen(false)}
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md border border-gray-500"
 										>
 											Log In
 										</Link>
 										<Link
 											href="/register"
 											onClick={() => setMobileMenuOpen(false)}
-											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md"
+											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md border border-gray-500"
 										>
 											Sign In
 										</Link>
