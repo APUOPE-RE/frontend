@@ -62,7 +62,7 @@ export default function Quiz() {
 							<p>
 								Score:{" "}
 								<span className="bg-blue-500 text-white rounded-md px-2 py-1">
-									{quizSummaryData?.quizResultData.score
+									{quizSummaryData?.quizResultData.score >= 0
 										? quizSummaryData?.quizResultData
 												.score +
 										  "/" +

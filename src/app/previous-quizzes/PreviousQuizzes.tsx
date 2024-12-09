@@ -27,7 +27,6 @@ export const PreviousQuizzes = ({
 		if (quizId !== currentQuiz) {
 			const response = await fetchPreviousQuiz(quizId);
       if (response !== undefined){
-        console.log(response)
 				setQuizSummaryData(response);
 				setQuestionDataList(response.quizData.questionDataList);
         setAnswerDataList(response.quizResultData.quizAnswerDataList);
@@ -38,7 +37,6 @@ export const PreviousQuizzes = ({
 	return (
 		<>
 			{previousQuizzes.map((q) => {
-        console.log(q.quizId)
 				return (
 					<button
 						key={q.quizId}
