@@ -25,7 +25,7 @@ export default function Chatbot() {
 		reset,
 		setValue,
 		watch,
-		formState: {},
+		formState: { },
 	} = useForm<ChatBotRequestData>();
 
 	const lectureId = watch("lectureId");
@@ -132,8 +132,9 @@ export default function Chatbot() {
 							<input
 								type="text"
 								id="input"
-								className="basis-11/12 me-2 p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
-								placeholder="Say something..."
+								className={`basis-11/12 me-2 p-4 text-sm border border-gray-300 rounded-lg 
+									${disableInputField ? "bg-white font-bold" : "bg-gray-50 text-gray-900"}`}
+								placeholder={disableInputField ? "Please select a topic from '+' button on the left side bar" : "Say something..."}
 								{...register("content", { required: true })}
 								disabled={disableInputField}
 							/>
