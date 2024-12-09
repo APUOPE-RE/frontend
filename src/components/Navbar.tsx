@@ -7,7 +7,7 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated } = useAppContext();
+	const { isAuthenticated, setAuthenticated, setFetchData } = useAppContext();
 	const router = useRouter();
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -76,22 +76,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 		await handleLogout(setAuthenticated);
 		router.push("/login");
 	};
-
-	useEffect(() => {
-		console.log("currentLink: ", currentLink);
-	}, [currentLink]);
-
-	useEffect(() => {
-		if (menuRef.current) {
-			console.log("MenuRef current:", menuRef.current);
-		}
-	}, [menuOpen]);
-
-	useEffect(() => {
-		if (mobileMenuRef.current) {
-			console.log("Mobile menuRef current:", mobileMenuRef.current);
-		}
-	}, [mobileMenuOpen]);
 
 	return (
 		<>
