@@ -17,6 +17,10 @@ interface AppContextType {
 	materials: { id: number; label: string }[];
 	setFetchData: (value: boolean) => void;
 	conversations: ConversationData[];
+	dropdownOpen: boolean;
+	setDropdownOpen: (value: boolean) => void;
+	selectedQuizId: number;
+	setSelectedQuizId: (id: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -26,6 +30,8 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	const [registerSuccess, setRegisterSuccess] = useState("");
 	const [fetchData, setFetchData] = useState(false);
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [selectedQuizId, setSelectedQuizId] = useState(0);
 
 	const setAuthenticated = (auth: boolean) => {
 		setIsAuthenticated(auth);
@@ -68,6 +74,10 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				materials,
 				setFetchData,
 				conversations,
+				dropdownOpen,
+				setDropdownOpen,
+				selectedQuizId,
+				setSelectedQuizId,
 			}}
 		>
 			{children}

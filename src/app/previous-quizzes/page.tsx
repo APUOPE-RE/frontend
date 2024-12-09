@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import { useAppContext } from "../../context";
 // import Link from "next/link";
 // import { useForm } from "react-hook-form";
 // import { UserCredentials, validateUser } from "../actions/login";
@@ -92,33 +93,70 @@ const QUIZ_LIST = [
 export default function Quiz() {
   const [selectedQuizId, setSelectedQuizId] = useState(QUIZ_LIST[0].id);
   const [title, setTitle] = useState("");
+  const { dropdownOpen, setDropdownOpen } = useAppContext();
 
   const filteredQuizzes = QUIZ_LIST.filter((quiz) =>
-      quiz.title.toLowerCase().includes(title.toLowerCase())
-    );
+    quiz.title.toLowerCase().includes(title.toLowerCase())
+  );
 
   const selectedQuiz = QUIZ_LIST.find(quiz => quiz.id === selectedQuizId);
 
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
-      <div className="basis-1/4 me-3  bg-white p-3 h-full rounded overflow-auto">
-        <div className="">
+
+      {/* mobile */}
+      {dropdownOpen && (
+        <div className="absolute top-20 left-0 bg-white shadow-lg rounded-lg w-1/3 border border-gray-500 md:hidden">
+          <div className="flex justify-center">
             <input
+              type="search"
+              placeholder="Search title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-[90%] h-8 mt-2 mb-2 mx-auto bg-slate-200 p-2 outline-none border border-gray-500"
+            />
+          </div>
+          <ul>
+            {filteredQuizzes.map((quiz) => (
+              <li
+                key={quiz.id}
+                className="p-2 cursor-pointer hover:bg-gray-200 rounded-lg"
+                onClick={() => {
+                  setSelectedQuizId(quiz.id);
+                  setDropdownOpen(false);
+                }}
+              >
+                {quiz.title}
+                {/* <p className="text-lg font-semibold">{quiz.title}</p> */}
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-sm text-gray-500">{quiz.date}</p>
+                  <p className="bg-blue-500 text-center text-white rounded-xl px-2 py-1">
+                    {quiz.score.current}/{quiz.score.total}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="basis-1/4 me-3  bg-white p-3 h-full rounded overflow-auto hidden md:block">
+        <div className="">
+          <input
             type="search"
             placeholder="Search title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full bg-slate-200 p-4 rounded-2xl outline-none"
-            />
+          />
         </div>
         {filteredQuizzes.map((quiz) => (
-            <div
-                key={quiz.id}
-                className={`flex w-100 h-20 rounded-xl mt-3 p-3 cursor-pointer hover:bg-gray-200 shadow-lg ${
-                    selectedQuizId === quiz.id ? 'border border-gray-400' : 'bg-white'
-                    }`}
-                onClick={() => setSelectedQuizId(quiz.id)}
-                >
+          <div
+            key={quiz.id}
+            className={`flex w-100 h-20 rounded-xl mt-3 p-3 cursor-pointer hover:bg-gray-200 shadow-lg ${selectedQuizId === quiz.id ? 'border border-gray-400' : 'bg-white'
+              }`}
+            onClick={() => setSelectedQuizId(quiz.id)}
+          >
             <div className="basis-3/4">
               <p>{quiz.title}</p>
             </div>
@@ -132,7 +170,7 @@ export default function Quiz() {
         ))}
       </div>
 
-      <div className="basis-3/4 flex flex-col bg-white p-3 h-full rounded">
+      <div className="basis-full md:basis-3/4 flex flex-col bg-white p-3 h-full rounded w-full">
         {selectedQuiz && (
           <>
             <div
@@ -157,7 +195,7 @@ export default function Quiz() {
             </div>
 
             <div className="basis-10/12" style={{ height: "90%" }}>
-              <div className="w-full h-full p-4 rounded-xl bg-gray-200" style={{height: "90%"}}>
+              <div className="w-full h-full p-4 rounded-xl bg-gray-200" style={{ height: "90%" }}>
                 <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white">
                   <div className="w-full h-full overflow-auto px-3">
                     {selectedQuiz.questions.map((question, index) => (
@@ -251,9 +289,9 @@ export default function Quiz() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-end justify-end w-full" style={{height: "10%"}}>
+              <div className="flex items-end justify-end w-full" style={{ height: "10%" }}>
                 <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Export as pdf</button>
-            </div>
+              </div>
             </div>
           </>
         )
