@@ -66,6 +66,15 @@ export type QuestionData = {
 	question_number: number;
 }
 
+export type QuizAnswerData = {
+    id: number;
+    quizResultId: number;
+    questionId: number;
+    answer: string;
+    correct: boolean;
+    points: number;
+}
+
 export type QuizData = {
     id: number;
     accountId: number;
@@ -84,13 +93,10 @@ export type QuizResultData = {
     quizAnswerDataList: QuizAnswerData[];
 }
 
-export type QuizAnswerData = {
-    id: number;
-    quizResultId: number;
-    questionId: number;
-    answer: string;
-    correct: boolean;
-    points: number;
+export type QuizSummaryData = {
+    quizId: number;
+    quizData: QuizData;
+    quizResultData: QuizResultData;
 }
 
 export type RegistrationData = {
