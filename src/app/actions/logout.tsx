@@ -1,3 +1,5 @@
+import { ResponseData } from "../types/types";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const handleLogout = async (setAuthenticated: (value: boolean) => void) => {
@@ -19,9 +21,9 @@ export const handleLogout = async (setAuthenticated: (value: boolean) => void) =
       // // Redirect to login page after logout
       // router.push("/login");
     } else {
-      console.error("Failed to log out");
+      // set error here
     }
   } catch (error) {
-    console.error("An error occurred during logout:", error);
+		console.log("An error occurred: ", error);
   }
 };

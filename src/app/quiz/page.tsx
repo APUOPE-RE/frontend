@@ -27,9 +27,6 @@ export default function Quiz() {
   const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
   const [score, setScore] = useState<number>(0);
   const [quizid, setQuizid] = useState<number>(0);
-  const [quizResultWithScore, setQuizResultWithScore] = useState<
-    QuizResultData[]
-  >([]);
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
@@ -37,14 +34,16 @@ export default function Quiz() {
 
   const generateQuiz = async (value: number | null): Promise<void> => {
     setIsLoading(true);
-    const res: QuizData = await fetchQuiz(value);
-    setQuizid(res.id);
-    const quizResponse = res.questionDataList;
-    if (quizResponse) {
-      setResponse(quizResponse);
-      setIsLoading(false);
-    } else {
-      console.error("Failed to fetch quiz.");
+    const res = await fetchQuiz(value);
+    if (res !== null){
+      setQuizid(res.id);
+      const quizResponse = res.questionDataList;
+      if (quizResponse) {
+        setResponse(quizResponse);
+        setIsLoading(false);
+      } else {
+        console.error("Failed to fetch quiz.");
+      }
     }
   };
 
@@ -85,15 +84,9 @@ export default function Quiz() {
     };
 
     const quizResult = await fetchResult(submissionPayload);
-    if (!quizResult || !quizResult.score) {
-      console.error(
-        "Quiz result is invalid or score is not available.",
-        quizResult
-      );
-      return;
+    if (quizResult !== null) {
+      setScore(quizResult.score);
     }
-    setScore(quizResult.score);
-    setQuizResultWithScore(quizResult);
   };
 
   async function downloadQuiz() {

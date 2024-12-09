@@ -31,7 +31,7 @@ export const Conversations = ({
 			setValue("conversationId", 0);
 			setValue("lectureId", 0);
 			const response = await fetchConversation(conversationId);
-			if (Array.isArray(response)) {
+			if (response.length > 0) {
 				const messages: Message[] = response.map((m) => ({
 					from: m.source === Source.USER ? "user" : "bot",
 					message: m.content,

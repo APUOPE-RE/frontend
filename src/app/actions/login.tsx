@@ -15,17 +15,16 @@ export const validateUser = async (
 				email: userCredentials.email,
 				passwordHash: userCredentials.passwordHash,
 			}),
-		})
-			.then((res) => {
-				return res.json();
-			})
-			.then((data: ResponseData<string>) => {
+		});
+		if (!response.ok || response.ok) {
+			return response.json().then((data: ResponseData<string>) => {
 				return data;
 			});
+		}
 
-		return response;
+		return response.json();
 	} catch (error) {
-		console.error("Error during login request:", error);
-		return { success: false, data: "An error occurred" };
+		console.log("An error occurred: ", error);
+    return { success: false, data: "An error occurred"};
 	}
 };

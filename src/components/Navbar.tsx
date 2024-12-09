@@ -12,6 +12,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
+	const { appError, setAppError, setFetchData } = useAppContext();
 
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
@@ -90,7 +91,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 							<li className="font-semibold h-full">
 								<Link
 									href="/chatbot"
-									onClick={() => setCurrentLink("chatbot")}
+									onClick={() => (setCurrentLink("chatbot"), setFetchData(true))}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "chatbot"
 											? "border-b-2  border-blue-600"
@@ -154,6 +155,22 @@ export const Navbar: React.FC = (): JSX.Element => {
 						)}
 					</div>
 				</div>
+				{appError !== "" &&
+					<div className="fixed flex flex-col right-10 bottom-32 p-2 w-1/4 max-w-sm max-h-96 rounded bg-rose-500 text-white shadow-lg overflow-auto">
+						<div className="flex place-self-end mr-2 mt-1 cursor-pointer">
+							<Image
+								src={"/close.png"}
+								alt={"Close"}
+								width={20}
+								height={20}
+								onClick={() => setAppError("")}
+							/>
+						</div>
+						<div className="flex text-wrap p-2 text-md mt-[-7px] break-words">
+						{appError}
+						</div>
+					</div>
+				}
 			</header>
 			<div className="w-full bg-white" style={{ height: "12dvh" }}></div>
 		</>

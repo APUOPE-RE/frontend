@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const registerUser = async (
 	registrationData: RegistrationData
-): Promise<ResponseData<string>> => {
+): Promise<string | null> => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/api/register`, {
 			method: "POST",
@@ -17,16 +17,21 @@ export const registerUser = async (
 				passwordHash: registrationData.passwordFirst,
 			}),
 		})
-			.then((res) => {
-				return res.json();
-			})
-			.then((data: ResponseData<string>) => {
-				return data;
-			});
+		.then((res) => {
+      return res.json();
+    })
+    .then((data: ResponseData<Object>) => {
+      return data;
+    });
 
-		return response;
+		if (response.success) {
+			return response.data as string;
+		} else {
+			// set error here
+    return null;
+		}
 	} catch (error) {
-		console.error("Error during registration:", error);
-		return { success: false, data: "An error occurred" };
+		console.log("An error occurred: ", error);
+    return null;
 	}
 };

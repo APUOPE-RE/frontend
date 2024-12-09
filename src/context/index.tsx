@@ -17,6 +17,8 @@ interface AppContextType {
 	materials: { id: number; label: string }[];
 	setFetchData: (value: boolean) => void;
 	conversations: ConversationData[];
+	appError: string;
+	setAppError: (value: string) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	const [registerSuccess, setRegisterSuccess] = useState("");
 	const [fetchData, setFetchData] = useState(false);
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
+	const [appError, setAppError] = useState<string>("");
 
 	const setAuthenticated = (auth: boolean) => {
 		setIsAuthenticated(auth);
@@ -46,7 +49,7 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		const fetchConversations = async () => {
 			const response = await fetchAllConversations();
-			if (Array.isArray(response)) {
+			if (response.length > 0) {
 				response.sort((a, b) => b.id - a.id);
 				setConversations(response);
 			}
@@ -68,6 +71,8 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				materials,
 				setFetchData,
 				conversations,
+				appError,
+				setAppError,
 			}}
 		>
 			{children}

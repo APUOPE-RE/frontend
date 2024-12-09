@@ -1,16 +1,9 @@
-import {
-	ChatBotRequestData,
-	ChatBotResponseData,
-	ConversationData,
-	MessageData,
-	ResponseData,
-} from "../types/types";
+import { ChatBotRequestData, ChatBotResponseData, ConversationData, MessageData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const fetchAllConversations = async (): Promise<
-	ConversationData[] | ResponseData<string>
-> => {
+	ConversationData[]> => {
 	try {
 		const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/conversations`, {
@@ -27,17 +20,17 @@ export const fetchAllConversations = async (): Promise<
 			.then((data: ConversationData[]) => {
 				return data;
 			});
-
+			
 		return response;
 	} catch (error) {
-		console.error("Error during conversation fetch:", error);
-		return { success: false, data: "An error occurred" };
+		console.log("An error occurred: ", error);
+    return [];
 	}
 };
 
 export const fetchConversation = async (
 	conversationId: number
-): Promise<MessageData[] | ResponseData<string>> => {
+): Promise<MessageData[]> => {
 	try {
 		const token = localStorage.getItem("token");
 		const response = await fetch(
@@ -60,14 +53,14 @@ export const fetchConversation = async (
 
 		return response;
 	} catch (error) {
-		console.error("Error during conversation fetch:", error);
-		return { success: false, data: "An error occurred" };
+		console.log("An error occurred: ", error);
+    return [];
 	}
 };
 
 export const chatBotRequest = async (
 	request: ChatBotRequestData
-): Promise<ResponseData<ChatBotResponseData | string>> => {
+): Promise<ChatBotResponseData | string> => {
 	try {
 		const token = localStorage.getItem("token");
 		const response = await fetch(`${API_BASE_URL}/api/chatBot`, {
@@ -83,16 +76,19 @@ export const chatBotRequest = async (
 				data: request.content,
 			}),
 		})
-			.then((res) => {
-				return res.json();
-			})
-			.then((data: ResponseData<ChatBotResponseData>) => {
-				return data;
-			});
 
-		return response;
+		if (!response.ok) {
+			return response.json().then((data: ResponseData<ChatBotResponseData>) => {
+				return data.data;
+			});
+		} else {
+			return "tämäm on virhe"
+			/*return response.json().then((data: ResponseData<string>) => {
+				return data.data;
+			});*/
+		}
 	} catch (error) {
-		console.error("Error during chatbot request:", error);
-		return { success: false, data: "An error occurred" };
+		console.log("An error occurred: ", error);
+    return "";
 	}
 };

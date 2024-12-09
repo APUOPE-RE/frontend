@@ -21,6 +21,7 @@ export const downloadQuizPdf = async (quizid: number | null) => {
         tag.remove();
         window.URL.revokeObjectURL(url);
     } else {
+      // set error here
       console.error("Failed to fetch PDF:", await response.text());
     }
   } catch (error) {

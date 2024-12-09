@@ -13,6 +13,7 @@ function Login() {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 	const [accountVerified, setAccountVerified] = useState(false);
+	const [error, setError] = useState<string>("");
 	const {
 		setAuthenticated,
 		setRegisterSuccess,
@@ -24,9 +25,7 @@ function Login() {
 		handleSubmit,
 		register,
 		watch,
-		setError,
 		clearErrors,
-		formState: { errors },
 	} = useForm<UserCredentials>();
 
 	const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
@@ -54,14 +53,12 @@ function Login() {
 	}, [watchEmail, watchPasswordHash, clearErrors]);
 
 	const handleLogin = async (data: UserCredentials): Promise<void> => {
+		setError("");
 		const response = await validateUser(data);
 
 		if (!response.success) {
-			setError("errors", {
-				message: response.data,
-			});
+			setError(response.data);
 		} else {
-			clearErrors("errors");
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
 			router.push("/chatbot");
@@ -85,6 +82,11 @@ function Login() {
 				<h2 className="text-2xl font-bold mb-3 text-center">
 					Login
 				</h2>
+				{error !== "" && (
+					<div className="text-center mt-5 mb-5 text-amber-500">
+						{error}
+					</div>
+				)}
 				<form onSubmit={handleSubmit(handleLogin)}>
 					<div className="mb-4">
 						<label
