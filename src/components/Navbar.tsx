@@ -12,9 +12,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
-	const { appError, setAppError, setFetchData } = useAppContext();
+	const { appErrors, addAppError, removeAppError, setFetchData } = useAppContext();
 
 	useEffect(() => {
+		//localStorage.removeItem("token")
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
 	}, []);
@@ -35,8 +36,12 @@ export const Navbar: React.FC = (): JSX.Element => {
 	}, []);
 
 	const logoutAndRedirect = async () => {
-		await handleLogout(setAuthenticated);
-		router.push("/login");
+		const response = await handleLogout(setAuthenticated);
+		if (typeof response !== "string") {
+			router.push("/login");
+		} else {
+			addAppError(response);
+		}
 	};
 
 	useEffect(() => {
@@ -155,19 +160,19 @@ export const Navbar: React.FC = (): JSX.Element => {
 						)}
 					</div>
 				</div>
-				{appError !== "" &&
-					<div className="fixed flex flex-col right-10 bottom-32 p-2 w-1/4 max-w-sm max-h-96 rounded bg-rose-500 text-white shadow-lg overflow-auto">
-						<div className="flex place-self-end mr-2 mt-1 cursor-pointer">
+				{appErrors.length > 0 &&
+					<div className="fixed flex flex-row right-10 bottom-32 p-2 w-1/5 max-w-sm max-h-96 rounded bg-rose-500 text-white shadow-lg overflow-auto">
+						<div className="flex text-wrap p-2 text-md break-words">
+							{appErrors[0]}
+						</div>
+						<div className="flex right-0 absolute mr-2 cursor-pointer">
 							<Image
 								src={"/close.png"}
 								alt={"Close"}
 								width={20}
 								height={20}
-								onClick={() => setAppError("")}
+								onClick={() => removeAppError()}
 							/>
-						</div>
-						<div className="flex text-wrap p-2 text-md mt-[-7px] break-words">
-						{appError}
 						</div>
 					</div>
 				}

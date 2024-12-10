@@ -17,8 +17,9 @@ interface AppContextType {
 	materials: { id: number; label: string }[];
 	setFetchData: (value: boolean) => void;
 	conversations: ConversationData[];
-	appError: string;
-	setAppError: (value: string) => void;
+	appErrors: string[];
+	addAppError: (error: string) => void;
+	removeAppError: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -28,7 +29,7 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	const [registerSuccess, setRegisterSuccess] = useState("");
 	const [fetchData, setFetchData] = useState(false);
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
-	const [appError, setAppError] = useState<string>("");
+	const [appErrors, setAppErrors] = useState<string[]>([]);
 
 	const setAuthenticated = (auth: boolean) => {
 		setIsAuthenticated(auth);
@@ -61,6 +62,18 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 		}
 	}, [fetchData]);
 
+	const addAppError = (error: string) => {
+		setAppErrors(errors => [...errors, error]);
+	}
+
+	const removeAppError = () => {
+		if (appErrors.length === 1) {
+			setAppErrors([]);
+		} else {
+			setAppErrors(appErrors.slice(0, 1));
+		}
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -71,8 +84,9 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				materials,
 				setFetchData,
 				conversations,
-				appError,
-				setAppError,
+				appErrors,
+				addAppError,
+				removeAppError,
 			}}
 		>
 			{children}

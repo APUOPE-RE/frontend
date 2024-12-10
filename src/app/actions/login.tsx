@@ -25,6 +25,6 @@ export const validateUser = async (
 		return response.json();
 	} catch (error) {
 		console.log("An error occurred: ", error);
-    return { success: false, data: "An error occurred"};
+    return { success: false, data: "An error occurred. Please, try again."};
 	}
 };

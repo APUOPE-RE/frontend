@@ -28,7 +28,7 @@ export const sendResetPasswordLink = async (
 
 export const resetPassword = async (
 	newPasswordData: NewPasswordData
-): Promise<string | null> => {
+): Promise<ResponseData<string>> => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/api/resetPassword`, {
 			method: "POST",
@@ -47,14 +47,9 @@ export const resetPassword = async (
       return data;
     });
 
-		if (response.success) {
-			return response.data as string;
-		} else {
-			// set error here
-    return null;
-		}
+		return response.data as ResponseData<string>;
 	} catch (error) {
 		console.log("An error occurred: ", error);
-    return null;
+    return { success: false, data: "An error occurred. Please, try again." };
 	}
 };

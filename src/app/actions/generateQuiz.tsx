@@ -2,7 +2,7 @@ import { QuizData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const fetchQuiz = async (lectureId: number | null): Promise<QuizData | null> => {
+export const fetchQuiz = async (lectureId: number | null): Promise<QuizData | string> => {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/api/generateQuiz/${lectureId}`, {
@@ -22,10 +22,10 @@ export const fetchQuiz = async (lectureId: number | null): Promise<QuizData | nu
 		if (response.success) {
 			return response.data as QuizData;
 		} else {
-			return null;
+      return response.data as string;
 		}
   } catch (error) {
 		console.log("An error occurred: ", error);
-    return null;
+    return "An error occurred. Please, try again.";
   }
 };

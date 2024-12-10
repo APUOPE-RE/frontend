@@ -15,6 +15,7 @@ function Login() {
 	const [accountVerified, setAccountVerified] = useState(false);
 	const [error, setError] = useState<string>("");
 	const {
+		addAppError,
 		setAuthenticated,
 		setRegisterSuccess,
 		registerSuccess,
@@ -34,11 +35,12 @@ function Login() {
 		const handleToken = async () => {
 			if (token !== null) {
 				const response = await verifyAccount(token);
-				if (response) {
+				if (response.success) {
 					setRegisterSuccess("");
 					setAccountVerified(true);
 				} else {
 					setAccountVerified(false);
+					addAppError(response.data)
 				}
 			}
 		};

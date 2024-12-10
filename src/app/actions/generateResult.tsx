@@ -2,7 +2,7 @@ import { QuizResultData, QuizSubmitData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const fetchResult = async (submissionPayload: QuizSubmitData): Promise<QuizResultData | null> => {
+export const fetchResult = async (submissionPayload: QuizSubmitData): Promise<QuizResultData | string> => {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/api/submitQuiz`, {
@@ -24,10 +24,10 @@ export const fetchResult = async (submissionPayload: QuizSubmitData): Promise<Qu
 		if (response.success) {
 			return response.data as QuizResultData;
 		} else {
-      return null;
+			return response.data as string;
 		}
   } catch (error) {
 		console.log("An error occurred: ", error);
-    return null;
+    return "An error occurred. Please, try again.";
   }
 };

@@ -82,13 +82,12 @@ export const chatBotRequest = async (
 				return data.data;
 			});
 		} else {
-			return "tämäm on virhe"
-			/*return response.json().then((data: ResponseData<string>) => {
+			return response.json().then((data: ResponseData<string>) => {
 				return data.data;
-			});*/
+			});
 		}
 	} catch (error) {
 		console.log("An error occurred: ", error);
-    return "";
+    return "An error occurred. Please, try again.";
 	}
 };

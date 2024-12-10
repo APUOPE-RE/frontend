@@ -17,7 +17,7 @@ export default function Chatbot() {
 	const [isModelOpen, setIsModelOpen] = useState(false);
 	const [topic, setTopic] = useState("");
 	const [selectedTopic, setSelectedTopic] = useState(0);
-	const { setAppError, setFetchData, materials } = useAppContext();
+	const { addAppError, setFetchData, materials } = useAppContext();
 
 	const {
 		handleSubmit,
@@ -46,7 +46,6 @@ export default function Chatbot() {
 		]);
 
 		try {
-			setAppError("")
 			const inputData = { ...data, conversationId: conversationId };
 			const response = await chatBotRequest(inputData);
 			if (typeof response !== "string") {
@@ -62,7 +61,7 @@ export default function Chatbot() {
 					setValue("conversationId", response.conversationId);
 				}
 			} else {
-				setAppError(response);
+				addAppError(response);
 			}
 		} catch (error) {
 			console.error("Error fetching chatbot response:", error);
