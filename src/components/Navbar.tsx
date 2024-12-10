@@ -16,7 +16,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
-	}, []);
+	}, [setAuthenticated]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {

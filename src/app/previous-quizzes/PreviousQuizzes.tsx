@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction } from "react";
 import { useAppContext } from "@/src/context";
-import { ChatBotRequestData, Message, QuestionData, QuizAnswerData, QuizSummaryData } from "../types/types";
-import { UseFormSetValue } from "react-hook-form";
+import { QuestionData, QuizAnswerData, QuizSummaryData } from "../types/types";
 import { fetchPreviousQuiz } from "../actions/generateQuiz";
 
 type PreviousQuizzesProps = {

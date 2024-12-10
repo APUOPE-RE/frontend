@@ -26,7 +26,6 @@ function Login() {
 		watch,
 		setError,
 		clearErrors,
-		formState: { errors },
 	} = useForm<UserCredentials>();
 
 	const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
