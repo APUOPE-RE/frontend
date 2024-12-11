@@ -6,7 +6,6 @@ import { useAppContext } from "@/src/context";
 import {
   QuestionData,
   QuizData,
-  QuizResultData,
   QuizSubmitAnswerData,
   QuizSubmitData,
 } from "../types/types";
@@ -27,9 +26,6 @@ export default function Quiz() {
   const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
   const [score, setScore] = useState<number>(0);
   const [quizid, setQuizid] = useState<number>(0);
-  const [quizResultWithScore, setQuizResultWithScore] = useState<
-    QuizResultData[]
-  >([]);
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
@@ -93,7 +89,6 @@ export default function Quiz() {
       return;
     }
     setScore(quizResult.score);
-    setQuizResultWithScore(quizResult);
   };
 
   async function downloadQuiz() {

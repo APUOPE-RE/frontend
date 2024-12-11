@@ -39,7 +39,7 @@ export default function ResetPassword() {
       trigger("passwordFirst");
     }
     clearErrors("passwordFirst");
-  }, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
+  }, [watchPasswordFirst, watchPasswordSecond, clearErrors, trigger]);
 
   const handleResetPassword = async (data: NewPasswordData): Promise<void> => {
     if (data.passwordFirst !== watchPasswordSecond) {
