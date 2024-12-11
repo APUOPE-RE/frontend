@@ -37,7 +37,7 @@ export default function Quiz() {
       </div>
 
       <div className="basis-1/4 me-3 bg-white p-3 h-full rounded overflow-auto hidden md:block">
-        <div className="">
+        {/* <div className="">
           <input
             type="search"
             placeholder="Search title"
@@ -45,7 +45,7 @@ export default function Quiz() {
             onChange={(e) => setTitle(e.target.value)}
             className="w-full bg-slate-200 p-4 rounded-2xl outline-none"
           />
-        </div>
+        </div> */}
         <div className="overflow-auto mt-1" style={{ height: "90%" }}>
           <PreviousQuizzes
             currentQuiz={quizSummaryData?.quizId ?? 0}

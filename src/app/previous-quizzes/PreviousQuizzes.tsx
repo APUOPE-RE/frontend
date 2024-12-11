@@ -44,9 +44,16 @@ export const PreviousQuizzes = ({
 							className="w-[99%] h-20 border p-2 border-none rounded-lg mb-2 bg-gray-100 shadow-md hover:bg-blue-100"
 							onClick={() => fetchQuizSummaryData(q.quizId)}
 						>
-							<p className="text-xs text-right">
-								{new Date(q.quizResultData.datetime).toLocaleDateString()}
-							</p>
+							<div className="flex items-center justify-between">
+								<p className="text-xs text-left">
+									{new Date(q.quizResultData.datetime).toLocaleDateString()}
+								</p>
+								<div className="basis-1/4 flex flex-col justify-between">
+									<p className="bg-blue-500 text-center text-white rounded-xl">
+										{q.quizResultData.score}/{q.quizResultData.maxScore}
+									</p>
+								</div>
+							</div>
 							<p className="pt-3 pl-3 text-left">
 								{
 									filterSubject(q.quizData.lectureId > 0 ? q.quizData.lectureId : 1)
@@ -60,7 +67,7 @@ export const PreviousQuizzes = ({
 
 			{/* mobile */}
 			<div className="md:hidden">
-				<div className="flex justify-center md:hidden">
+				{/* <div className="flex justify-center md:hidden">
 
 					<input
 						type="search"
@@ -70,7 +77,7 @@ export const PreviousQuizzes = ({
 						onChange={(e) => setTitle(e.target.value)}
 						className="w-[90%] h-8 mt-2 mb-2 mx-auto bg-slate-200 p-2 outline-none border border-gray-500"
 					/>
-				</div>
+				</div> */}
 				<ul>
 					{previousQuizzes.map((q) => (
 						<li
@@ -83,12 +90,12 @@ export const PreviousQuizzes = ({
 						>
 							{filterSubject(q.quizData.lectureId > 0 ? q.quizData.lectureId : 1)
 								?.label}
-							{/* <div className="flex justify-between items-center mt-2">
+							<div className="flex justify-between items-center mt-2">
 								<p className="text-sm text-gray-500">{new Date(q.quizResultData.datetime).toLocaleDateString()}</p>
 								<p className="bg-blue-500 text-center text-white rounded-xl px-2 py-1">
-									{quiz.score.current}/{quiz.score.total}
+									{q.quizResultData.score}/{q.quizResultData.maxScore}
 								</p>
-							</div> */}
+							</div>
 						</li>
 					))}
 				</ul>
