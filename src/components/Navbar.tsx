@@ -7,18 +7,25 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated } = useAppContext();
+	const {
+		appErrors,
+		isAuthenticated,
+		addAppError,
+		removeAppError,
+		setAuthenticated,
+		setFetchPreviousQuizzesData,
+		setFetchConversationsData
+	} = useAppContext();
 	const router = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const [currentLink, setCurrentLink] = useState("");
-	const { appErrors, addAppError, removeAppError, setFetchData } = useAppContext();
 
 	useEffect(() => {
 		//localStorage.removeItem("token")
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
-	}, []);
+	}, [setAuthenticated]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -44,10 +51,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 		}
 	};
 
-	useEffect(() => {
-		console.log("currentLink: ", currentLink);
-	}, [currentLink]);
-
 	return (
 		<>
 			<header className="fixed top-0 left-0 w-full">
@@ -68,9 +71,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 							<li className="font-semibold h-full">
 								<Link
 									href="/previous-quizzes"
-									onClick={() =>
-										setCurrentLink("previous-quizzes")
-									}
+									onClick={() => (
+										setCurrentLink("previous-quizzes"),
+                    setFetchPreviousQuizzesData(true)
+                  )}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "previous-quizzes"
 											? "border-b-2  border-blue-600"
@@ -96,7 +100,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 							<li className="font-semibold h-full">
 								<Link
 									href="/chatbot"
-									onClick={() => (setCurrentLink("chatbot"), setFetchData(true))}
+									onClick={() => (
+										setCurrentLink("chatbot"),
+										setFetchConversationsData(true)
+									)}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "chatbot"
 											? "border-b-2  border-blue-600"

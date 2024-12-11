@@ -5,6 +5,7 @@ import { fetchQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
 import {
   QuestionData,
+  QuizResultData,
   QuizSubmitAnswerData,
   QuizSubmitData,
 } from "../types/types";
@@ -23,6 +24,7 @@ export default function Quiz() {
   const [selectedTopic, setSelectedTopic] = useState<number | null>(0);
   const [response, setResponse] = useState<QuestionData[]>([]);
   const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
+  const [quizResult, setQuizResult] = useState<QuizResultData>();
   const [score, setScore] = useState<number>(-1);
   const [quizid, setQuizid] = useState<number>(0);
 	const { addAppError } = useAppContext();
@@ -35,6 +37,7 @@ export default function Quiz() {
     setIsLoading(true);
     const res = await fetchQuiz(value);
     if (typeof res !== "string") {
+      console.log(res)
       setQuizid(res.id);
       const quizResponse = res.questionDataList;
       if (quizResponse) {
@@ -84,11 +87,16 @@ export default function Quiz() {
       quizSubmitAnswerDataList: result,
     };
 
-    const quizResult = await fetchResult(submissionPayload);
-    if (typeof quizResult !== "string") {
-      setScore(quizResult.score);
+    if (result.length < 10){
+      addAppError("Answer all the questions to submit")
     } else {
-      addAppError(quizResult);
+      const quizResult = await fetchResult(submissionPayload);
+      if (typeof quizResult !== "string") {
+        setQuizResult(quizResult);
+        setScore(quizResult.score);
+      } else {
+        addAppError(quizResult);
+      }
     }
   };
 
@@ -236,7 +244,7 @@ export default function Quiz() {
                           }
                         />
                         <span className="mr-2">{question[optionKey]}</span>
-                        {score >= 0 && optionKey === question.correct_option && (
+                        {score >= 0 && optionKey === quizResult?.quizAnswerDataList.at(question.question_number-1)?.correctOption && (
                           <Image
                             src="/correct.png"
                             alt="Correct"
@@ -244,7 +252,7 @@ export default function Quiz() {
                             height={20}
                           />
                         )}
-                        {score >= 0 && optionKey !== question.correct_option && (
+                        {score >= 0 && optionKey !== quizResult?.quizAnswerDataList.at(question.question_number-1)?.correctOption && (
                           <Image
                             src="/incorrect.png"
                             alt="Incorrect"
