@@ -1,6 +1,6 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const downloadQuizPdf = async (quizid: number | null) => {
+export const downloadQuizPdf = async (quizid: number | null): Promise<boolean | string> => {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/api/fetchQuizPdf/${quizid}`, {
@@ -20,10 +20,15 @@ export const downloadQuizPdf = async (quizid: number | null) => {
         tag.click();
         tag.remove();
         window.URL.revokeObjectURL(url);
+
+        return true;
     } else {
-      console.error("Failed to fetch PDF:", await response.text());
+			return response.json().then((data: string) => {
+				return data;
+			});
     }
   } catch (error) {
     console.error("Error fetching PDF:", error);
+    return "An error occurred. Please, try again.";
   }
 };

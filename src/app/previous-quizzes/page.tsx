@@ -3,9 +3,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../context";
 import { QuestionData, QuizAnswerData, QuizSummaryData } from "../types/types";
-import { PreviousQuizzes } from "./PreviousQuizzes";
 import { CgSoftwareDownload } from "react-icons/cg";
 import { downloadQuizPdf } from "../actions/quizDownloader";
+import { PreviousQuizzes } from "./PreviousQuizzes";
 
 export default function Quiz() {
   const [quizSummaryData, setQuizSummaryData] = useState<QuizSummaryData>();
@@ -120,10 +120,10 @@ export default function Quiz() {
                         className="mr-2 p-2"
                         style={
                           answerDataList.at(
-                            question.question_number
+                            question.question_number-1
                           )?.answer === "option_a" &&
                             answerDataList.at(
-                              question.question_number
+                              question.question_number-1
                             )?.answer ===
                             question.correct_option
                             ? {
@@ -132,11 +132,11 @@ export default function Quiz() {
                                 "5px",
                             }
                             : answerDataList.at(
-                              question.question_number
+                              question.question_number-1
                             )?.answer ===
                               "option_a" &&
                               answerDataList.at(
-                                question.question_number
+                                question.question_number-1
                               )?.answer !==
                               question.correct_option
                               ? {
@@ -176,10 +176,10 @@ export default function Quiz() {
                         className="mr-2 p-2"
                         style={
                           answerDataList.at(
-                            question.question_number
+                            question.question_number-1
                           )?.answer === "option_b" &&
                             answerDataList.at(
-                              question.question_number
+                              question.question_number-1
                             )?.answer ===
                             question.correct_option
                             ? {
@@ -188,11 +188,11 @@ export default function Quiz() {
                                 "5px",
                             }
                             : answerDataList.at(
-                              question.question_number
+                              question.question_number-1
                             )?.answer ===
                               "option_b" &&
                               answerDataList.at(
-                                question.question_number
+                                question.question_number-1
                               )?.answer !==
                               question.correct_option
                               ? {
@@ -232,10 +232,10 @@ export default function Quiz() {
                         className="mr-2 p-2"
                         style={
                           answerDataList.at(
-                            question.question_number
+                            question.question_number-1
                           )?.answer === "option_c" &&
                             answerDataList.at(
-                              question.question_number
+                              question.question_number-1
                             )?.answer ===
                             question.correct_option
                             ? {
@@ -244,11 +244,11 @@ export default function Quiz() {
                                 "5px",
                             }
                             : answerDataList.at(
-                              question.question_number
+                              question.question_number-1
                             )?.answer ===
                               "option_c" &&
                               answerDataList.at(
-                                question.question_number
+                                question.question_number-1
                               )?.answer !==
                               question.correct_option
                               ? {

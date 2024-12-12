@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const sendResetPasswordLink = async (
 	userEmail: EmailforPassReset
-): Promise<ResponseData<string>> => {
+): Promise<ResponseData<Object>> => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/api/sendResetPasswordLink`, {
 			method: "POST",
@@ -13,16 +13,15 @@ export const sendResetPasswordLink = async (
 			},
 			body: userEmail.email,
 		})
+		.then((res) => {
+      return res.json();
+    })
+    .then((data: ResponseData<Object>) => {
+      return data;
+    });
 
-		if (!response.ok) {
-			throw new Error(`HTTP error: ${response.status}`);
-		}
-
-		const data: ResponseData<string> = await response.json();
-		return data;
-
+    return response;
 	} catch (error) {
-		console.error("Error during password reset request:", error);
 		return { success: false, data: "An error occurred" };
 	}
 };
@@ -41,16 +40,16 @@ export const resetPassword = async (
 				password: newPasswordData.passwordFirst,
 			}),
 		})
+		.then((res) => {
+      return res.json();
+    })
+    .then((data: ResponseData<Object>) => {
+      return data;
+    });
 
-		if (!response.ok) {
-			throw new Error(`HTTP error: ${response.status}`);
-		}
-
-		const data: ResponseData<string> = await response.json();
-		return data;
-
+		return response.data as ResponseData<string>;
 	} catch (error) {
-		console.error("Error during password reset request:", error);
-		return { success: false, data: "An error occurred" };
+		console.log("An error occurred: ", error);
+    return { success: false, data: "An error occurred. Please, try again." };
 	}
 };

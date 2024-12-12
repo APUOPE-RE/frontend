@@ -5,7 +5,7 @@ import { fetchQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
 import {
   QuestionData,
-  QuizData,
+  QuizResultData,
   QuizSubmitAnswerData,
   QuizSubmitData,
 } from "../types/types";
@@ -24,8 +24,10 @@ export default function Quiz() {
   const [selectedTopic, setSelectedTopic] = useState<number | null>(0);
   const [response, setResponse] = useState<QuestionData[]>([]);
   const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
-  const [score, setScore] = useState<number>(0);
+  const [quizResult, setQuizResult] = useState<QuizResultData>();
+  const [score, setScore] = useState<number>(-1);
   const [quizid, setQuizid] = useState<number>(0);
+	const { addAppError } = useAppContext();
 
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
@@ -33,14 +35,18 @@ export default function Quiz() {
 
   const generateQuiz = async (value: number | null): Promise<void> => {
     setIsLoading(true);
-    const res: QuizData = await fetchQuiz(value);
-    setQuizid(res.id);
-    const quizResponse = res.questionDataList;
-    if (quizResponse) {
-      setResponse(quizResponse);
-      setIsLoading(false);
+    const res = await fetchQuiz(value);
+    if (typeof res !== "string") {
+      setQuizid(res.id);
+      const quizResponse = res.questionDataList;
+      if (quizResponse) {
+        setResponse(quizResponse);
+        setIsLoading(false);
+      } else {
+        console.error("Failed to fetch quiz.");
+      }
     } else {
-      console.error("Failed to fetch quiz.");
+      addAppError(res);
     }
   };
 
@@ -80,19 +86,24 @@ export default function Quiz() {
       quizSubmitAnswerDataList: result,
     };
 
-    const quizResult = await fetchResult(submissionPayload);
-    if (!quizResult || !quizResult.score) {
-      console.error(
-        "Quiz result is invalid or score is not available.",
-        quizResult
-      );
-      return;
+    if (result.length < 10){
+      addAppError("Answer all questions to submit")
+    } else {
+      const quizResult = await fetchResult(submissionPayload);
+      if (typeof quizResult !== "string") {
+        setQuizResult(quizResult);
+        setScore(quizResult.score);
+      } else {
+        addAppError(quizResult);
+      }
     }
-    setScore(quizResult.score);
   };
 
   async function downloadQuiz() {
-    await downloadQuizPdf(quizid);
+    const response = await downloadQuizPdf(quizid);
+    if (typeof response === "string"){
+      addAppError(response);
+    }
   }
 
   return (
@@ -168,7 +179,7 @@ export default function Quiz() {
                 </span>
               ) : (
                 <span className="bg-blue-500 text-white rounded-md px-2 py-1">
-                  {score}/{response.length}
+                  {score < 0 ? "-" : score}/{response.length}
                 </span>
               )}
             </p>
@@ -232,7 +243,7 @@ export default function Quiz() {
                           }
                         />
                         <span className="mr-2">{question[optionKey]}</span>
-                        {score > 0 && optionKey === question.correct_option && (
+                        {score >= 0 && optionKey === quizResult?.quizAnswerDataList.at(question.question_number-1)?.correctOption && (
                           <Image
                             src="/correct.png"
                             alt="Correct"
@@ -240,7 +251,7 @@ export default function Quiz() {
                             height={20}
                           />
                         )}
-                        {score > 0 && optionKey !== question.correct_option && (
+                        {score >= 0 && optionKey !== quizResult?.quizAnswerDataList.at(question.question_number-1)?.correctOption && (
                           <Image
                             src="/incorrect.png"
                             alt="Incorrect"
@@ -254,7 +265,7 @@ export default function Quiz() {
                 </div>
               ))}
               <div className="flex justify-end">
-                {score === 0 ? (
+                {score < 0 ? (
                   <button
                     className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
                     onClick={submitQuiz}

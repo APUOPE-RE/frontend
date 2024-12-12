@@ -20,6 +20,9 @@ interface AppContextType {
 	setFetchConversationsData: (value: boolean) => void;
 	setFetchPreviousQuizzesData: (value: boolean) => void;
 	conversations: ConversationData[];
+	appErrors: string[];
+	addAppError: (error: string) => void;
+	removeAppError: () => void;
 	dropdownOpen: boolean;
 	setDropdownOpen: (value: boolean) => void;
 	selectedQuizId: number;
@@ -38,6 +41,7 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	const [fetchConversationsData, setFetchConversationsData] = useState(false);
 	const [fetchPreviousQuizzesData, setFetchPreviousQuizzesData] = useState(false);
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
+	const [appErrors, setAppErrors] = useState<string[]>([]);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const [selectedQuizId, setSelectedQuizId] = useState(0);
 	const [title, setTitle] = useState("");
@@ -63,7 +67,7 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	useEffect(() => {
 		const fetchConversations = async () => {
 			const response = await fetchAllConversations();
-			if (Array.isArray(response)) {
+			if (response.length > 0) {
 				response.sort((a, b) => b.id - a.id);
 				setConversations(response);
 			}
@@ -90,6 +94,18 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 		}
 	}, [fetchPreviousQuizzesData]);
 
+	const addAppError = (error: string) => {
+		setAppErrors(errors => [...errors, error]);
+	}
+
+	const removeAppError = () => {
+		if (appErrors.length === 1) {
+			setAppErrors([]);
+		} else {
+			setAppErrors(appErrors.slice(0, 1));
+		}
+	}
+
 	return (
 		<AppContext.Provider
 			value={{
@@ -101,6 +117,9 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				setFetchConversationsData,
 				setFetchPreviousQuizzesData,
 				conversations,
+				appErrors,
+				addAppError,
+				removeAppError,
 				dropdownOpen,
 				setDropdownOpen,
 				selectedQuizId,

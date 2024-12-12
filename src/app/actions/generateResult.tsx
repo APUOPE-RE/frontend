@@ -1,8 +1,8 @@
-import { QuizSubmitData } from "../types/types";
+import { QuizResultData, QuizSubmitData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export const fetchResult = async (submissionPayload: QuizSubmitData) => {
+export const fetchResult = async (submissionPayload: QuizSubmitData): Promise<QuizResultData | string> => {
   try {
     const token = localStorage.getItem("token");
     const response = await fetch(`${API_BASE_URL}/api/submitQuiz`, {
@@ -13,18 +13,21 @@ export const fetchResult = async (submissionPayload: QuizSubmitData) => {
       },
       body: JSON.stringify(submissionPayload),
       credentials: "include",
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data: ResponseData<Object>) => {
+      return data;
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    } else {
-      const errorData = await response.text(); 
-      console.error("Failed", errorData);
-      return null
-    }
+		if (response.success) {
+			return response.data as QuizResultData;
+		} else {
+			return response.data as string;
+		}
   } catch (error) {
-    console.error("Error", error);
-    throw error;
+		console.log("An error occurred: ", error);
+    return "An error occurred. Please, try again.";
   }
 };

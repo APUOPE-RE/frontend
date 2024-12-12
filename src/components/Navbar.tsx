@@ -7,7 +7,15 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated, setFetchPreviousQuizzesData, setFetchConversationsData } = useAppContext();
+	const {
+		appErrors,
+		isAuthenticated,
+		addAppError,
+		removeAppError,
+		setAuthenticated,
+		setFetchPreviousQuizzesData,
+		setFetchConversationsData
+	} = useAppContext();
 	const router = useRouter();
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -73,8 +81,12 @@ export const Navbar: React.FC = (): JSX.Element => {
 	};
 
 	const logoutAndRedirect = async () => {
-		await handleLogout(setAuthenticated);
-		router.push("/login");
+		const response = await handleLogout(setAuthenticated);
+		if (typeof response !== "string") {
+			router.push("/login");
+		} else {
+			addAppError(response);
+		}
 	};
 
 	return (
@@ -208,8 +220,23 @@ export const Navbar: React.FC = (): JSX.Element => {
 								)}
 							</div>
 						)}
+						{appErrors.length > 0 &&
+							<div className="fixed flex flex-row right-10 bottom-32 p-2 w-1/5 max-w-sm max-h-96 rounded bg-rose-500 text-white shadow-lg overflow-auto">
+								<div className="flex text-wrap p-2 text-md break-words">
+									{appErrors[0]}
+								</div>
+								<div className="flex right-0 absolute mr-2 cursor-pointer">
+									<Image
+										src={"/close.png"}
+										alt={"Close"}
+										width={20}
+										height={20}
+										onClick={() => removeAppError()}
+									/>
+								</div>
+							</div>
+						}
 					</div>
-
 					{/* Mobile Menu */}
 					<div className="md:hidden flex items-center h-full px-4">
 						{isOnPreviousQuizzesPage ? (

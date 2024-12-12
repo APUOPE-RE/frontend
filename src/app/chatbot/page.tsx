@@ -13,11 +13,11 @@ import { IoSendSharp } from "react-icons/io5";
 import { Conversations } from "./Conversations";
 
 export default function Chatbot() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [isModelOpen, setIsModelOpen] = useState(false);
-  const [topic, setTopic] = useState("");
-  const [selectedTopic, setSelectedTopic] = useState(0);
-  const { setFetchConversationsData, materials } = useAppContext();
+	const [messages, setMessages] = useState<Message[]>([]);
+	const [isModelOpen, setIsModelOpen] = useState(false);
+	const [topic, setTopic] = useState("");
+	const [selectedTopic, setSelectedTopic] = useState(0);
+	const { addAppError, setFetchConversationsData, materials } = useAppContext();
 
   const {
     handleSubmit,
@@ -42,11 +42,11 @@ export default function Chatbot() {
 
     setMessages((list) => [...list, { from: "user", message: data.content }]);
 
-    try {
-      const inputData = { ...data, conversationId: conversationId };
-      const response = await chatBotRequest(inputData);
-      if (response.success && typeof response.data !== "string") {
-        const responseData: ChatBotResponseData = response.data;
+		try {
+			const inputData = { ...data, conversationId: conversationId };
+			const response = await chatBotRequest(inputData);
+			if (typeof response !== "string") {
+				const responseData: ChatBotResponseData = response;
 
         setMessages((list) => [
           ...list,
@@ -54,12 +54,14 @@ export default function Chatbot() {
         ]);
         setFetchConversationsData(true);
 
-        if (conversationId === undefined || conversationId === 0) {
-          setValue("conversationId", response.data.conversationId);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching chatbot response:", error);
+				if (conversationId === undefined) {
+					setValue("conversationId", response.conversationId);
+				}
+			} else {
+				addAppError(response);
+			}
+		} catch (error) {
+			console.error("Error fetching chatbot response:", error);
 
       setMessages((list) => [
         ...list,

@@ -14,6 +14,7 @@ function Login() {
 	const token = searchParams.get("token");
 	const [accountVerified, setAccountVerified] = useState(false);
 	const {
+		addAppError,
 		setAuthenticated,
 		setRegisterSuccess,
 		registerSuccess,
@@ -24,25 +25,26 @@ function Login() {
 		handleSubmit,
 		register,
 		watch,
-		setError,
 		clearErrors,
+		setError,
     formState: { errors },
 	} = useForm<UserCredentials>();
 
   const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
 
-  useEffect(() => {
-    const handleToken = async () => {
-      if (token !== null) {
-        const response = await verifyAccount(token);
-        if (response) {
-          setRegisterSuccess("");
-          setAccountVerified(true);
-        } else {
-          setAccountVerified(false);
-        }
-      }
-    };
+	useEffect(() => {
+		const handleToken = async () => {
+			if (token !== null) {
+				const response = await verifyAccount(token);
+				if (response.success) {
+					setRegisterSuccess("");
+					setAccountVerified(true);
+				} else {
+					setAccountVerified(false);
+					addAppError(response.data)
+				}
+			}
+		};
 
     handleToken();
   }, [token, setAccountVerified]);
@@ -53,15 +55,14 @@ function Login() {
     }
   }, [watchEmail, watchPasswordHash, clearErrors]);
 
-  const handleLogin = async (data: UserCredentials): Promise<void> => {
-    const response = await validateUser(data);
+	const handleLogin = async (data: UserCredentials): Promise<void> => {
+		const response = await validateUser(data);
 
 		if (!response.success) {
 			setError("errors", {
 				message: response.data,
 			});
 		} else {
-			clearErrors("errors");
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
 			router.push("/chatbot");
@@ -81,7 +82,7 @@ function Login() {
 					{registerSuccess}
 				</div>
 			)}
-      {(errors.errors?.message === "Invalid credentials. Please try again." || errors.passwordHash)  && (
+      {errors.errors?.message  && (
         <div className="flex text-m p-5 text-white max-w-md w-full justify-center mb-8 rounded-lg bg-red-500">
           <p>Invalid credentials. Please try again.</p>
         </div>

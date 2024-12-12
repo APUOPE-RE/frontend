@@ -71,6 +71,7 @@ export type QuizAnswerData = {
     quizResultId: number;
     questionId: number;
     answer: string;
+    correctOption: string;
     correct: boolean;
     points: number;
 }
