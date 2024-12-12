@@ -88,7 +88,7 @@ export default function Quiz() {
     };
 
     if (result.length < 10){
-      addAppError("Answer all the questions to submit")
+      addAppError("Answer all questions to submit")
     } else {
       const quizResult = await fetchResult(submissionPayload);
       if (typeof quizResult !== "string") {

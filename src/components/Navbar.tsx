@@ -22,7 +22,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 	const [currentLink, setCurrentLink] = useState("");
 
 	useEffect(() => {
-		//localStorage.removeItem("token")
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
 	}, [setAuthenticated]);
