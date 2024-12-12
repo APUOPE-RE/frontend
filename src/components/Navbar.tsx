@@ -7,7 +7,7 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated, setFetchData } = useAppContext();
+	const { isAuthenticated, setAuthenticated, setFetchPreviousQuizzesData, setFetchConversationsData } = useAppContext();
 	const router = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
-	}, []);
+	}, [setAuthenticated]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -61,9 +61,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 								<Link
 									id="previous-quizzes-link"
 									href="/previous-quizzes"
-									onClick={() =>
-										setCurrentLink("previous-quizzes")
-									}
+									onClick={() => (
+										setCurrentLink("previous-quizzes"),
+                    setFetchPreviousQuizzesData(true)
+                  )}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "previous-quizzes"
 											? "border-b-2  border-blue-600"
@@ -93,7 +94,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 									href="/chatbot"
 									onClick={() => (
 										setCurrentLink("chatbot"),
-										setFetchData(true)
+										setFetchConversationsData(true)
 									)}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "chatbot"
