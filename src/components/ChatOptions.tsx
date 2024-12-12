@@ -64,8 +64,6 @@ export default function ChatOptions({ conversation, setValue }: any) {
           credentials: "include",
         }
       );
-
-      console.log("DELETE CHAT RESPONSE: ", response);
       setFetchConversationsData(true);
       setDialogWindow(null);
     };

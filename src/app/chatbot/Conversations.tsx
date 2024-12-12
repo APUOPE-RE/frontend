@@ -58,8 +58,6 @@ export const Conversations = ({
             </span>
             <div className="h-full flex items-center justify-between">
               <p>{c.subject}</p>
-              {/* <p>{filterSubject(c.chapterId > 0 ? c.chapterId : 1)?.label}</p> */}
-              {/* console.log(c.id, currentConversation) */}
               {currentConversation === c.id && (
                 <ChatOptions conversation={c} setValue={setValue} />
               )}

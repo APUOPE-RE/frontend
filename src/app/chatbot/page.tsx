@@ -37,8 +37,6 @@ export default function Chatbot() {
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
 
-  console.log("CONVERSATION ID: ", conversationId);
-
   const handleRequest = async (data: ChatBotRequestData) => {
     if (!data.content.trim() || !lectureId) return;
 
@@ -124,95 +122,104 @@ export default function Chatbot() {
                 id="input"
                 className={`basis-11/12 me-2 p-4 text-sm border border-gray-300 rounded-lg 
 									${disableInputField ? "bg-white font-bold" : "bg-gray-50 text-gray-900"}`}
-                placeholder={
-                  disableInputField
-                    ? "Please select a topic from '+' button on the left side bar"
-                    : "Say something..."
-                }
-                {...register("content", { required: true })}
-                disabled={disableInputField}
-              />
-              <button
-                type="submit"
-                className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
-              >
-                <IoSendSharp className="text-2xl" />
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-      {isModelOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[40%] h-[70%] text-center">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">New Conversation</h2>
-              <p className="mb-6">Select a topic for your next conversation:</p>
-            </div>
+								placeholder={disableInputField ? "Please select a topic from '+' button on the left side bar" : "Say something..."}
+								{...register("content", { required: true })}
+								disabled={disableInputField}
+							/>
+							<button
+								id="submit_prompt"
+								type="submit"
+								className="text-white bg-blue-700 font-medium rounded-lg text-sm px-4 py-2 basis-1/12 flex justify-center items-center"
+							>
+								<IoSendSharp className="text-2xl" />
+							</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			{isModelOpen && (
+				<div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+					<div className="bg-white flex flex-col justify-center items-center p-6 rounded-lg shadow-lg w-[40%] h-[70%] text-center">
+						<div>
+							<h2 className="text-2xl font-bold mb-2">
+								New Conversation
+							</h2>
+							<p className="mb-6">
+								Select a topic for your next conversation:
+							</p>
+						</div>
 
-            <div className="flex flex-col items-center border rounded-lg w-[80%] h-[70%] overflow-auto">
-              <form
-                className="w-full relative"
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 10,
-                  backdropFilter: "blur(10px)",
-                }}
-              >
-                <div>
-                  <input
-                    type="search"
-                    placeholder="Search topic"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    className="w-full bg-slate-100 p-2 rounded-md outline-none"
-                  />
-                </div>
-              </form>
-              {filteredItems.map((item) => (
-                <div
-                  className="flex justify-between items-center my-1 px-4 w-[98%] h-20 rounded-xl py-2 bg-gray-100 shadow-md cursor-pointer hover:bg-blue-100"
-                  key={item.id}
-                  onClick={() => setSelectedTopic(item.id)}
-                >
-                  <label htmlFor={item.label} className="cursor-pointer">
-                    {item.label}
-                  </label>
-                  <input
-                    id={item.label}
-                    type="radio"
-                    value={item.id}
-                    checked={selectedTopic === item.id}
-                    readOnly
-                  />
-                </div>
-              ))}
-              <div></div>
-            </div>
-            <div className="w-full flex justify-end pt-4 gap-4 px-4">
-              <button
-                className="bg-rose-500 text-white py-2 px-4 rounded"
-                onClick={() => (setSelectedTopic(0), setIsModelOpen(false))}
-              >
-                Close
-              </button>
-              <button
-                className="bg-blue-500 text-white py-2 px-4 rounded"
-                onClick={() => (
-                  reset(),
-                  setValue("lectureId", selectedTopic),
-                  setIsModelOpen(false),
-                  setSelectedTopic(0),
-                  setMessages([])
-                )}
-              >
-                Create
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+						<div className="flex flex-col items-center border rounded-lg w-[80%] h-[70%] overflow-auto">
+							<form
+								className="w-full relative"
+								style={{
+									position: "sticky",
+									top: 0,
+									zIndex: 10,
+									backdropFilter: "blur(10px)",
+								}}
+							>
+								<div>
+									<input
+										type="search"
+										placeholder="Search topic"
+										value={topic}
+										onChange={(e) =>
+											setTopic(e.target.value)
+										}
+										className="w-full bg-slate-100 p-2 rounded-md outline-none"
+									/>
+								</div>
+							</form>
+							{filteredItems.map((item) => (
+								<div
+									className="flex justify-between items-center my-1 px-4 w-[98%] h-20 rounded-xl py-2 bg-gray-100 shadow-md cursor-pointer hover:bg-blue-100"
+									key={item.id}
+									onClick={() => setSelectedTopic(item.id)}
+								>
+									<label
+										htmlFor={item.label}
+										className="cursor-pointer"
+									>
+										{item.label}
+									</label>
+									<input
+										id={item.label}
+										type="radio"
+										value={item.id}
+										checked={selectedTopic === item.id}
+										readOnly
+									/>
+								</div>
+							))}
+							<div></div>
+						</div>
+						<div className="w-full flex justify-end pt-4 gap-4 px-4">
+							<button
+								className="bg-rose-500 text-white py-2 px-4 rounded"
+								onClick={() => (
+									setSelectedTopic(0), setIsModelOpen(false)
+								)}
+							>
+								Close
+							</button>
+							<button
+								id="create_chat"
+								className="bg-blue-500 text-white py-2 px-4 rounded"
+								onClick={() => (
+									reset(),
+									setValue("lectureId", selectedTopic),
+									setIsModelOpen(false),
+									setSelectedTopic(0),
+									setMessages([])
+								)}
+							>
+								Create
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 }
