@@ -13,7 +13,6 @@ function Login() {
 	const searchParams = useSearchParams();
 	const token = searchParams.get("token");
 	const [accountVerified, setAccountVerified] = useState(false);
-	const [error, setError] = useState<string>("");
 	const {
 		addAppError,
 		setAuthenticated,
@@ -27,9 +26,11 @@ function Login() {
 		register,
 		watch,
 		clearErrors,
+		setError,
+    formState: { errors },
 	} = useForm<UserCredentials>();
 
-	const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
+  const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
 
 	useEffect(() => {
 		const handleToken = async () => {
@@ -45,21 +46,22 @@ function Login() {
 			}
 		};
 
-		handleToken();
-	}, [token, setAccountVerified]);
+    handleToken();
+  }, [token, setAccountVerified]);
 
-	useEffect(() => {
-		if (watchEmail || watchPasswordHash) {
-			clearErrors("errors");
-		}
-	}, [watchEmail, watchPasswordHash, clearErrors]);
+  useEffect(() => {
+    if (watchEmail || watchPasswordHash) {
+      clearErrors("errors");
+    }
+  }, [watchEmail, watchPasswordHash, clearErrors]);
 
 	const handleLogin = async (data: UserCredentials): Promise<void> => {
-		setError("");
 		const response = await validateUser(data);
 
 		if (!response.success) {
-			setError(response.data);
+			setError("errors", {
+				message: response.data,
+			});
 		} else {
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
@@ -80,15 +82,15 @@ function Login() {
 					{registerSuccess}
 				</div>
 			)}
+      {errors.errors?.message  && (
+        <div className="flex text-m p-5 text-white max-w-md w-full justify-center mb-8 rounded-lg bg-red-500">
+          <p>Invalid credentials. Please try again.</p>
+        </div>
+      )}
 			<div className="w-full max-w-md p-8 pt-16 bg-white rounded-lg shadow-md">
 				<h2 className="text-2xl font-bold mb-3 text-center">
 					Login
 				</h2>
-				{error !== "" && (
-					<div className="text-center mt-5 mb-5 text-amber-500">
-						{error}
-					</div>
-				)}
 				<form onSubmit={handleSubmit(handleLogin)}>
 					<div className="mb-4">
 						<label
@@ -135,6 +137,7 @@ function Login() {
 							</span>
 						</p>
 						<input
+							id="submit-login"
 							type="submit"
 							className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring"
 							value={"Login"}
@@ -147,9 +150,9 @@ function Login() {
 }
 
 export default function LoginPageWrapper() {
-	return (
-		<Suspense fallback={<div>Loading...</div>}>
-			<Login />
-		</Suspense>
-	);
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Login />
+    </Suspense>
+  );
 }
