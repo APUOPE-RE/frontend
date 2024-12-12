@@ -130,6 +130,7 @@ function Login() {
 							</span>
 						</p>
 						<input
+							id="submit-login"
 							type="submit"
 							className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring"
 							value={"Login"}
