@@ -7,7 +7,7 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated, setFetchData } = useAppContext();
+	const { isAuthenticated, setAuthenticated, setFetchPreviousQuizzesData, setFetchConversationsData } = useAppContext();
 	const router = useRouter();
 	const pathname = usePathname();
 	const [menuOpen, setMenuOpen] = useState(false);
@@ -23,7 +23,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
-	}, []);
+	}, [setAuthenticated]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -90,7 +90,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 									<li className="font-semibold h-full">
 										<Link
 											href="/chatbot"
-											onClick={() => setCurrentLink("chatbot")}
+											onClick={() => {
+												setCurrentLink("chatbot"),
+													setFetchConversationsData(true)
+											}}
 											className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "chatbot"
 												? "border-b-2  border-blue-600"
 												: "hover:bg-blue-100"
@@ -114,9 +117,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 									<li className="font-semibold h-full">
 										<Link
 											href="/previous-quizzes"
-											onClick={() =>
-												setCurrentLink("previous-quizzes")
-											}
+											onClick={() => {
+												setCurrentLink("previous-quizzes"),
+													setFetchPreviousQuizzesData(true)
+											}}
 											className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "previous-quizzes"
 												? "border-b-2  border-blue-600"
 												: "hover:bg-blue-100"
@@ -130,8 +134,8 @@ export const Navbar: React.FC = (): JSX.Element => {
 						) : (
 							null
 						)}
-					</div>
 
+					</div>
 
 					<div className="hidden md:flex items-center ml-auto mr-6 relative">
 						<Image

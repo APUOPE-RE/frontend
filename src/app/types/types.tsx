@@ -89,7 +89,7 @@ export type QuizResultData = {
     quizId: number;
     score: number;
     maxScore: number;
-    dateTime: Date;
+    datetime: Date;
     quizAnswerDataList: QuizAnswerData[];
 }
 
