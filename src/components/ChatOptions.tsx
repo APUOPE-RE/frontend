@@ -11,17 +11,19 @@ import { useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FiEdit3 } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
+import { useAppContext } from "../context";
 
-export default function ChatOptions({ conversation }: any) {
+export default function ChatOptions({ conversation, setValue }: any) {
   const [dialogWindow, setDialogWindow] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState<string>("");
+
+  const { setFetchConversationsData } = useAppContext();
 
   const { id } = conversation;
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    console.log("CONVERSATION: ", conversation);
-    setNewTitle(conversation.title);
+    setNewTitle(conversation.subject);
   }, []);
 
   const handleTitleChange = () => {
@@ -39,7 +41,11 @@ export default function ChatOptions({ conversation }: any) {
         }
       );
 
-      console.log("CHANGE TITLE RESPONSE: ", response);
+      if (response.status === 200) {
+        setValue("conversationId", 0);
+        setDialogWindow(null);
+        setFetchConversationsData(true);
+      }
     };
 
     changeTitle();
@@ -60,6 +66,8 @@ export default function ChatOptions({ conversation }: any) {
       );
 
       console.log("DELETE CHAT RESPONSE: ", response);
+      setFetchConversationsData(true);
+      setDialogWindow(null);
     };
 
     deleteConversation();
@@ -109,7 +117,7 @@ export default function ChatOptions({ conversation }: any) {
 
                   <p className="mt-4 text-lg">
                     Introduce a new title for this{" "}
-                    <strong>{conversation.title}</strong>:
+                    <strong>{conversation.subject}</strong>:
                   </p>
 
                   <Input

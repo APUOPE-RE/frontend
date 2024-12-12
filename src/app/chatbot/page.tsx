@@ -90,11 +90,6 @@ export default function Chatbot() {
             currentConversation={conversationId}
             setMessages={setMessages}
             setValue={setValue}
-            setCurrentConversationId={(id) => {
-              if (typeof id === "number") {
-                setValue("conversationId", id);
-              }
-            }}
           />
         </div>
       </div>

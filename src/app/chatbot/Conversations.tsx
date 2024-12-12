@@ -14,14 +14,12 @@ type ConversationsProps = {
   currentConversation: number;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   setValue: UseFormSetValue<ChatBotRequestData>;
-  setCurrentConversationId: Dispatch<SetStateAction<number>>;
 };
 
 export const Conversations = ({
   currentConversation,
   setMessages,
   setValue,
-  setCurrentConversationId,
 }: ConversationsProps) => {
   const { conversations, materials } = useAppContext();
 
@@ -31,7 +29,7 @@ export const Conversations = ({
 
   const fetchMessages = async (conversationId: number) => {
     if (conversationId !== currentConversation) {
-      setValue("conversationId", 0);
+      setValue("conversationId", conversationId);
       setValue("lectureId", 0);
       const response = await fetchConversation(conversationId);
       if (Array.isArray(response)) {
@@ -50,19 +48,21 @@ export const Conversations = ({
         return (
           <div
             key={c.id}
-            className="relative w-[99%] h-20 border p-2 border-none rounded-lg mb-2 bg-gray-100 shadow-md hover:bg-blue-100 cursor-pointer"
-            onClick={() => {
-              setCurrentConversationId(c.id);
-              fetchMessages(c.id);
-            }}
+            className={`relative w-[99%] h-20 border p-2 border-none rounded-lg mb-2 shadow-md hover:bg-blue-100 cursor-pointer ${
+              currentConversation === c.id ? "bg-blue-100" : "bg-gray-100"
+            }`}
+            onClick={() => fetchMessages(c.id)}
           >
             <span className="absolute top-2 right-2 text-xs">
               {new Date(c.dateTime).toLocaleDateString()}
             </span>
             <div className="h-full flex items-center justify-between">
-              <p>{filterSubject(c.chapterId > 0 ? c.chapterId : 1)?.label}</p>
+              <p>{c.subject}</p>
+              {/* <p>{filterSubject(c.chapterId > 0 ? c.chapterId : 1)?.label}</p> */}
               {/* console.log(c.id, currentConversation) */}
-              {currentConversation === c.id && <ChatOptions conversation={c} />}
+              {currentConversation === c.id && (
+                <ChatOptions conversation={c} setValue={setValue} />
+              )}
             </div>
           </div>
         );
