@@ -83,7 +83,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 				<div className="w-full h-20 shadow-xl bg-blue-200 flex justify-between border-b-2 border-blue-400">
 					<div className="hidden md:flex items-center h-full px-4">
 						{isAuthenticated ? (
-							<Link href="/chatbot">
+							<Link 
+								id="logo-link"
+								href="/chatbot">
 								<Image
 									src="/logo.png"
 									alt="logo"
@@ -110,7 +112,8 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 									<li className="font-semibold h-full">
 										<Link
-											href="/chatbot"
+											id="previous-quizzes-link"
+									href="/chatbot"
 											onClick={() => {
 												setCurrentLink("chatbot"),
 													setFetchConversationsData(true)
@@ -125,7 +128,8 @@ export const Navbar: React.FC = (): JSX.Element => {
 									</li>
 									<li className="font-semibold h-full">
 										<Link
-											href="/quiz"
+											id="quiz-maker-link"
+									href="/quiz"
 											onClick={() => setCurrentLink("quiz")}
 											className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "quiz"
 												? "border-b-2  border-blue-600"
@@ -137,7 +141,8 @@ export const Navbar: React.FC = (): JSX.Element => {
 									</li>
 									<li className="font-semibold h-full">
 										<Link
-											href="/previous-quizzes"
+											id="chatbot-link"
+									href="/previous-quizzes"
 											onClick={() => {
 												setCurrentLink("previous-quizzes"),
 													setFetchPreviousQuizzesData(true)
@@ -159,6 +164,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 					<div className="hidden md:flex items-center ml-auto mr-6 relative">
 						<Image
+							id="user-icon"
 							src="/user_icon.png"
 							alt="User Icon"
 							width={48}
@@ -175,6 +181,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 							>
 								{isAuthenticated ? (
 									<button
+										id="logout-button"
 										className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-md border border-gray-500"
 										onClick={() => { logoutAndRedirect(); setMenuOpen(false); }}
 									>
@@ -182,7 +189,9 @@ export const Navbar: React.FC = (): JSX.Element => {
 									</button>
 								) : (
 									<>
-										<Link href="/login"
+										<Link
+											id="login-button" 
+											href="/login"
 											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md border border-gray-500 "
 											onClick={() => setMenuOpen(false)}
 										>
@@ -260,6 +269,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 								{isAuthenticated ? (
 									<>
 										<Link
+											id="chatbot-button"
 											href="/chatbot"
 											onClick={() => { setMobileMenuOpen(false); setCurrentLink("chatbot") }}
 											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md border border-gray-500"
@@ -267,6 +277,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 											Chatbot
 										</Link>
 										<Link
+											id="quiz-maker-button"
 											href="/quiz"
 											onClick={() => { setMobileMenuOpen(false); setCurrentLink("quiz") }}
 											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left border border-gray-500"
@@ -274,6 +285,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 											Quiz Maker
 										</Link>
 										<Link
+											id="previous-quizzes-button"
 											href="/previous-quizzes"
 											onClick={() => { setMobileMenuOpen(false); setCurrentLink("previous-quizzes") }}
 											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left border border-gray-500"
@@ -281,6 +293,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 											Previous Quizzes
 										</Link>
 										<button
+											id="logout-button"
 											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-b-md border border-gray-500"
 											onClick={() => {
 												logoutAndRedirect();
@@ -293,6 +306,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 								) : (
 									<>
 										<Link
+											id="login-button"
 											href="/login"
 											onClick={() => setMobileMenuOpen(false)}
 											className="block px-4 py-2 text-gray-700 hover:bg-gray-200 w-full text-left rounded-t-md border border-gray-500"
