@@ -9,25 +9,25 @@ import { verifyAccount } from "../actions/verification";
 import { useAppContext } from "@/src/context";
 
 function Login() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const [accountVerified, setAccountVerified] = useState(false);
-  const {
-    setAuthenticated,
-    setRegisterSuccess,
-    registerSuccess,
-    setFetchData,
-  } = useAppContext();
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const token = searchParams.get("token");
+	const [accountVerified, setAccountVerified] = useState(false);
+	const {
+		setAuthenticated,
+		setRegisterSuccess,
+		registerSuccess,
+		setFetchConversationsData,
+	} = useAppContext();
 
-  const {
-    handleSubmit,
-    register,
-    watch,
-    setError,
-    clearErrors,
+	const {
+		handleSubmit,
+		register,
+		watch,
+		setError,
+		clearErrors,
     formState: { errors },
-  } = useForm<UserCredentials>();
+	} = useForm<UserCredentials>();
 
   const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
 
@@ -56,18 +56,18 @@ function Login() {
   const handleLogin = async (data: UserCredentials): Promise<void> => {
     const response = await validateUser(data);
 
-    if (!response.success) {
-      setError("errors", {
-        message: response.data,
-      });
-    } else {
-      clearErrors("errors");
-      localStorage.setItem("token", response.data);
-      setAuthenticated(true);
-      router.push("/chatbot");
-      setFetchData(true);
-    }
-  };
+		if (!response.success) {
+			setError("errors", {
+				message: response.data,
+			});
+		} else {
+			clearErrors("errors");
+			localStorage.setItem("token", response.data);
+			setAuthenticated(true);
+			router.push("/chatbot");
+			setFetchConversationsData(true);
+		}
+	};
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
