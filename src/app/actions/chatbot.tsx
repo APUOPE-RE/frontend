@@ -77,7 +77,7 @@ export const chatBotRequest = async (
 			}),
 		})
 
-		if (!response.ok) {
+		if (response.ok) {
 			return response.json().then((data: ResponseData<ChatBotResponseData>) => {
 				return data.data;
 			});

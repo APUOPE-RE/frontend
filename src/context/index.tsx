@@ -5,6 +5,7 @@ import {
 	useContext,
 	ReactNode,
 	useEffect,
+	useRef,
 } from "react";
 import { fetchAllConversations } from "../app/actions/chatbot";
 import { ConversationData, QuizSummaryData } from "../app/types/types";
@@ -22,6 +23,13 @@ interface AppContextType {
 	appErrors: string[];
 	addAppError: (error: string) => void;
 	removeAppError: () => void;
+	dropdownOpen: boolean;
+	setDropdownOpen: (value: boolean) => void;
+	selectedQuizId: number;
+	setSelectedQuizId: (id: number) => void;
+	title: string;
+	setTitle: (value: string) => void;
+	searchInputRef: React.RefObject<HTMLInputElement>;
 	previousQuizzes: QuizSummaryData[];
 }
 
@@ -34,6 +42,10 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 	const [fetchPreviousQuizzesData, setFetchPreviousQuizzesData] = useState(false);
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
 	const [appErrors, setAppErrors] = useState<string[]>([]);
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [selectedQuizId, setSelectedQuizId] = useState(0);
+	const [title, setTitle] = useState("");
+	const searchInputRef = useRef<HTMLInputElement>(null);
 	const [previousQuizzes, setPreviousQuizzes] = useState<QuizSummaryData[]>([]);
 
 	const setAuthenticated = (auth: boolean) => {
@@ -108,6 +120,13 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				appErrors,
 				addAppError,
 				removeAppError,
+				dropdownOpen,
+				setDropdownOpen,
+				selectedQuizId,
+				setSelectedQuizId,
+				title,
+				setTitle,
+				searchInputRef,
 				previousQuizzes,
 			}}
 		>

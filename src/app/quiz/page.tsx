@@ -37,7 +37,6 @@ export default function Quiz() {
     setIsLoading(true);
     const res = await fetchQuiz(value);
     if (typeof res !== "string") {
-      console.log(res)
       setQuizid(res.id);
       const quizResponse = res.questionDataList;
       if (quizResponse) {

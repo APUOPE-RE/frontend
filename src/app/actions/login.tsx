@@ -16,13 +16,10 @@ export const validateUser = async (
 				passwordHash: userCredentials.passwordHash,
 			}),
 		});
-		if (!response.ok || response.ok) {
-			return response.json().then((data: ResponseData<string>) => {
-				return data;
-			});
-		}
 
-		return response.json();
+		return response.json().then((data: ResponseData<string>) => {
+			return data;
+		});
 	} catch (error) {
 		console.log("An error occurred: ", error);
     return { success: false, data: "An error occurred. Please, try again."};
