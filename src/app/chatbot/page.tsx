@@ -17,7 +17,7 @@ export default function Chatbot() {
   const [isModelOpen, setIsModelOpen] = useState(false);
   const [topic, setTopic] = useState("");
   const [selectedTopic, setSelectedTopic] = useState(0);
-  const { setFetchData, materials } = useAppContext();
+  const { setFetchConversationsData, materials } = useAppContext();
 
   const {
     handleSubmit,
@@ -54,7 +54,7 @@ export default function Chatbot() {
           ...list,
           { from: "bot", message: responseData.content },
         ]);
-        setFetchData(true);
+        setFetchConversationsData(true);
 
         if (conversationId === undefined || conversationId === 0) {
           setValue("conversationId", response.data.conversationId);
@@ -90,9 +90,11 @@ export default function Chatbot() {
             currentConversation={conversationId}
             setMessages={setMessages}
             setValue={setValue}
-            setCurrentConversationId={(id: number) =>
-              setValue("conversationId", id)
-            }
+            setCurrentConversationId={(id) => {
+              if (typeof id === "number") {
+                setValue("conversationId", id);
+              }
+            }}
           />
         </div>
       </div>
@@ -125,8 +127,13 @@ export default function Chatbot() {
               <input
                 type="text"
                 id="input"
-                className="basis-11/12 me-2 p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50"
-                placeholder="Say something..."
+                className={`basis-11/12 me-2 p-4 text-sm border border-gray-300 rounded-lg 
+									${disableInputField ? "bg-white font-bold" : "bg-gray-50 text-gray-900"}`}
+                placeholder={
+                  disableInputField
+                    ? "Please select a topic from '+' button on the left side bar"
+                    : "Say something..."
+                }
                 {...register("content", { required: true })}
                 disabled={disableInputField}
               />

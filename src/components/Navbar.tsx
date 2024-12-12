@@ -7,7 +7,7 @@ import { useAppContext } from "../context";
 import { handleLogout } from "../app/actions/logout";
 
 export const Navbar: React.FC = (): JSX.Element => {
-	const { isAuthenticated, setAuthenticated } = useAppContext();
+	const { isAuthenticated, setAuthenticated, setFetchPreviousQuizzesData, setFetchConversationsData } = useAppContext();
 	const router = useRouter();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -16,7 +16,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 	useEffect(() => {
 		const isLoggedin = localStorage.getItem("token") !== null;
 		setAuthenticated(isLoggedin);
-	}, []);
+	}, [setAuthenticated]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -38,10 +38,6 @@ export const Navbar: React.FC = (): JSX.Element => {
 		router.push("/login");
 	};
 
-	useEffect(() => {
-		console.log("currentLink: ", currentLink);
-	}, [currentLink]);
-
 	return (
 		<>
 			<header className="fixed top-0 left-0 w-full">
@@ -62,9 +58,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 							<li className="font-semibold h-full">
 								<Link
 									href="/previous-quizzes"
-									onClick={() =>
-										setCurrentLink("previous-quizzes")
-									}
+									onClick={() => (
+										setCurrentLink("previous-quizzes"),
+                    setFetchPreviousQuizzesData(true)
+                  )}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "previous-quizzes"
 											? "border-b-2  border-blue-600"
@@ -90,7 +87,10 @@ export const Navbar: React.FC = (): JSX.Element => {
 							<li className="font-semibold h-full">
 								<Link
 									href="/chatbot"
-									onClick={() => setCurrentLink("chatbot")}
+									onClick={() => (
+										setCurrentLink("chatbot"),
+										setFetchConversationsData(true)
+									)}
 									className={`px-3 transition-colors duration-300 h-full flex items-center ${
 										currentLink == "chatbot"
 											? "border-b-2  border-blue-600"

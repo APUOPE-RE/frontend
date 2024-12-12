@@ -17,7 +17,7 @@ function Login() {
 		setAuthenticated,
 		setRegisterSuccess,
 		registerSuccess,
-		setFetchData,
+		setFetchConversationsData,
 	} = useAppContext();
 
 	const {
@@ -26,7 +26,6 @@ function Login() {
 		watch,
 		setError,
 		clearErrors,
-		formState: { errors },
 	} = useForm<UserCredentials>();
 
 	const [watchEmail, watchPasswordHash] = watch(["email", "passwordHash"]);
@@ -65,7 +64,7 @@ function Login() {
 			localStorage.setItem("token", response.data);
 			setAuthenticated(true);
 			router.push("/chatbot");
-			setFetchData(true);
+			setFetchConversationsData(true);
 		}
 	};
 

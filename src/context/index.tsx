@@ -7,7 +7,8 @@ import {
 	useEffect,
 } from "react";
 import { fetchAllConversations } from "../app/actions/chatbot";
-import { ConversationData } from "../app/types/types";
+import { ConversationData, QuizSummaryData } from "../app/types/types";
+import { fetchPreviousQuizzes } from "../app/actions/generateQuiz";
 
 interface AppContextType {
 	isAuthenticated: boolean;
@@ -15,8 +16,10 @@ interface AppContextType {
 	registerSuccess: string;
 	setRegisterSuccess: (register: string) => void;
 	materials: { id: number; label: string }[];
-	setFetchData: (value: boolean) => void;
+	setFetchConversationsData: (value: boolean) => void;
+	setFetchPreviousQuizzesData: (value: boolean) => void;
 	conversations: ConversationData[];
+	previousQuizzes: QuizSummaryData[];
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -24,8 +27,10 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppWrapper({ children }: { children: ReactNode }) {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [registerSuccess, setRegisterSuccess] = useState("");
-	const [fetchData, setFetchData] = useState(false);
+	const [fetchConversationsData, setFetchConversationsData] = useState(false);
+	const [fetchPreviousQuizzesData, setFetchPreviousQuizzesData] = useState(false);
 	const [conversations, setConversations] = useState<ConversationData[]>([]);
+	const [previousQuizzes, setPreviousQuizzes] = useState<QuizSummaryData[]>([]);
 
 	const setAuthenticated = (auth: boolean) => {
 		setIsAuthenticated(auth);
@@ -52,11 +57,26 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 			}
 		};
 
-		if (fetchData) {
+		if (fetchConversationsData) {
 			fetchConversations();
-			setFetchData(false);
+			setFetchConversationsData(false);
 		}
-	}, [fetchData]);
+	}, [fetchConversationsData]);
+
+	useEffect(() => {
+		const fetchQuizzes = async () => {
+			const response = await fetchPreviousQuizzes();
+			if (Array.isArray(response)) {
+				response.sort((a, b) => b.quizId - a.quizId);
+				setPreviousQuizzes(response);
+			}
+		};
+
+		if (fetchPreviousQuizzesData) {
+			fetchQuizzes();
+			setFetchPreviousQuizzesData(false);
+		}
+	}, [fetchPreviousQuizzesData]);
 
 	return (
 		<AppContext.Provider
@@ -66,8 +86,10 @@ export function AppWrapper({ children }: { children: ReactNode }) {
 				registerSuccess,
 				setRegisterSuccess,
 				materials,
-				setFetchData,
+				setFetchConversationsData,
+				setFetchPreviousQuizzesData,
 				conversations,
+				previousQuizzes,
 			}}
 		>
 			{children}
