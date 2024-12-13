@@ -47,7 +47,7 @@ function Login() {
 		};
 
     handleToken();
-  }, [token, setAccountVerified]);
+  }, [token, addAppError, setAccountVerified, setRegisterSuccess]);
 
   useEffect(() => {
     if (watchEmail || watchPasswordHash) {

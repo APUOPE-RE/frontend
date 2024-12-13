@@ -15,7 +15,7 @@ export const fetchQuiz = async (lectureId: number | null): Promise<QuizData | st
     .then((res) => {
       return res.json();
     })
-    .then((data: ResponseData<Object>) => {
+    .then((data: ResponseData<QuizData | string>) => {
       return data;
     });
 

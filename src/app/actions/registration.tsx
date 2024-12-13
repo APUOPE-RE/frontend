@@ -20,7 +20,7 @@ export const registerUser = async (
 		.then((res) => {
       return res.json();
     })
-    .then((data: ResponseData<Object>) => {
+    .then((data: ResponseData<string>) => {
       return data;
     });
 
