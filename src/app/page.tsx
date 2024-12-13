@@ -1,8 +1,5 @@
+import { redirect } from "next/navigation";
 
-export default function Home() {
-  return (
-    <div>
-      <h2>APUOPE-RE</h2>
-    </div>
-  );
+export default async function Home() {
+  redirect("/login");
 }
