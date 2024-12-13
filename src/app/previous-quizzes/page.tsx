@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppContext } from "../../context";
 import { QuestionData, QuizAnswerData, QuizSummaryData } from "../types/types";
 import { CgSoftwareDownload } from "react-icons/cg";
@@ -13,7 +13,7 @@ export default function Quiz() {
     []
   );
   const [answerDataList, setAnswerDataList] = useState<QuizAnswerData[]>([]);
-  const { dropdownOpen, title, setTitle } = useAppContext();
+  const { dropdownOpen} = useAppContext();
 
   return (
     <div

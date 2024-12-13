@@ -35,7 +35,7 @@ export default function Register() {
 			trigger("passwordFirst");
 		}
 		clearErrors("passwordFirst");
-	}, [watchPasswordFirst, watchPasswordSecond, clearErrors]);
+	}, [watchPasswordFirst, watchPasswordSecond, clearErrors, trigger]);
 
 	useEffect(() => {
 		if (watchEmail || watchUsername) {

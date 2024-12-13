@@ -17,7 +17,7 @@ export const fetchResult = async (submissionPayload: QuizSubmitData): Promise<Qu
     .then((res) => {
       return res.json();
     })
-    .then((data: ResponseData<Object>) => {
+    .then((data: ResponseData<QuizResultData | string>) => {
       return data;
     });
 

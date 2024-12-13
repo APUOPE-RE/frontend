@@ -7,13 +7,20 @@ import {
   PopoverButton,
   PopoverPanel,
 } from "@headlessui/react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { FiEdit3 } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
 import { useAppContext } from "../context";
+import { ChatBotRequestData, ConversationData } from "../app/types/types";
+import { UseFormSetValue } from "react-hook-form";
 
-export default function ChatOptions({ conversation, setValue }: any) {
+type ChatOptionsProps = {
+  conversation: ConversationData;
+  setValue: UseFormSetValue<ChatBotRequestData>;
+}
+
+export default function ChatOptions({ conversation, setValue }: ChatOptionsProps) {
   const [dialogWindow, setDialogWindow] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState<string>("");
 
@@ -24,7 +31,7 @@ export default function ChatOptions({ conversation, setValue }: any) {
 
   useEffect(() => {
     setNewTitle(conversation.subject);
-  }, []);
+  }, [ conversation.subject, setNewTitle ]);
 
   const handleTitleChange = () => {
     const changeTitle = async () => {
@@ -53,7 +60,7 @@ export default function ChatOptions({ conversation, setValue }: any) {
 
   const handleDeleteChat = () => {
     const deleteConversation = async () => {
-      const response = await fetch(
+      await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/deleteConversation/${id}`,
         {
           method: "GET",
@@ -121,7 +128,7 @@ export default function ChatOptions({ conversation, setValue }: any) {
                   <Input
                     type="text"
                     value={newTitle}
-                    onChange={(e: any) => setNewTitle(e.target.value)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setNewTitle(e.target.value)}
                     className="mt-4 border w-full border-gray-500 rounded-lg py-2 px-3 text-lg"
                   />
 
