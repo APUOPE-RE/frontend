@@ -17,7 +17,7 @@ export const PreviousQuizzes = ({
 	setAnswerDataList
 }: PreviousQuizzesProps) => {
 	const { previousQuizzes, materials } = useAppContext();
-	const { setDropdownOpen, title, setTitle, searchInputRef } = useAppContext();
+	const { setDropdownOpen } = useAppContext();
 
 	const filterSubject = (id: number) => {
 		return materials.find((m) => m.id === id);

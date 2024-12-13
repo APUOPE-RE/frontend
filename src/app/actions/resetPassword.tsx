@@ -4,7 +4,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const sendResetPasswordLink = async (
 	userEmail: EmailforPassReset
-): Promise<ResponseData<Object>> => {
+): Promise<ResponseData<string>> => {
 	try {
 		const response = await fetch(`${API_BASE_URL}/api/sendResetPasswordLink`, {
 			method: "POST",
@@ -16,7 +16,7 @@ export const sendResetPasswordLink = async (
 		.then((res) => {
       return res.json();
     })
-    .then((data: ResponseData<Object>) => {
+    .then((data: ResponseData<string>) => {
       return data;
     });
 
@@ -43,11 +43,11 @@ export const resetPassword = async (
 		.then((res) => {
       return res.json();
     })
-    .then((data: ResponseData<Object>) => {
+    .then((data: ResponseData<string>) => {
       return data;
     });
 
-		return response.data as ResponseData<string>;
+		return response;
 	} catch (error) {
 		console.log("An error occurred: ", error);
     return { success: false, data: "An error occurred. Please, try again." };

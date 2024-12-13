@@ -12,11 +12,11 @@ export const verifyAccount = async (
 			.then((res) => {
 				return res.json();
 			})
-			.then((data: ResponseData<Object>) => {
+			.then((data: ResponseData<string>) => {
 				return data;
 			});
 
-		return response as ResponseData<string>;
+		return response;
 	} catch (error) {
 		console.log("An error occurred: ", error);
     return { success: false, data: "An error occurred. Please, try again." };

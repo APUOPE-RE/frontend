@@ -66,7 +66,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 		return () => {
 			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, []);
+	}, [ searchInputRef, setDropdownOpen, setTitle ]);
 
 	const handleToggleMenu = () => {
 		setMenuOpen(prev => !prev);

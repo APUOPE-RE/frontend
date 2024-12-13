@@ -21,11 +21,7 @@ export const Conversations = ({
   setMessages,
   setValue,
 }: ConversationsProps) => {
-  const { conversations, materials } = useAppContext();
-
-  const filterSubject = (id: number) => {
-    return materials.find((m) => m.id === id);
-  };
+  const { conversations } = useAppContext();
 
   const fetchMessages = async (conversationId: number) => {
     if (conversationId !== currentConversation) {

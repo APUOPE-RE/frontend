@@ -25,7 +25,6 @@ export default function Chatbot() {
     reset,
     setValue,
     watch,
-    formState: { errors },
   } = useForm<ChatBotRequestData>();
 
   const lectureId = watch("lectureId");
