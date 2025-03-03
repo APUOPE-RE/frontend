@@ -29,6 +29,7 @@ export default function Quiz() {
   const [quizid, setQuizid] = useState<number>(0);
 	const { addAppError } = useAppContext();
 
+
   const filteredItems = materials.filter((item) =>
     item.label.toLowerCase().includes(topic.toLowerCase())
   );
@@ -258,9 +259,15 @@ export default function Quiz() {
                             width={20}
                             height={20}
                           />
-                        )}
+                        )}                        
                       </div>
                     ))}
+                    {score >= 0 && (
+                          <div className="mt-6 p-4 border-t-2">
+                          <h3 className="text-lg font-semibold">Source:</h3>
+                          <p className="text-gray-600">{question.source}</p>
+                        </div>
+                        )}
                   </div>
                 </div>
               ))}
