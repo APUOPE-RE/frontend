@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useState } from "react";
-import { fetchQuiz } from "../actions/generateQuiz";
+import { fetchQuiz, fetchTrueOrFalseQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
 import {
   QuestionData,
@@ -27,6 +27,7 @@ export default function Quiz() {
   const [quizResult, setQuizResult] = useState<QuizResultData>();
   const [score, setScore] = useState<number>(-1);
   const [quizid, setQuizid] = useState<number>(0);
+  const [quizType, setQuizType] = useState<"MSQ" | "TF" | null>(null);
 	const { addAppError } = useAppContext();
 
 
@@ -50,6 +51,18 @@ export default function Quiz() {
       addAppError(res);
     }
   };
+
+
+  const generateTrueOrFalseQuiz = async (value: number | null): Promise<void> => {
+    setIsLoading(true);
+    const res = await fetchTrueOrFalseQuiz(value);
+    console.log(res);
+  };
+
+
+
+
+
 
   const handleAnswerChange = (questionId: number, selectedOption: string) => {
     setResult((prev) => {
@@ -188,34 +201,44 @@ export default function Quiz() {
         </div>
         <div className="basis-10/12 py-10" style={{ height: "90%" }}>
           {response.length === 0 ? (
-            <div className="flex flex-col justify-between w-full h-full p-4 border bg-gray-100 border-gray-300 rounded-lg">
-              {selectedTopic === 0 ? (
-                <p className="flex align-middle justify-center font-semibold text-3xl">
-                  Please Select a Topic{" "}
-                </p>
-              ) : (
-                <p className="flex align-middle justify-center font-semibold text-3xl">
-                  Click the button below to Generate questions for lecture{" "}
-                  {selectedTopic}
-                </p>
-              )}
-
-              {isLoading ? (
-                <div className="flex justify-center mt-4">
-                  <p className="text-xl font-semibold">Loading...</p>
-                </div>
-              ) : (
-                <div className="flex justify-center align-middle">
-                  <button
-                    className="bg-blue-500 text-white p-4 m-4 rounded-lg"
-                    disabled={selectedTopic === 0}
-                    onClick={() => generateQuiz(selectedTopic)}
-                  >
-                    Generate quiz!
-                  </button>
-                </div>
-              )}
+        <div className="flex flex-col justify-between w-full h-full p-4 border bg-gray-100 border-gray-300 rounded-lg">
+          {selectedTopic === 0 ? (
+            <p className="flex align-middle justify-center font-semibold text-3xl">
+              Please Select a Topic
+            </p>
+          ) : quizType === null && isLoading === false ? (
+            // Ask user to select quiz type
+            <div className="flex flex-col items-center">
+              <p className="font-semibold text-2xl mb-4">
+                Choose the quiz type for lecture {selectedTopic}
+              </p>
+              <div className="flex gap-4">
+                <button
+                  className="bg-blue-500 text-white px-6 py-3 rounded-lg"
+                  onClick={() => {
+                    setQuizType("MSQ");
+                    generateQuiz(selectedTopic);
+                  }}
+                >
+                  Multiple-Choice Quiz
+                </button>
+                <button
+                  className="bg-green-500 text-white px-6 py-3 rounded-lg"
+                  onClick={() => {
+                    setQuizType("TF");
+                    generateTrueOrFalseQuiz(selectedTopic);
+                  }}
+                >
+                  True/False Quiz
+                </button>
+              </div>
             </div>
+          ) : (
+            <p className="flex align-middle justify-center font-semibold text-3xl">
+              Generating {quizType === "MSQ" ? "Multiple-Choice" : "True/False"} Quiz...
+            </p>
+          )}
+        </div>
           ) : (
             <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white shadow-lg overflow-auto">
               {response.map((question, index) => (
