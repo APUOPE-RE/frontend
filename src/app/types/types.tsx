@@ -67,6 +67,16 @@ export type QuestionData = {
 	source: string;
 }
 
+export type QuestionTrueOrFalseData = {
+    id: number;
+    question: string;
+    option_a: string;
+    option_b: string;
+    correct_option: string;
+    points: number;
+	question_number: number;
+}
+
 export type QuizAnswerData = {
     id: number;
     quizResultId: number;
@@ -83,6 +93,14 @@ export type QuizData = {
     lectureId: number;
     maxPoints: number;
     questionDataList: QuestionData[];
+}
+
+export type QuizTrueOrFalseData = {
+    id: number;
+    accountId: number;
+    lectureId: number;
+    maxPoints: number;
+    questionDataTrueAndFalseList: QuestionTrueOrFalseData[];
 }
 
 export type QuizResultData = {

@@ -1,4 +1,5 @@
-import { QuizData, QuizSummaryData, ResponseData } from "../types/types";
+/* eslint-disable @typescript-eslint/ban-types */
+import { QuizData, QuizSummaryData, QuizTrueOrFalseData, ResponseData } from "../types/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -32,7 +33,7 @@ export const fetchQuiz = async (lectureId: number | null): Promise<QuizData | st
 
 
 
-export const fetchTrueOrFalseQuiz = async (lectureId: number | null): Promise<QuizData | string> => {
+export const fetchTrueOrFalseQuiz = async (lectureId: number | null): Promise<QuizTrueOrFalseData | string> => {
 	try {
 	  const token = localStorage.getItem("token");
 	  const response = await fetch(`${API_BASE_URL}/api/generateTrueOrFalseQuiz/${lectureId}`, {
@@ -50,7 +51,7 @@ export const fetchTrueOrFalseQuiz = async (lectureId: number | null): Promise<Qu
 	  });
   
 		  if (response.success) {
-			  return response.data as QuizData;
+			  return response.data as QuizTrueOrFalseData;
 		  } else {
 		return response.data as string;
 		  }

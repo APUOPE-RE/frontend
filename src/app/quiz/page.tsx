@@ -5,11 +5,12 @@ import { fetchQuiz, fetchTrueOrFalseQuiz } from "../actions/generateQuiz";
 import { useAppContext } from "@/src/context";
 import {
   QuestionData,
+  QuestionTrueOrFalseData,
   QuizResultData,
   QuizSubmitAnswerData,
   QuizSubmitData,
 } from "../types/types";
-import { fetchResult } from "../actions/generateResult";
+import { fetchResult, fetchResultForTrueOrFalse } from "../actions/generateResult";
 import { CgSoftwareDownload } from "react-icons/cg";
 import { downloadQuizPdf } from "../actions/quizDownloader";
 
@@ -23,6 +24,8 @@ export default function Quiz() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState<number | null>(0);
   const [response, setResponse] = useState<QuestionData[]>([]);
+  const [trueOrFalseResponse, setTrueOrFalseResponse] = useState<QuestionTrueOrFalseData[]>([]);
+
   const [result, setResult] = useState<QuizSubmitAnswerData[]>([]);
   const [quizResult, setQuizResult] = useState<QuizResultData>();
   const [score, setScore] = useState<number>(-1);
@@ -56,12 +59,20 @@ export default function Quiz() {
   const generateTrueOrFalseQuiz = async (value: number | null): Promise<void> => {
     setIsLoading(true);
     const res = await fetchTrueOrFalseQuiz(value);
-    console.log(res);
+
+    if (typeof res !== "string") {
+      setQuizid(res.id);
+      const quizTrueOrFalseResponse = res.questionDataTrueAndFalseList;
+      if (typeof res !== "string") {
+        setTrueOrFalseResponse(quizTrueOrFalseResponse);
+        setIsLoading(false);
+      } else {
+        console.error("Failed to fetch quiz....");
+      }
+    } else {
+      addAppError(res);
+    }
   };
-
-
-
-
 
 
   const handleAnswerChange = (questionId: number, selectedOption: string) => {
@@ -120,6 +131,30 @@ export default function Quiz() {
     }
   }
 
+  const submitTrueOrFalseQuiz = async (): Promise<void> => {
+    if (!selectedTopic) {
+      console.error("No topic selected.");
+      return;
+    }
+
+    const submissionPayload: QuizSubmitData = {
+      quizId: quizid,
+      quizSubmitAnswerDataList: result,
+    };
+
+    if (result.length < 10){
+      addAppError("Answer all questions to submit")
+    } else {
+      const quizResult = await fetchResultForTrueOrFalse(submissionPayload);
+      if (typeof quizResult !== "string") {
+        setQuizResult(quizResult);
+        setScore(quizResult.score);
+      } else {
+        addAppError(quizResult);
+      }
+    }
+  };
+
   return (
     <div className="flex w-full bg-gray-100 p-3" style={{ height: "88dvh" }}>
       <div className="basis-1/4 me-3 bg-white px-3 h-full rounded overflow-auto">
@@ -169,6 +204,7 @@ export default function Quiz() {
         ))}
       </div>
 
+
       <div className="basis-3/4 flex flex-col p-3 h-full rounded bg-white">
         <div
           className="basis-2/12 flex flex-row justify-between"
@@ -187,20 +223,20 @@ export default function Quiz() {
           <div className="flex items-center">
             <p>
               Score:{" "}
-              {response.length === 0 ? (
+              {(response.length === 0 && trueOrFalseResponse.length === 0) ? (
                 <span className="bg-blue-500 text-white rounded-md px-2 py-1">
                   0/0
                 </span>
               ) : (
                 <span className="bg-blue-500 text-white rounded-md px-2 py-1">
-                  {score < 0 ? "-" : score}/{response.length}
+                  {score < 0 ? "-" : score}/{response.length > trueOrFalseResponse.length ? response.length : trueOrFalseResponse.length}
                 </span>
               )}
             </p>
           </div>
         </div>
         <div className="basis-10/12 py-10" style={{ height: "90%" }}>
-          {response.length === 0 ? (
+          {(response?.length === 0 && trueOrFalseResponse?.length === 0) ? (
         <div className="flex flex-col justify-between w-full h-full p-4 border bg-gray-100 border-gray-300 rounded-lg">
           {selectedTopic === 0 ? (
             <p className="flex align-middle justify-center font-semibold text-3xl">
@@ -241,7 +277,9 @@ export default function Quiz() {
         </div>
           ) : (
             <div className="w-full h-full rounded-xl border p-4 border-gray-400 bg-white shadow-lg overflow-auto">
-              {response.map((question, index) => (
+              {response.length !== 0 ? 
+              <div> 
+                {response.map((question, index) => (
                 <div key={question.id} className="mb-4 border-b-2 p-2 py-4">
                   <p className="font-semibold pb-2">
                     {index + 1}. {question.question}
@@ -312,6 +350,87 @@ export default function Quiz() {
                   </button>
                 )}
               </div>
+
+              </div>
+              : 
+              <div> 
+
+
+
+                {trueOrFalseResponse?.length > 0 ? (
+                  trueOrFalseResponse.map((question, index) => (
+                    <div key={question.id ?? index} className="mb-4 border-b-2 p-2 py-4">
+                      <p className="font-semibold pb-2">
+                        {index + 1}. {question.question}
+                      </p>
+                      <div className="flex flex-col pl-6">
+                        {(
+                          ["option_a", "option_b"] as Array<
+                            keyof QuestionTrueOrFalseData
+                          >
+                        ).map((optionKey) => (
+                          <div key={optionKey}>
+                            <input
+                              id={`${question.id}_${optionKey}`}
+                              name={`question_${question.id}`}
+                              value={optionKey}
+                              type="radio"
+                              className="mr-3"
+                              onChange={(e) =>
+                                handleAnswerChange(
+                                  question.question_number,
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <span className="mr-2">{question[optionKey]}</span>
+                            {score >= 0 && (() => {
+                              // Convert frontend options to backend format
+                              const answer = optionKey === 'option_a' ? 'true' : optionKey === 'option_b' ? 'false' : '';
+
+                              // Find the correct option for the question from the quizResult
+                              const correctAnswer = quizResult?.quizAnswerDataList.at(question.question_number - 1)?.correctOption;
+
+                              // Compare the answer with the correctOption
+                              return answer === correctAnswer ? (
+                                <Image src="/correct.png" alt="Correct" width={20} height={20} />
+                              ) : (
+                                <Image src="/incorrect.png" alt="Incorrect" width={20} height={20} />
+                              );
+                            })()}                        
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No questions available.</p>
+                )}
+
+              <div className="flex justify-end">
+                {score < 0 ? (
+                  <button
+                    className="bg-blue-500 text-white p-4 m-4 rounded-lg hover:bg-blue-700 active:bg-blue-800 "
+                    onClick={submitTrueOrFalseQuiz}
+                  >
+                    Send Answers
+                  </button>
+                ) : (
+                  <button 
+                    disabled 
+                    className="bg-blue-500 text-white p-4 m-4 rounded-lg flex align-middle justify-center 
+                              opacity-50 cursor-not-allowed hover:bg-blue-500 active:bg-blue-500"
+                    onClick={downloadQuiz}
+                  >
+                    <CgSoftwareDownload className="w-6 h-6" />
+                    <span>Download as PDF Coming Soon</span>
+                  </button>
+                )}
+              </div>
+
+              </div>
+              }
+              
             </div>
           )}
         </div>
