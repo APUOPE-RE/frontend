@@ -91,7 +91,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 
 	return (
 		<>
-			<header className="fixed top-0 left-0 w-full">
+			<header className="fixed top-0 left-0 w-full z-50">
 				<div className="w-full h-20 shadow-xl bg-blue-200 flex justify-between border-b-2 border-blue-400">
 					<div className="hidden md:flex items-center h-full px-4">
 						{isAuthenticated ? (
@@ -121,6 +121,23 @@ export const Navbar: React.FC = (): JSX.Element => {
 						{isAuthenticated ? (
 							<ul className="flex items-center h-full text-black text-xl">
 								<nav className="hidden md:flex space-x-6">
+
+								<li className="font-semibold h-full">
+										<Link
+											id="previous-quizzes-link"
+									href="/performance-stat"
+											onClick={() => {
+												setCurrentLink("performance-stat"),
+												setFetchPreviousQuizzesData(true)
+											}}
+											className={`px-3 transition-colors duration-300 h-full flex items-center ${currentLink == "performance-stat"
+												? "border-b-2  border-blue-600"
+												: "hover:bg-blue-100"
+												}`}
+										>
+											Performance
+										</Link>
+									</li>
 
 									<li className="font-semibold h-full">
 										<Link
@@ -189,7 +206,7 @@ export const Navbar: React.FC = (): JSX.Element => {
 						{menuOpen && (
 							<div
 								ref={menuRef}
-								className="absolute top-full right-0 w-28 bg-white border border border-gray-500 rounded-md z-50"
+								className="absolute top-full right-0 w-28 bg-white border border-gray-500 rounded-md z-50"
 							>
 								{isAuthenticated ? (
 									<button

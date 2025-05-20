@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { Dispatch, SetStateAction } from "react";
 import { useAppContext } from "@/src/context";
 import { QuestionData, QuizAnswerData, QuizSummaryData } from "../types/types";
@@ -21,7 +22,7 @@ export const PreviousQuizzes = ({
 
 	const filterSubject = (id: number) => {
 		return materials.find((m) => m.id === id);
-	};
+	}; 
 
 	const fetchQuizSummaryData = async (quizId: number) => {
 		if (quizId !== currentQuiz) {
